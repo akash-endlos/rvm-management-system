@@ -74,7 +74,7 @@ const AddEditCustomerSidebar = ({ onClose, onSubmit, selectedCustomer }) => {
             {...register('vendorId', { required: true })}
             defaultValue={selectedCustomer?.vendorId || ''}
           >
-            {vendors.length>0 && vendors.map((item, index) => (
+            {vendors?.length>0 && vendors?.map((item, index) => (
               <MenuItem key={index} value={item?._id}>
                 {item?.name}
               </MenuItem>
