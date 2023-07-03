@@ -15,11 +15,11 @@ const SidebarLayout = ({ children }) => {
       url: '/dashboard',
       icon: <AiOutlineUserAdd />,
     },
-    {
-      title: 'Vendors',
-      url: '/vendor',
-      icon: <AiOutlineUserAdd />,
-    },
+    // {
+    //   title: 'Vendors',
+    //   url: '/vendor',
+    //   icon: <AiOutlineUserAdd />,
+    // },
     {
       title: 'Customer',
       url: '/customer',

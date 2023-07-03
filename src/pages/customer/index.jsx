@@ -1,3 +1,4 @@
+"use client"
 import AdminNestedTable from '@/components/AdminTable/AdminNestedTable'
 import AdminTable from '@/components/AdminTable/AdminTable'
 import SidebarLayout from '@/components/SidebarLayout/SidebarLayout'
@@ -10,16 +11,41 @@ import { useDispatch, useSelector } from 'react-redux'
 
 const index = () => {
     const dispatch = useDispatch()
-    useEffect(() => {
-        dispatch(fetchAllCustomers())
-    }, [])
     const allcustomers = useSelector((state) => state?.customer?.Customer)
-    const [tableData, setTableData] = useState(() =>
-        allcustomers?.map((customer, index) => ({
-            ...customer,
-            index: index + 1,
-        }))
+    // const [tableData, setTableData] = useState(() =>
+    //     allcustomers?.map((customer, index) => ({
+    //         ...customer,
+    //         index: index + 1,
+    //     }))
+    // );
+    const mainTableColumns = useMemo(
+        () => [
+            {
+                accessorKey: 'index',
+                header: 'Sr. No',
+                size: 150,
+            },
+            {
+                accessorKey: 'name',
+                header: 'Name',
+                size: 150,
+            },
+        ],
+        [],
     );
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            await dispatch(fetchAllCustomers());
+          } catch (error) {
+            // Handle error if necessary
+          }
+        };
+      
+        fetchData();
+      }, []);
+      
+ 
     const handleActions = () => {
         return (
             <Box sx={{ display: 'flex', gap: '1rem' }}>
@@ -36,21 +62,7 @@ const index = () => {
             </Box>
         )
     }
-    const mainTableColumns = useMemo(
-        () => [
-            {
-                accessorKey: 'index',
-                header: 'Sr. No',
-                size: 150,
-            },
-            {
-                accessorKey: 'name',
-                header: 'Name',
-                size: 150,
-            },
-        ],
-        [],
-    );
+
 
     const handleNestedTable = (row) => {
         const nestedTableConfigurations = [
@@ -88,9 +100,10 @@ const index = () => {
             <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
                 customers
             </Typography>
-            <AdminTable data={tableData} columns={mainTableColumns} handleActions={handleActions} handleNestedTable={handleNestedTable} />
+            {allcustomers&& <AdminTable data={allcustomers} columns={mainTableColumns} handleActions={handleActions} handleNestedTable={handleNestedTable} />}
         </Layout>
     )
 }
+
 
 export default index
