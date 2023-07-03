@@ -5,6 +5,7 @@ import {
   Select,
   MenuItem,
   InputLabel,
+  FormHelperText,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -47,24 +48,23 @@ const AddCustomerSidebar = ({ onClose, onSubmit }) => {
     >
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <div style={{ marginBottom: "10px" }}>
-        <InputLabel >Name</InputLabel>
+          <InputLabel >Name</InputLabel>
           <TextField
             fullWidth
             name="name"
             {...register("name")}
-            error={!!errors.name}
-            helperText={errors.name?.message}
           />
+           <FormHelperText>{errors.name?.message}</FormHelperText>
         </div>
         <div style={{ marginBottom: "10px" }}>
           <InputLabel id="vendorId-label">Vendor ID</InputLabel>
           <Select
             fullWidth
+            labelId="vendorId-label"
             name="vendorId"
-            placeholder="Vendor ID"
             {...register("vendorId", { required: true })}
-            error={!!errors.vendorId}
-            helperText={errors.vendorId?.message}
+            // error={!!errors.vendorId}
+            // helperText={errors.vendorId?.message}
             defaultValue=""
           >
             <MenuItem value="">Select Vendor ID</MenuItem>
@@ -72,9 +72,10 @@ const AddCustomerSidebar = ({ onClose, onSubmit }) => {
             <MenuItem value="vendor2">Vendor 2</MenuItem>
             <MenuItem value="vendor3">Vendor 3</MenuItem>
           </Select>
+          <FormHelperText>{errors.vendorId?.message}</FormHelperText>
         </div>
         <div style={{ marginBottom: "10px" }}>
-        <InputLabel >Branch Name (Optional)</InputLabel>
+          <InputLabel >Branch Name (Optional)</InputLabel>
           <TextField
             fullWidth
             name="branchName"
