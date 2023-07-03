@@ -28,6 +28,7 @@ import { FiGitBranch } from 'react-icons/fi';
 import DeleteModal from '@/components/customer/DeleteCustomerModal';
 import AddEditBranchSidebar from '@/components/customer/AddEditBranchSidebar';
 import DeleteCustomerModal from '@/components/customer/DeleteCustomerModal';
+import DeleteBranchModal from '@/components/customer/DeleteBranchModal';
 
 const schema = yup.object().shape({
   name: yup.string().required('Name is required'),
@@ -102,18 +103,13 @@ const Index = () => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip arrow placement="left" title="Edit Customer">
-          <IconButton onClick={() => handleEditCustomer(row.original)}>
+          <IconButton onClick={() => handleEditBranch(row.original)}>
             <Edit />
           </IconButton>
         </Tooltip>
         <Tooltip arrow placement="right" title="Delete Customer">
-          <IconButton color="error" onClick={() => handleDeleteCustomer(row.original)}>
+          <IconButton color="error" onClick={() => handleDeleteBranch(row.original)}>
             <Delete />
-          </IconButton>
-        </Tooltip>
-        <Tooltip arrow placement="right" title="Add Branch">
-          <IconButton color="secondary" onClick={() => handleOpenAddBranchSidebar(row.original)}>
-            <FiGitBranch />
           </IconButton>
         </Tooltip>
       </Box>
@@ -190,6 +186,10 @@ const Index = () => {
     setSelectedCustomer(customerData);
     setIsDeleteModalOpen(true);
   };
+  const handleDeleteBranch = (branchData) => {
+    setSelectedBranch(branchData);
+    setIsDeleteModalOpen(true);
+  };
 
   const handleCloseDeleteModal = () => {
     setIsDeleteModalOpen(false);
@@ -198,6 +198,11 @@ const Index = () => {
   const handleConfirmDeleteCustomer = () => {
     // Perform delete operation on selectedCustomer
     console.log('Deleting customer', selectedCustomer);
+    setIsDeleteModalOpen(false);
+  };
+  const handleConfirmDeleteBranch = () => {
+    // Perform delete operation on selectedCustomer
+    console.log('Deleting branch', selectedBranch);
     setIsDeleteModalOpen(false);
   };
 
@@ -272,6 +277,12 @@ const Index = () => {
             onClose={handleCloseDeleteModal}
             onDelete={handleConfirmDeleteCustomer}
             title='Customer'
+          />
+           <DeleteBranchModal
+            isOpen={isDeleteModalOpen}
+            onClose={handleCloseDeleteModal}
+            onDelete={handleConfirmDeleteBranch}
+            title='Branch'
           />
         </>
       )}
