@@ -1,11 +1,18 @@
 import React, { useMemo } from 'react';
 import { MaterialReactTable } from 'material-react-table';
 
-const AdminNestedTable = ({ columns, data,heading }) => {
+const AdminNestedTable = ({ columns, data,heading,handleAdminNestedTableRowActions }) => {
 
   return (
   <> 
-    <MaterialReactTable columns={columns} data={data} />
+    <MaterialReactTable  enableRowActions
+        enableFilters
+        enableColumnFilterModes
+        enableColumnOrdering
+        enablePinning
+        positionActionsColumn="last"
+        enableRowSelection renderRowActions={({ row, table }) => handleAdminNestedTableRowActions(row, table)}
+        columns={columns} data={data} />
   </>);
 };
 

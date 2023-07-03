@@ -98,6 +98,29 @@ const Index = () => {
     );
   };
 
+  const handleAdminNestedTableRowActions = (row, table) => {
+    return (
+      <Box sx={{ display: 'flex', gap: '1rem' }}>
+        <Tooltip arrow placement="left" title="Edit Customer">
+          <IconButton onClick={() => handleEditCustomer(row.original)}>
+            <Edit />
+          </IconButton>
+        </Tooltip>
+        <Tooltip arrow placement="right" title="Delete Customer">
+          <IconButton color="error" onClick={() => handleDeleteCustomer(row.original)}>
+            <Delete />
+          </IconButton>
+        </Tooltip>
+        <Tooltip arrow placement="right" title="Add Branch">
+          <IconButton color="secondary" onClick={() => handleOpenAddBranchSidebar(row.original)}>
+            <FiGitBranch />
+          </IconButton>
+        </Tooltip>
+      </Box>
+    );
+  };
+
+  
   const handleToolBar = (table) => {
     const handleExportRows = (rows) => {
       csvExporter.generateCsv(rows.map((row) => row.original));
@@ -142,7 +165,7 @@ const Index = () => {
             <Typography variant="h5" style={{ fontWeight: 'bold', color: 'teal' }}>
               {config?.header}
             </Typography>
-            <AdminNestedTable columns={config?.columns} data={config?.data} />
+            <AdminNestedTable handleAdminNestedTableRowActions={handleAdminNestedTableRowActions} columns={config?.columns} data={config?.data} />
           </>
         ))}
       </>
