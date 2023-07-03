@@ -34,15 +34,9 @@ const index = () => {
         [],
     );
     useEffect(() => {
-        const fetchData = async () => {
-          try {
-            await dispatch(fetchAllCustomers());
-          } catch (error) {
-            // Handle error if necessary
-          }
-        };
-      
-        fetchData();
+
+         dispatch(fetchAllCustomers());
+    
       }, []);
       
  
@@ -100,7 +94,7 @@ const index = () => {
             <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
                 customers
             </Typography>
-            {allcustomers&& <AdminTable data={allcustomers} columns={mainTableColumns} handleActions={handleActions} handleNestedTable={handleNestedTable} />}
+            {allcustomers && <AdminTable data={allcustomers} columns={mainTableColumns} handleActions={handleActions} handleNestedTable={handleNestedTable} />}
         </Layout>
     )
 }

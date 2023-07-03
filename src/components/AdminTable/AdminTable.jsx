@@ -20,7 +20,7 @@ const AdminTable = ({ columns,data, handleActions, handleNestedTable }) => {
         positionActionsColumn="last"
         enableRowSelection
         columns={columns}
-        data={data}
+        data={tableData}
         renderRowActions={({ row, table }) => handleActions(row, table)}
         renderDetailPanel={({ row }) => handleNestedTable(row)}
       />
