@@ -5,6 +5,7 @@ import {RxCross1} from 'react-icons/rx'
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '@/redux/reducers/authSlice';
 import { useRouter } from 'next/router';
+import { AiOutlineDoubleLeft, AiOutlineDoubleRight } from 'react-icons/ai';
 
 const NewHeader = ({ handleSidebarToggle,isSidebarOpen }) => {
     const user = useSelector((state)=>state?.auth?.user?.user)
@@ -29,11 +30,11 @@ const NewHeader = ({ handleSidebarToggle,isSidebarOpen }) => {
             <div className="px-3  lg:px-5 lg:pl-3">
                 <div className="flex items-center justify-between">
                     <div className='flex items-center'>
-                    {isSidebarOpen ? <RxCross1
+                    {isSidebarOpen ? <AiOutlineDoubleLeft
                             className="cursor-pointer"
                             size={25}
                             onClick={handleSidebarToggle}
-                        />:<GiHamburgerMenu    
+                        />:<AiOutlineDoubleRight    
                         className="cursor-pointer"
                         size={25}
                         onClick={handleSidebarToggle}
