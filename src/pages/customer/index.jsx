@@ -12,16 +12,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 
 const index = () => {
-    
-
     const dispatch = useDispatch()
     const allcustomers = useSelector((state) => state?.customer?.Customer)
-    // const [tableData, setTableData] = useState(() =>
-    //     allcustomers?.map((customer, index) => ({
-    //         ...customer,
-    //         index: index + 1,
-    //     }))
-    // );
     const mainTableColumns = useMemo(
         () => [
             {
@@ -45,14 +37,14 @@ const index = () => {
         useBom: true,
         useKeysAsHeaders: false,
         headers: mainTableColumns.map((c) => c.header),
-      };
-      
-      const csvExporter = new ExportToCsv(csvOptions);
+    };
+
+    const csvExporter = new ExportToCsv(csvOptions);
     useEffect(() => {
-         dispatch(fetchAllCustomers());
-      }, []);
-      
- 
+        dispatch(fetchAllCustomers());
+    }, []);
+
+
     const handleActions = () => {
         return (
             <Box sx={{ display: 'flex', gap: '1rem' }}>
@@ -70,34 +62,39 @@ const index = () => {
         )
     }
 
-    const handleToolBar=(table)=>{
+    const handleToolBar = (table) => {
         const handleExportRows = (rows) => {
             csvExporter.generateCsv(rows.map((row) => row.original));
-          };
-        return(<Box
+        };
+        return (<Box
             sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
-          >
+        >
             <Button
-              disabled={table.getPrePaginationRowModel().rows.length === 0}
-              onClick={() =>
-                handleExportRows(table.getPrePaginationRowModel().rows)
-              }
-              startIcon={<FileDownloadIcon />}
-              variant="contained"
+                disabled={table.getPrePaginationRowModel().rows.length === 0}
+                onClick={() =>
+                    handleExportRows(table.getPrePaginationRowModel().rows)
+                }
+                startIcon={<FileDownloadIcon />}
+                variant="contained"
             >
-              Export All Rows
+                Export All Rows
             </Button>
             <Button
-              disabled={
-                !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
-              }
-              onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
-              startIcon={<FileDownloadIcon />}
-              variant="contained"
+                disabled={
+                    !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+                }
+                onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
+                startIcon={<FileDownloadIcon />}
+                variant="contained"
             >
-              Export Selected Rows
+                Export Selected Rows
             </Button>
-          </Box>)
+            <Button
+                variant="contained"
+            >
+                Add Customer
+            </Button>
+        </Box>)
     }
     const handleNestedTable = (row) => {
         const nestedTableConfigurations = [
