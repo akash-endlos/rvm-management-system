@@ -34,9 +34,7 @@ const index = () => {
         [],
     );
     useEffect(() => {
-
          dispatch(fetchAllCustomers());
-    
       }, []);
       
  
