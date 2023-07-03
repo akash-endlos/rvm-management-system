@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Button,
   TextField,
@@ -6,25 +6,29 @@ import {
   MenuItem,
   InputLabel,
   FormHelperText,
-} from "@mui/material";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
+} from '@mui/material';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
 const schema = yup.object().shape({
-  name: yup.string().required("Name is required"),
-  vendorId: yup.string().required("Vendor ID is required"),
+  name: yup.string().required('Name is required'),
+  vendorId: yup.string().required('Vendor ID is required'),
   branchName: yup.string().optional(),
 });
 
-const AddCustomerSidebar = ({ onClose, onSubmit }) => {
+const AddEditCustomerSidebar = ({ onClose, onSubmit, selectedCustomer }) => {
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
-    defaultValues: { name: "", vendorId: "", branchName: "" },
+    defaultValues: {
+      name: selectedCustomer?.name || '',
+      vendorId: selectedCustomer?.vendorId || '',
+      branchName: selectedCustomer?.branchName || '',
+    },
   });
 
   const handleFormSubmit = (data) => {
@@ -34,37 +38,31 @@ const AddCustomerSidebar = ({ onClose, onSubmit }) => {
   return (
     <div
       style={{
-        position: "fixed",
+        position: 'fixed',
         top: 0,
         right: 0,
-        width: "300px",
-        height: "100vh",
-        backgroundColor: "#f0f0f0",
-        padding: "1rem",
-        display: "flex",
-        flexDirection: "column",
+        width: '300px',
+        height: '100vh',
+        backgroundColor: '#f0f0f0',
+        padding: '1rem',
+        display: 'flex',
+        flexDirection: 'column',
         zIndex: 999,
       }}
     >
       <form onSubmit={handleSubmit(handleFormSubmit)}>
-        <div style={{ marginBottom: "10px" }}>
-          <InputLabel >Name</InputLabel>
-          <TextField
-            fullWidth
-            name="name"
-            {...register("name")}
-          />
-           <FormHelperText>{errors.name?.message}</FormHelperText>
+        <div style={{ marginBottom: '10px' }}>
+          <InputLabel>Name</InputLabel>
+          <TextField fullWidth name="name" {...register('name')} />
+          <FormHelperText>{errors.name?.message}</FormHelperText>
         </div>
-        <div style={{ marginBottom: "10px" }}>
+        <div style={{ marginBottom: '10px' }}>
           <InputLabel id="vendorId-label">Vendor ID</InputLabel>
           <Select
             fullWidth
             labelId="vendorId-label"
             name="vendorId"
-            {...register("vendorId", { required: true })}
-            // error={!!errors.vendorId}
-            // helperText={errors.vendorId?.message}
+            {...register('vendorId', { required: true })}
             defaultValue=""
           >
             <MenuItem value="">Select Vendor ID</MenuItem>
@@ -74,12 +72,12 @@ const AddCustomerSidebar = ({ onClose, onSubmit }) => {
           </Select>
           <FormHelperText>{errors.vendorId?.message}</FormHelperText>
         </div>
-        <div style={{ marginBottom: "10px" }}>
-          <InputLabel >Branch Name (Optional)</InputLabel>
+        <div style={{ marginBottom: '10px' }}>
+          <InputLabel>Branch Name (Optional)</InputLabel>
           <TextField
             fullWidth
             name="branchName"
-            {...register("branchName")}
+            {...register('branchName')}
             error={!!errors.branchName}
             helperText={errors.branchName?.message}
           />
@@ -88,9 +86,9 @@ const AddCustomerSidebar = ({ onClose, onSubmit }) => {
           type="submit"
           color="primary"
           variant="contained"
-          style={{ marginRight: "10px" }}
+          style={{ marginRight: '10px' }}
         >
-          Submit
+          {selectedCustomer ? 'Update' : 'Submit'}
         </Button>
         <Button onClick={onClose}>Cancel</Button>
       </form>
@@ -98,4 +96,4 @@ const AddCustomerSidebar = ({ onClose, onSubmit }) => {
   );
 };
 
-export default AddCustomerSidebar;
+export default AddEditCustomerSidebar;
