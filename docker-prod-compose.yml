@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+  rvm-webapp:
+    container_name: rvm-management-production
+    build:
+      context: .
+      dockerfile: ./dockerfile.prod
+    ports:
+      - 3001:3000
