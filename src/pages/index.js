@@ -52,9 +52,6 @@ export default function Home() {
           py: 8,
         }}
       >
-        {/* <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-          <img className="w-28 h-28 mr-2" src="/1080.png" alt="logo" />
-        </a> */}
         <Box
           sx={{
             width: '100%',
