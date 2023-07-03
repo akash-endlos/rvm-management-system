@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 
-const DeleteModal = ({ isOpen, onClose, onDelete,title }) => {
+const DeleteCustomerModal = ({ isOpen, onClose, onDelete,title }) => {
     return (
       <Dialog open={isOpen} onClose={onClose}>
         <DialogTitle>Delete {title}</DialogTitle>
@@ -17,4 +17,4 @@ const DeleteModal = ({ isOpen, onClose, onDelete,title }) => {
     );
   };
 
-  export default DeleteModal
+  export default DeleteCustomerModal

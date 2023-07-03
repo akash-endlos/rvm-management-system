@@ -25,7 +25,9 @@ import Layout from '@/layout/Layout';
 import { fetchAllCustomers } from '@/redux/reducers/customerSlice';
 import AddEditCustomerSidebar from '@/components/customer/AddEditCustomerSidebar';
 import { FiGitBranch } from 'react-icons/fi';
-import DeleteModal from '@/components/delete-modal/DeleteModal';
+import DeleteModal from '@/components/customer/DeleteCustomerModal';
+import AddEditBranchSidebar from '@/components/customer/AddEditBranchSidebar';
+import DeleteCustomerModal from '@/components/customer/DeleteCustomerModal';
 
 const schema = yup.object().shape({
   name: yup.string().required('Name is required'),
@@ -39,6 +41,8 @@ const Index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isAddBranchSidebarOpen, setIsAddBranchSidebarOpen] = useState(false); // New state for AddEditBranchSidebar
+  const [selectedBranch, setSelectedBranch] = useState(null); // New state for AddEditBranchSidebar
 
   const mainTableColumns = useMemo(
     () => [
@@ -86,7 +90,7 @@ const Index = () => {
           </IconButton>
         </Tooltip>
         <Tooltip arrow placement="right" title="Add Branch">
-          <IconButton color="secondary">
+          <IconButton color="secondary" onClick={() => handleOpenAddBranchSidebar(row.original)}>
             <FiGitBranch />
           </IconButton>
         </Tooltip>
@@ -174,6 +178,21 @@ const Index = () => {
     setIsDeleteModalOpen(false);
   };
 
+  const handleOpenAddBranchSidebar = (customerData) => {
+    setSelectedBranch(null);
+    setIsAddBranchSidebarOpen(true);
+    setSelectedCustomer(customerData);
+  };
+
+  const handleCloseAddBranchSidebar = () => {
+    setIsAddBranchSidebarOpen(false);
+  };
+
+  const handleEditBranch = (branchData) => {
+    setSelectedBranch(branchData);
+    setIsAddBranchSidebarOpen(true);
+  };
+
   const handleAddCustomer = (customerData) => {
     if (selectedCustomer) {
       // Update existing customer
@@ -183,6 +202,17 @@ const Index = () => {
       console.log('Adding customer', customerData);
     }
     handleCloseAddSidebar();
+  };
+
+  const handleAddBranch = (branchData) => {
+    if (selectedBranch) {
+      // Update existing branch
+      console.log('Updating branch', branchData);
+    } else {
+      // Add new branch
+      console.log('Adding branch', branchData);
+    }
+    handleCloseAddBranchSidebar();
   };
 
   return (
@@ -206,7 +236,15 @@ const Index = () => {
               selectedCustomer={selectedCustomer}
             />
           )}
-          <DeleteModal
+          {isAddBranchSidebarOpen && (
+            <AddEditBranchSidebar
+              onClose={handleCloseAddBranchSidebar}
+              onSubmit={handleAddBranch}
+              selectedBranch={selectedBranch}
+              selectedCustomer={selectedCustomer}
+            />
+          )}
+          <DeleteCustomerModal
             isOpen={isDeleteModalOpen}
             onClose={handleCloseDeleteModal}
             onDelete={handleConfirmDeleteCustomer}
