@@ -65,7 +65,7 @@ const index = () => {
     dispatch(fetchAllCustomers());
   }, [dispatch]);
 
-  const handleRowActions = (row, table) => {
+  const handleAdminTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip arrow placement="left" title="Edit">
@@ -174,7 +174,7 @@ const index = () => {
             data={allcustomers}
             handleToolBar={handleToolBar}
             columns={mainTableColumns}
-            handleRowActions={handleRowActions}
+            handleAdminTableRowActions={handleAdminTableRowActions}
             handleNestedTable={handleNestedTable}
           />
           {isAddSidebarOpen && (

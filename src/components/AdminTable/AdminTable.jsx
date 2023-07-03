@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { MaterialReactTable } from 'material-react-table';
 
 
-const AdminTable = ({ columns,data, handleRowActions, handleNestedTable,handleToolBar }) => {
+const AdminTable = ({ columns,data, handleAdminTableRowActions, handleNestedTable,handleToolBar }) => {
   const [tableData, setTableData] = useState(() =>
   data?.map((customer, index) => ({
       ...customer,
@@ -21,7 +21,7 @@ const AdminTable = ({ columns,data, handleRowActions, handleNestedTable,handleTo
         enableRowSelection
         columns={columns}
         data={tableData}
-        renderRowActions={({ row, table }) => handleRowActions(row, table)}
+        renderRowActions={({ row, table }) => handleAdminTableRowActions(row, table)}
         renderDetailPanel={({ row }) => handleNestedTable(row)}
         renderTopToolbarCustomActions={({table})=>handleToolBar(table)}
       />
