@@ -6,7 +6,6 @@ import axiosInstance from './api';
 export const getAllCustomersApi = async () => {
   try {
     const response = await axiosInstance.get('/customer/getAll');
-    console.log(response);
     return response.data;
   } catch (error) {
     throw Error(error.response.data.error);

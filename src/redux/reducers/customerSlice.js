@@ -5,7 +5,6 @@ export const fetchAllCustomers = createAsyncThunk(
   'customers/fetchAll',
   async () => {
     const response = await getAllCustomersApi();
-    console.log(response.payload);
     return response.payload;
   }
 );
