@@ -1,7 +1,7 @@
 import { Button, TextField } from "@mui/material";
 import { useState } from "react";
 
-const Sidebar = ({ columns, initialValues, onClose, onSubmit }) => {
+const AddEditSidebar = ({ columns, initialValues, onClose, onSubmit }) => {
   const [formValues, setFormValues] = useState(initialValues || {});
 
   const handleChange = (event) => {
@@ -60,4 +60,4 @@ const Sidebar = ({ columns, initialValues, onClose, onSubmit }) => {
   );
 };
 
-export default Sidebar
+export default AddEditSidebar

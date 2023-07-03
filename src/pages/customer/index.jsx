@@ -9,6 +9,7 @@ import { ExportToCsv } from 'export-to-csv'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import AddCustomerSidebar from '@/components/customer/AddCustomerSidebar'
 
 const index = () => {
     const dispatch = useDispatch()
@@ -43,8 +44,17 @@ const index = () => {
         dispatch(fetchAllCustomers());
     }, []);
 
+    const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
 
-    const handleActions = () => {
+    const handleOpenAddSidebar = () => {
+        setIsAddSidebarOpen(true);
+    };
+
+    const handleCloseAddSidebar = () => {
+        setIsAddSidebarOpen(false);
+    };
+
+    const handleRowActions = () => {
         return (
             <Box sx={{ display: 'flex', gap: '1rem' }}>
                 <Tooltip arrow placement="left" title="Edit">
@@ -65,36 +75,37 @@ const index = () => {
         const handleExportRows = (rows) => {
             csvExporter.generateCsv(rows.map((row) => row.original));
         };
-        return (<Box
-            sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
-        >
-            <Button
-                disabled={table.getPrePaginationRowModel().rows.length === 0}
-                onClick={() =>
-                    handleExportRows(table.getPrePaginationRowModel().rows)
-                }
-                startIcon={<FileDownloadIcon />}
-                variant="contained"
+        return (
+            <Box
+                sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
             >
-                Export All Rows
-            </Button>
-            <Button
-                disabled={
-                    !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
-                }
-                onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
-                startIcon={<FileDownloadIcon />}
-                variant="contained"
-            >
-                Export Selected Rows
-            </Button>
-            <Button
-                variant="contained"
-            >
-                Add Customer
-            </Button>
-        </Box>)
-    }
+                <Button
+                    disabled={table.getPrePaginationRowModel().rows.length === 0}
+                    onClick={() =>
+                        handleExportRows(table.getPrePaginationRowModel().rows)
+                    }
+                    startIcon={<FileDownloadIcon />}
+                    variant="contained"
+                >
+                    Export All Rows
+                </Button>
+                <Button
+                    disabled={
+                        !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+                    }
+                    onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
+                    startIcon={<FileDownloadIcon />}
+                    variant="contained"
+                >
+                    Export Selected Rows
+                </Button>
+                <Button variant="contained" onClick={handleOpenAddSidebar}>
+                    Add Customer
+                </Button>
+            </Box>
+        );
+    };
+
     const handleNestedTable = (row) => {
         const nestedTableConfigurations = [
             {
@@ -104,13 +115,6 @@ const index = () => {
                 ],
                 data: row?.original?.branches,
             },
-            // {
-            //   header: 'vendors',
-            //   columns: [
-            //     { header: 'Name', accessorKey: 'name' },
-            //   ],
-            //   data: row?.original?.vendors,
-            // },
         ];
         return (
             <>
@@ -126,15 +130,32 @@ const index = () => {
         );
     };
 
+    const handleAddCustomer = (customerData) => {
+        console.log(customerData);
+         handleCloseAddSidebar();
+       };
+       console.log(isAddSidebarOpen);
     return (
         <Layout>
             <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
                 customers
             </Typography>
-            {allcustomers && <AdminTable data={allcustomers} handleToolBar={handleToolBar} columns={mainTableColumns} handleActions={handleActions} handleNestedTable={handleNestedTable} />}
+            {allcustomers && (
+                <>
+                    <AdminTable
+                        data={allcustomers}
+                        handleToolBar={handleToolBar}
+                        columns={mainTableColumns}
+                        handleRowActions={handleRowActions}
+                        handleNestedTable={handleNestedTable}
+                    />
+                    {isAddSidebarOpen && (
+                        <AddCustomerSidebar onClose={handleCloseAddSidebar} onSubmit={handleAddCustomer} />
+                    )}
+                </>
+            )}
         </Layout>
     )
 }
 
-
-export default index
+export default index;
