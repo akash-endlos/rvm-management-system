@@ -6,7 +6,8 @@ import axiosInstance from './api';
 export const getAllCustomersApi = async () => {
   try {
     const response = await axiosInstance.get('/customer/getAll');
-    return response.data;
+    console.log(response.data);
+    return response?.data?.payload?.Customer;
   } catch (error) {
     throw Error(error.response.data.error);
   }
@@ -15,7 +16,7 @@ export const getAllCustomersApi = async () => {
 
 export const createCustomerApi = async (customerData) => {
   try {
-    const response = await axiosInstance.post('/customers', customerData);
+    const response = await axiosInstance.post('/customer/add', customerData);
     return response.data;
   } catch (error) {
     throw Error(error.response.data.error);

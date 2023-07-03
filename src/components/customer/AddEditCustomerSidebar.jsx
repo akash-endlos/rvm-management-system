@@ -21,6 +21,7 @@ const schema = yup.object().shape({
 
 const AddEditCustomerSidebar = ({ onClose, onSubmit, selectedCustomer }) => {
   const vendors = useSelector((state) => state?.vendor?.vendors)
+  console.log(vendors);
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(fetchAllVendors())
@@ -73,7 +74,7 @@ const AddEditCustomerSidebar = ({ onClose, onSubmit, selectedCustomer }) => {
             {...register('vendorId', { required: true })}
             defaultValue={selectedCustomer?.vendorId || ''}
           >
-            {vendors.map((item, index) => (
+            {vendors.length>0 && vendors.map((item, index) => (
               <MenuItem key={index} value={item?._id}>
                 {item?.name}
               </MenuItem>

@@ -22,7 +22,7 @@ import * as yup from 'yup';
 import AdminNestedTable from '@/components/AdminTable/AdminNestedTable';
 import AdminTable from '@/components/AdminTable/AdminTable';
 import Layout from '@/layout/Layout';
-import { fetchAllCustomers } from '@/redux/reducers/customerSlice';
+import { createNewCustomer, fetchAllCustomers } from '@/redux/reducers/customerSlice';
 import AddEditCustomerSidebar from '@/components/customer/AddEditCustomerSidebar';
 import { FiGitBranch } from 'react-icons/fi';
 import DeleteModal from '@/components/customer/DeleteCustomerModal';
@@ -38,7 +38,7 @@ const schema = yup.object().shape({
 
 const Index = () => {
   const dispatch = useDispatch();
-  const allCustomers = useSelector((state) => state?.customer?.Customer);
+  const allCustomers = useSelector((state) => state?.customer);
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -227,6 +227,7 @@ const Index = () => {
       console.log('Updating customer', customerData);
     } else {
       // Add new customer
+      dispatch(createNewCustomer(customerData))
       console.log('Adding customer', customerData);
     }
     handleCloseAddSidebar();

@@ -5,7 +5,7 @@ export const fetchAllCustomers = createAsyncThunk(
   'customers/fetchAll',
   async () => {
     const response = await getAllCustomersApi();
-    return response.payload;
+    return response;
   }
 );
 
@@ -51,27 +51,28 @@ const customerSlice = createSlice({
         return action.payload;
       })
       .addCase(createNewCustomer.fulfilled, (state, action) => {
-        state.push(action.payload);
+        const newCustomer = action.payload;
+        state.push(newCustomer);
       })
       .addCase(fetchCustomer.fulfilled, (state, action) => {
         // Handle updating specific customer data in state
       })
       .addCase(updateCustomer.fulfilled, (state, action) => {
         const { customerId, customerData } = action.payload;
-        const customerIndex = state.findIndex((customer) => customer.id === customerId);
-        if (customerIndex !== -1) {
-          state[customerIndex] = { id: customerId, ...customerData };
-        }
+        return state.map((customer) => {
+          if (customer.id === customerId) {
+            return { id: customerId, ...customerData };
+          }
+          return customer;
+        });
       })
       .addCase(deleteCustomer.fulfilled, (state, action) => {
         const customerId = action.payload;
-        const customerIndex = state.findIndex((customer) => customer.id === customerId);
-        if (customerIndex !== -1) {
-          state.splice(customerIndex, 1);
-        }
+        return state.filter((customer) => customer.id !== customerId);
       });
   },
 });
+
 
 export const customerActions = customerSlice.actions;
 export const customerReducer = customerSlice.reducer;
