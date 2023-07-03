@@ -11,7 +11,7 @@ const AdminNestedTable = ({ columns, data,heading,handleAdminNestedTableRowActio
         enableColumnOrdering
         enablePinning
         positionActionsColumn="last"
-        enableRowSelection renderRowActions={({ row, table }) => handleAdminNestedTableRowActions(row, table)}
+        renderRowActions={({ row, table }) => handleAdminNestedTableRowActions(row, table)}
         columns={columns} data={data} />
   </>);
 };
