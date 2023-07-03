@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Button,
   TextField,
@@ -10,6 +10,8 @@ import {
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAllVendors } from '@/redux/reducers/vendorSlice';
 
 const schema = yup.object().shape({
   name: yup.string().required('Name is required'),
@@ -18,6 +20,12 @@ const schema = yup.object().shape({
 });
 
 const AddEditCustomerSidebar = ({ onClose, onSubmit, selectedCustomer }) => {
+  const vendors = useSelector((state) => state?.vendor?.vendors)
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(fetchAllVendors())
+  }, [])
+  console.log(selectedCustomer?.vendorId);
   const {
     handleSubmit,
     register,
@@ -63,13 +71,15 @@ const AddEditCustomerSidebar = ({ onClose, onSubmit, selectedCustomer }) => {
             labelId="vendorId-label"
             name="vendorId"
             {...register('vendorId', { required: true })}
-            defaultValue=""
+            defaultValue={selectedCustomer?.vendorId || ''}
           >
-            <MenuItem value="">Select Vendor ID</MenuItem>
-            <MenuItem value="vendor1">Vendor 1</MenuItem>
-            <MenuItem value="vendor2">Vendor 2</MenuItem>
-            <MenuItem value="vendor3">Vendor 3</MenuItem>
+            {vendors.map((item, index) => (
+              <MenuItem key={index} value={item?._id}>
+                {item?.name}
+              </MenuItem>
+            ))}
           </Select>
+
           <FormHelperText>{errors.vendorId?.message}</FormHelperText>
         </div>
         <div style={{ marginBottom: '10px' }}>
