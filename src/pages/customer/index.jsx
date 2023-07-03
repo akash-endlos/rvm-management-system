@@ -1,7 +1,6 @@
 "use client"
 import AdminNestedTable from '@/components/AdminTable/AdminNestedTable'
 import AdminTable from '@/components/AdminTable/AdminTable'
-import SidebarLayout from '@/components/SidebarLayout/SidebarLayout'
 import Layout from '@/layout/Layout'
 import { fetchAllCustomers } from '@/redux/reducers/customerSlice'
 import { Delete, Edit } from '@mui/icons-material'
