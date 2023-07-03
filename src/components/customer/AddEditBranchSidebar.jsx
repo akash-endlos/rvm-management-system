@@ -37,7 +37,7 @@ const AddEditBranchSidebar = ({ onClose, onSubmit, selectedBranch }) => {
         position: 'fixed',
         top: 0,
         right: 0,
-        width: '300px',
+        width: '500px',
         height: '100vh',
         backgroundColor: '#f0f0f0',
         padding: '1rem',

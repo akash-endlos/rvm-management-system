@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '@/redux/reducers/authSlice';
 import { useRouter } from 'next/router';
@@ -7,6 +8,7 @@ import { toast } from 'react-hot-toast';
 import {
   Box,
   Button,
+  CircularProgress,
   Container,
   TextField,
   Typography,
@@ -22,6 +24,7 @@ export default function Home() {
     formState: { errors },
     reset,
   } = useForm();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (token) {
@@ -31,12 +34,15 @@ export default function Home() {
 
   const onSubmit = async (data) => {
     try {
+      setLoading(true);
       await dispatch(loginUser(data)).unwrap();
       router.push('/dashboard');
       reset();
       toast.success('Logged in successfully');
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -98,8 +104,13 @@ export default function Home() {
                 color="primary"
                 size="large"
                 fullWidth
+                disabled={loading}
               >
-                Sign in
+                {loading ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  'Sign in'
+                )}
               </Button>
             </form>
           </Box>
