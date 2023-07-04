@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getAllVendorsApi, createVendorApi, getVendorApi, updateVendorApi, deleteVendorApi } from '../api/vendorApi';
+import { getAllVendorsApi, createVendorApi, getVendorApi, deleteVendorApi, updateVendorApi } from '../api/vendorApi';
 
 export const fetchAllVendors = createAsyncThunk(
   'vendors/fetchAll',
   async () => {
     const response = await getAllVendorsApi();
-    return response.payload;
+    console.log(response);
+    return response;
   }
 );
 
@@ -25,53 +26,71 @@ export const fetchVendor = createAsyncThunk(
   }
 );
 
-export const updateVendor = createAsyncThunk(
-  'vendors/update',
-  async ({ vendorId, vendorData }) => {
-    const response = await updateVendorApi(vendorId, vendorData);
-    return { vendorId, vendorData };
-  }
-);
-
 export const deleteVendor = createAsyncThunk(
   'vendors/delete',
   async (vendorId) => {
-    await deleteVendorApi(vendorId);
+    console.log(vendorId._id);
+    await deleteVendorApi(vendorId._id);
     return vendorId;
+  }
+);
+
+export const updateVendor = createAsyncThunk(
+  'vendors/update',
+  async (vendorData) => {
+    const response = await updateVendorApi(vendorData.id, { name: vendorData.name });
+    return response;
   }
 );
 
 const vendorSlice = createSlice({
   name: 'vendors',
   initialState: [],
-  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllVendors.fulfilled, (state, action) => {
-        return action.payload;
+        console.log(action.payload.payload.vendors);
+        const vendorsWithIndex = action.payload.payload.vendors.map((vendor, index) => ({
+          ...vendor,
+          index: index + 1,
+        }));
+        return vendorsWithIndex;
       })
-      .addCase(createNewVendor.fulfilled, (state, action) => {
-        state.push(action.payload);
+      .addCase(createNewVendor.fulfilled, (state, { payload }) => {
+        const newVendor = {
+          ...payload.payload.Vendor,
+          index: 1,
+        };
+        const updatedState = state.map((vendor) => ({
+          ...vendor,
+          index: vendor.index + 1,
+        }));
+        state.unshift(newVendor);
+        state.length = updatedState.length + 1;
+        state.splice(1, updatedState.length, ...updatedState);
       })
-      .addCase(fetchVendor.fulfilled, (state, action) => {
-        // Handle updating specific vendor data in state
+      .addCase(deleteVendor.fulfilled, (state, { payload }) => {
+        const updatedState = state.filter((vendor) => vendor._id !== payload._id);
+        const vendorsWithUpdatedIndex = updatedState.map((vendor, index) => ({
+          ...vendor,
+          index: index + 1,
+        }));
+        return vendorsWithUpdatedIndex;
       })
-      .addCase(updateVendor.fulfilled, (state, action) => {
-        const { vendorId, vendorData } = action.payload;
-        const vendorIndex = state.findIndex((vendor) => vendor.id === vendorId);
-        if (vendorIndex !== -1) {
-          state[vendorIndex] = { id: vendorId, ...vendorData };
+      .addCase(updateVendor.fulfilled, (state, { payload }) => {
+        const updatedVendor = payload.payload.updatedVendor;
+        const updatedIndex = state.findIndex((vendor) => vendor._id === updatedVendor._id);
+        if (updatedIndex !== -1) {
+          const newState = [...state]; // Create a new array
+          newState[updatedIndex] = {
+            ...updatedVendor,
+            index: state[updatedIndex].index, // Keep the existing index
+          };
+          return newState;
         }
-      })
-      .addCase(deleteVendor.fulfilled, (state, action) => {
-        const vendorId = action.payload;
-        const vendorIndex = state.findIndex((vendor) => vendor.id === vendorId);
-        if (vendorIndex !== -1) {
-          state.splice(vendorIndex, 1);
-        }
+        return state;
       });
   },
 });
 
-export const vendorActions = vendorSlice.actions;
 export const vendorReducer = vendorSlice.reducer;

@@ -11,6 +11,7 @@ const AdminTable = ({ columns,data, handleAdminTableRowActions, handleNestedTabl
         enableColumnFilterModes
         enableColumnOrdering
         enablePinning
+        enableClickToCopy
         positionActionsColumn="last"
         enableRowSelection
         columns={columns}

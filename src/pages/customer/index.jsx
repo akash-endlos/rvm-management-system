@@ -34,7 +34,6 @@ import { updateBranchApi } from '@/redux/api/branchApi';
 
 const Index = () => {
   const allcustomers = useSelector((state) => state.customer)
-  console.log(allcustomers);
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchData = async () => {
