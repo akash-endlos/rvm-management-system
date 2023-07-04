@@ -30,12 +30,20 @@ const customerSlice = createSlice({
   initialState: [],
   extraReducers: (builder) => {
     builder
-      .addCase(fetchAllCustomers.fulfilled, (state, action) => {
-        return [...action.payload];
-      })
-      .addCase(createNewCustomer.fulfilled, (state, {payload}) => {
-        state.push(payload.payload.Customer);
-      })         
+    .addCase(fetchAllCustomers.fulfilled, (state, action) => {
+      const customersWithIndex = action.payload.map((customer, index) => ({
+        ...customer,
+        index: index + 1, // Adding index starting from 1
+      }));
+      return customersWithIndex;
+    })
+    .addCase(createNewCustomer.fulfilled, (state, { payload }) => {
+      const newCustomer = {
+        ...payload.payload.Customer,
+        index: state.length + 1, // Calculate index based on the current length of the state array
+      };
+      state.push(newCustomer);
+    });    
   },
 });
 
