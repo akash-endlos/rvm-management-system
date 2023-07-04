@@ -8,7 +8,7 @@ import {
   IconButton
 } from '@mui/material';
 import AdminTable from '@/components/AdminTable/AdminTable';
-import { createNewVendor, deleteVendor, fetchAllVendors } from '@/redux/reducers/vendorSlice';
+import { createNewVendor, deleteVendor, fetchAllVendors, updateVendor } from '@/redux/reducers/vendorSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import AdminNestedTable from '@/components/AdminTable/AdminNestedTable';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
@@ -100,6 +100,17 @@ const index = () => {
   const handleAddVendor = async (vendorData) => {
     if (selectedVendor) {
       // Update existing customer
+      const updatedVendorData={
+        id:selectedVendor._id,
+        data:vendorData
+      }
+      console.log(updatedVendorData);
+      try {
+        dispatch(updateVendor(updatedVendorData))
+        toast.success('Vendor Updated Successfully')
+      } catch (error) {
+        console.log(error);
+      }
       console.log('Updating vendor', vendorData);
     } else {
       // Add new customer

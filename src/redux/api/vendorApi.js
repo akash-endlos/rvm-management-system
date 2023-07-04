@@ -29,7 +29,7 @@ export const createVendorApi = async (vendorData) => {
 
 export const updateVendorApi = async (vendorId, vendorData) => {
   try {
-    const response = await axiosInstance.put(`/vendors/${vendorId}`, vendorData);
+    const response = await axiosInstance.put(`/vendor/${vendorId}`, vendorData);
     return response.data;
   } catch (error) {
     throw Error(error.response.data.error);
