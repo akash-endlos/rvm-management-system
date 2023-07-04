@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getAllCustomersApi, createCustomerApi, getCustomerApi } from '../api/customerApi';
+import { getAllCustomersApi, createCustomerApi, getCustomerApi, deleteCustomerApi } from '../api/customerApi';
 
 export const fetchAllCustomers = createAsyncThunk(
   'customers/fetchAll',
@@ -24,6 +24,13 @@ export const fetchCustomer = createAsyncThunk(
     return response;
   }
 );
+export const deleteCustomer = createAsyncThunk(
+  'customers/delete',
+  async (customerId) => {
+    await deleteCustomerApi(customerId);
+    return customerId;
+  }
+);
 
 const customerSlice = createSlice({
   name: 'customers',
@@ -43,7 +50,12 @@ const customerSlice = createSlice({
         index: state.length + 1, 
       };
       state.push(newCustomer);
-    });    
+    })  
+    .addCase(deleteCustomer.fulfilled, (state, { payload }) => {
+      const deletedCustomerId = payload.id; 
+      const updatedState = state.filter((customer) => customer.id !== deletedCustomerId);
+      return updatedState;
+    });  
   },
 });
 

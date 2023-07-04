@@ -22,20 +22,13 @@ import * as yup from 'yup';
 import AdminNestedTable from '@/components/AdminTable/AdminNestedTable';
 import AdminTable from '@/components/AdminTable/AdminTable';
 import Layout from '@/layout/Layout';
-import { addCustomer, createNewCustomer, fetchAllCustomers, setCustomers } from '@/redux/reducers/customerSlice';
+import { addCustomer, createNewCustomer, deleteCustomer, fetchAllCustomers, setCustomers } from '@/redux/reducers/customerSlice';
 import AddEditCustomerSidebar from '@/components/customer/AddEditCustomerSidebar';
 import { FiGitBranch } from 'react-icons/fi';
-import DeleteModal from '@/components/customer/DeleteCustomerModal';
 import AddEditBranchSidebar from '@/components/customer/AddEditBranchSidebar';
 import DeleteCustomerModal from '@/components/customer/DeleteCustomerModal';
-import DeleteBranchModal from '@/components/customer/DeleteBranchModal';
 import { toast } from 'react-hot-toast';
-
-const schema = yup.object().shape({
-  name: yup.string().required('Name is required'),
-  vendorId: yup.string().required('Vendor ID is required'),
-  branchName: yup.string().optional(),
-});
+import DeleteBranchModal from '@/components/customer/DeleteBranchModal';
 
 const Index = () => {
   const allcustomers = useSelector((state) => state.customer)
@@ -55,6 +48,7 @@ const Index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleteBranchModalOpen, setIsDeleteBranchModalOpen] = useState(false);
   const [isAddBranchSidebarOpen, setIsAddBranchSidebarOpen] = useState(false); // New state for AddEditBranchSidebar
   const [selectedBranch, setSelectedBranch] = useState(null); // New state for AddEditBranchSidebar
 
@@ -199,12 +193,15 @@ const Index = () => {
   };
   const handleDeleteBranch = (branchData) => {
     setSelectedBranch(branchData);
-    setIsDeleteModalOpen(true);
+    setIsDeleteBranchModalOpen(true);
   };
 
   const handleCloseDeleteModal = () => {
     setIsDeleteModalOpen(false);
   };
+  const handleCloseDeleteBranchModal=()=>{
+    setIsDeleteBranchModalOpen(false)
+  }
 
   const handleConfirmDeleteCustomer = () => {
     // Perform delete operation on selectedCustomer
@@ -214,7 +211,7 @@ const Index = () => {
   const handleConfirmDeleteBranch = () => {
     // Perform delete operation on selectedCustomer
     console.log('Deleting branch', selectedBranch);
-    setIsDeleteModalOpen(false);
+    setIsDeleteBranchModalOpen(false);
   };
 
   const handleOpenAddBranchSidebar = (customerData) => {
@@ -297,8 +294,8 @@ const Index = () => {
           title='Customer'
         />
         <DeleteBranchModal
-          isOpen={isDeleteModalOpen}
-          onClose={handleCloseDeleteModal}
+          isOpen={isDeleteBranchModalOpen}
+          onClose={handleCloseDeleteBranchModal}
           onDelete={handleConfirmDeleteBranch}
           title='Branch'
         />

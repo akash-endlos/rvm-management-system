@@ -43,7 +43,7 @@ export const updateCustomerApi = async (customerId, customerData) => {
 
 export const deleteCustomerApi = async (customerId) => {
   try {
-    const response = await axiosInstance.delete(`/customers/${customerId}`);
+    const response = await axiosInstance.delete(`/customer/delete?id=${customerId}`);
     return response.data;
   } catch (error) {
     throw Error(error.response.data.error);
