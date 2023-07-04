@@ -12,7 +12,7 @@ const AdminNestedTable = ({ columns, data,heading,handleAdminNestedTableRowActio
         enablePinning
         positionActionsColumn="last"
         renderRowActions={({ row, table }) => handleAdminNestedTableRowActions(row, table)}
-        columns={columns} data={data} />
+        columns={columns} data={data.length >0 && data} />
   </>);
 };
 
