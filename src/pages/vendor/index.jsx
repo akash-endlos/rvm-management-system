@@ -24,7 +24,6 @@ const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
   const [isDeleteVendorModalOpen, setIsDeleteVendorModalOpen] = useState(false);
   const [selectedVendor, setSelectedVendor] = useState(null)
-  console.log(allvendors);
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchData = async () => {
