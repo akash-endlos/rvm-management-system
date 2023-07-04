@@ -3,12 +3,6 @@ import { MaterialReactTable } from 'material-react-table';
 
 
 const AdminTable = ({ columns,data, handleAdminTableRowActions, handleNestedTable,handleToolBar }) => {
-  const [tableData, setTableData] = useState(() =>
-  data?.map((customer, index) => ({
-      ...customer,
-      index: index + 1,
-  }))
-);
   return (
     <>
       <MaterialReactTable
@@ -20,7 +14,7 @@ const AdminTable = ({ columns,data, handleAdminTableRowActions, handleNestedTabl
         positionActionsColumn="last"
         enableRowSelection
         columns={columns}
-        data={tableData}
+        data={data}
         renderRowActions={({ row, table }) => handleAdminTableRowActions(row, table)}
         renderDetailPanel={({ row }) => handleNestedTable(row)}
         renderTopToolbarCustomActions={({table})=>handleToolBar(table)}

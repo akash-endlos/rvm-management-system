@@ -48,14 +48,16 @@ const customerSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllCustomers.fulfilled, (state, action) => {
-        console.log(state);
-        return state;
+        console.log(action.payload);
+        return action.payload;
       })
       .addCase(createNewCustomer.fulfilled, (state, action) => {
         const newCustomer = action.payload.payload.Customer;
-        console.log(newCustomer);
         console.log(state);
-        return [action.payload, ...state];
+        const allCustomers = [newCustomer, ...state]
+        console.log(newCustomer);
+        console.log(allCustomers);
+        return allCustomers;
       })         
       .addCase(fetchCustomer.fulfilled, (state, action) => {
         // Handle updating specific customer data in state

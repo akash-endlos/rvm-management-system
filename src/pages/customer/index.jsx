@@ -38,7 +38,20 @@ const schema = yup.object().shape({
 
 const Index = () => {
   const dispatch = useDispatch();
-  const allCustomers = useSelector((state) => state?.customer);
+  const [customers, setCustomers] = useState([])
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await dispatch(fetchAllCustomers());
+    const allcustomer =  data.payload?.map((customer, index) => ({
+        ...customer,
+        index: index + 1,
+    }))
+      setCustomers(allcustomer)
+    };
+  
+    fetchData();
+  }, [dispatch]);
+  console.log(customers);
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -73,9 +86,7 @@ const Index = () => {
 
   const csvExporter = new ExportToCsv(csvOptions);
 
-  useEffect(() => {
-    dispatch(fetchAllCustomers());
-  }, [dispatch]);
+
 
   const handleAdminTableRowActions = (row, table) => {
     return (
@@ -249,10 +260,9 @@ const Index = () => {
       <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
         Customers
       </Typography>
-      {allCustomers && (
         <>
           <AdminTable
-            data={allCustomers}
+            data={customers}
             handleToolBar={handleToolBar}
             columns={mainTableColumns}
             handleAdminTableRowActions={handleAdminTableRowActions}
@@ -286,7 +296,6 @@ const Index = () => {
             title='Branch'
           />
         </>
-      )}
     </Layout>
   );
 };
