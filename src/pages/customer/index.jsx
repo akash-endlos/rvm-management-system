@@ -166,7 +166,7 @@ const Index = () => {
             <Typography variant="h5" style={{ fontWeight: 'bold', color: 'teal' }}>
               {config?.header}
             </Typography>
-            {config?.data?.length>0 && <AdminNestedTable handleAdminNestedTableRowActions={handleAdminNestedTableRowActions} columns={config?.columns} data={config?.data} />}
+            <AdminNestedTable handleAdminNestedTableRowActions={handleAdminNestedTableRowActions} columns={config?.columns} data={config?.data} />
           </>
         ))}
       </>
