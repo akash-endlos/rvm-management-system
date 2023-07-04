@@ -29,6 +29,7 @@ import DeleteModal from '@/components/customer/DeleteCustomerModal';
 import AddEditBranchSidebar from '@/components/customer/AddEditBranchSidebar';
 import DeleteCustomerModal from '@/components/customer/DeleteCustomerModal';
 import DeleteBranchModal from '@/components/customer/DeleteBranchModal';
+import { toast } from 'react-hot-toast';
 
 const schema = yup.object().shape({
   name: yup.string().required('Name is required'),
@@ -238,7 +239,13 @@ const Index = () => {
     } else {
       // Add new customer
       dispatch(createNewCustomer(customerData))
-      console.log('Add customer', customerData);
+    .then(() => {
+      toast.success('Customer added successfully');
+    })
+    .catch((error) => {
+      console.error('Failed to add customer', error);
+      // Handle the error, show an error message, or perform other actions
+    });
       // addCustomer(newcustomer.payload);
     }
     handleCloseAddSidebar();
