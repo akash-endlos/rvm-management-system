@@ -29,8 +29,8 @@ export const fetchVendor = createAsyncThunk(
 export const deleteVendor = createAsyncThunk(
   'vendors/delete',
   async (vendorId) => {
-    console.log(vendorId._id);
-    await deleteVendorApi(vendorId._id);
+    console.log(vendorId);
+    await deleteVendorApi(vendorId);
     return vendorId;
   }
 );
@@ -71,7 +71,8 @@ const vendorSlice = createSlice({
         state.splice(1, updatedState.length, ...updatedState);
       })
       .addCase(deleteVendor.fulfilled, (state, { payload }) => {
-        const updatedState = state.filter((vendor) => vendor._id !== payload._id);
+        console.log(payload);
+        const updatedState = state.filter((vendor) => vendor._id !== payload);
         const vendorsWithUpdatedIndex = updatedState.map((vendor, index) => ({
           ...vendor,
           index: index + 1,

@@ -8,7 +8,7 @@ import {
   IconButton
 } from '@mui/material';
 import AdminTable from '@/components/AdminTable/AdminTable';
-import { createNewVendor, fetchAllVendors } from '@/redux/reducers/vendorSlice';
+import { createNewVendor, deleteVendor, fetchAllVendors } from '@/redux/reducers/vendorSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import AdminNestedTable from '@/components/AdminTable/AdminNestedTable';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
@@ -185,7 +185,13 @@ const index = () => {
   const handleCloseDeleteModal = () => {
     setIsDeleteVendorModalOpen(false);
   };
-  const handleConfirmDeleteVendor = () => {
+  const handleConfirmDeleteVendor = async () => {
+    try {
+     await dispatch(deleteVendor(selectedVendor._id))
+      toast.success('Vendor Delete Successfully')
+    } catch (error) {
+      console.log(error);
+    }
     console.log('Deleting branch', selectedVendor);
     setIsDeleteVendorModalOpen(false);
   };

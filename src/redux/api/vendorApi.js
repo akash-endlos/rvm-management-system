@@ -38,7 +38,7 @@ export const updateVendorApi = async (vendorId, vendorData) => {
 
 export const deleteVendorApi = async (vendorId) => {
   try {
-    const response = await axiosInstance.delete(`/vendors/${vendorId}`);
+    const response = await axiosInstance.delete(`/vendor/${vendorId}`);
     return response.data;
   } catch (error) {
     throw Error(error.response.data.error);
