@@ -36,18 +36,13 @@ const Index = () => {
   useEffect(() => {
     const fetchData = async () => {
       await dispatch(fetchAllCustomers());
-      // const allcustomer = data.payload?.map((customer, index) => ({
-      //   ...customer,
-      //   index: index + 1,
-      // }))
     };
 
     fetchData();
   }, [dispatch]);
-  console.log(allcustomers);
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleteCustomerModalOpen, setIsDeleteCustomerModalOpen] = useState(false);
   const [isDeleteBranchModalOpen, setIsDeleteBranchModalOpen] = useState(false);
   const [isAddBranchSidebarOpen, setIsAddBranchSidebarOpen] = useState(false); // New state for AddEditBranchSidebar
   const [selectedBranch, setSelectedBranch] = useState(null); // New state for AddEditBranchSidebar
@@ -189,7 +184,7 @@ const Index = () => {
 
   const handleDeleteCustomer = (customerData) => {
     setSelectedCustomer(customerData);
-    setIsDeleteModalOpen(true);
+    setIsDeleteCustomerModalOpen(true);
   };
   const handleDeleteBranch = (branchData) => {
     setSelectedBranch(branchData);
@@ -197,7 +192,7 @@ const Index = () => {
   };
 
   const handleCloseDeleteModal = () => {
-    setIsDeleteModalOpen(false);
+    setIsDeleteCustomerModalOpen(false);
   };
   const handleCloseDeleteBranchModal=()=>{
     setIsDeleteBranchModalOpen(false)
@@ -207,7 +202,7 @@ const Index = () => {
     dispatch(deleteCustomer(selectedCustomer))
       .then(() => {
         toast.success('Customer Delete Successfully')
-        setIsDeleteModalOpen(false);
+        setIsDeleteCustomerModalOpen(false);
       })
       .catch((error) => {
         console.error('Error deleting customer:', error);
@@ -307,7 +302,7 @@ const Index = () => {
           />
         )}
         <DeleteCustomerModal
-          isOpen={isDeleteModalOpen}
+          isOpen={isDeleteCustomerModalOpen}
           onClose={handleCloseDeleteModal}
           onDelete={handleConfirmDeleteCustomer}
           title='Customer'
