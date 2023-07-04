@@ -58,10 +58,18 @@ const customerSlice = createSlice({
       .addCase(createNewCustomer.fulfilled, (state, { payload }) => {
         const newCustomer = {
           ...payload.payload.Customer,
-          index: state.length + 1,
+          index: 1, 
         };
-        state.push(newCustomer);
+        const updatedState = state.map((customer) => ({
+          ...customer,
+          index: customer.index + 1, 
+        }));
+        state.unshift(newCustomer); 
+        state.length = updatedState.length + 1;
+        state.splice(1, updatedState.length, ...updatedState); 
       })
+      
+      
       .addCase(deleteCustomer.fulfilled, (state, { payload }) => {
         const updatedState = state.filter((customer) => customer._id !== payload._id);
         const customersWithUpdatedIndex = updatedState.map((customer, index) => ({
