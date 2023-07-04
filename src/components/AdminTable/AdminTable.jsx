@@ -16,7 +16,7 @@ const AdminTable = ({ columns,data, handleAdminTableRowActions, handleNestedTabl
         columns={columns}
         data={data}
         renderRowActions={({ row, table }) => handleAdminTableRowActions(row, table)}
-        renderDetailPanel={({ row }) => handleNestedTable(row)}
+        renderDetailPanel={({ row,table }) => handleNestedTable(row,table)}
         renderTopToolbarCustomActions={({table})=>handleToolBar(table)}
       />
     </>)

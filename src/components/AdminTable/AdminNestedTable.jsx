@@ -5,14 +5,14 @@ const AdminNestedTable = ({ columns, data,heading,handleAdminNestedTableRowActio
 
   return (
   <> 
-    <MaterialReactTable  enableRowActions
+    {data && <MaterialReactTable  enableRowActions
         enableFilters
         enableColumnFilterModes
         enableColumnOrdering
         enablePinning
         positionActionsColumn="last"
         renderRowActions={({ row, table }) => handleAdminNestedTableRowActions(row, table)}
-        columns={columns} data={data.length >0 && data} />
+        columns={columns} data={data} />}
   </>);
 };
 
