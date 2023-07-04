@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getAllCustomersApi, createCustomerApi, getCustomerApi, updateCustomerApi, deleteCustomerApi } from '../api/customerApi';
+import { getAllCustomersApi, createCustomerApi, getCustomerApi } from '../api/customerApi';
 
 export const fetchAllCustomers = createAsyncThunk(
   'customers/fetchAll',
@@ -25,59 +25,20 @@ export const fetchCustomer = createAsyncThunk(
   }
 );
 
-export const updateCustomer = createAsyncThunk(
-  'customers/update',
-  async ({ customerId, customerData }) => {
-    const response = await updateCustomerApi(customerId, customerData);
-    return { customerId, customerData };
-  }
-);
-
-export const deleteCustomer = createAsyncThunk(
-  'customers/delete',
-  async (customerId) => {
-    await deleteCustomerApi(customerId);
-    return customerId;
-  }
-);
-
 const customerSlice = createSlice({
   name: 'customers',
   initialState: [],
-  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllCustomers.fulfilled, (state, action) => {
-        console.log(action.payload);
-        return action.payload;
+        return [...action.payload];
       })
-      .addCase(createNewCustomer.fulfilled, (state, action) => {
-        const newCustomer = action.payload.payload.Customer;
-        console.log(state);
-        const allCustomers = [newCustomer, ...state]
-        console.log(newCustomer);
-        console.log(allCustomers);
-        return allCustomers;
+      .addCase(createNewCustomer.fulfilled, (state, {payload}) => {
+        state.push(payload.payload.Customer);
       })         
-      .addCase(fetchCustomer.fulfilled, (state, action) => {
-        // Handle updating specific customer data in state
-      })
-      .addCase(updateCustomer.fulfilled, (state, action) => {
-        const { customerId, customerData } = action.payload;
-        return state.map((customer) => {
-          if (customer.id === customerId) {
-            return { id: customerId, ...customerData };
-          }
-          return customer;
-        });
-      })
-      .addCase(deleteCustomer.fulfilled, (state, action) => {
-        const customerId = action.payload;
-        return state.filter((customer) => customer.id !== customerId);
-      });
   },
 });
 
 
-export const customerActions = customerSlice.actions;
+export const { setCustomers, addCustomer } = customerSlice.actions;
 export const customerReducer = customerSlice.reducer;

@@ -22,7 +22,7 @@ import * as yup from 'yup';
 import AdminNestedTable from '@/components/AdminTable/AdminNestedTable';
 import AdminTable from '@/components/AdminTable/AdminTable';
 import Layout from '@/layout/Layout';
-import { createNewCustomer, fetchAllCustomers } from '@/redux/reducers/customerSlice';
+import { addCustomer, createNewCustomer, fetchAllCustomers, setCustomers } from '@/redux/reducers/customerSlice';
 import AddEditCustomerSidebar from '@/components/customer/AddEditCustomerSidebar';
 import { FiGitBranch } from 'react-icons/fi';
 import DeleteModal from '@/components/customer/DeleteCustomerModal';
@@ -37,21 +37,20 @@ const schema = yup.object().shape({
 });
 
 const Index = () => {
+  const allcustomers = useSelector((state) => state.customer)
   const dispatch = useDispatch();
-  const [customers, setCustomers] = useState([])
   useEffect(() => {
     const fetchData = async () => {
-      const data = await dispatch(fetchAllCustomers());
-    const allcustomer =  data.payload?.map((customer, index) => ({
-        ...customer,
-        index: index + 1,
-    }))
-      setCustomers(allcustomer)
+      await dispatch(fetchAllCustomers());
+      // const allcustomer = data.payload?.map((customer, index) => ({
+      //   ...customer,
+      //   index: index + 1,
+      // }))
     };
-  
+
     fetchData();
   }, [dispatch]);
-  console.log(customers);
+  console.log(allcustomers);
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -127,7 +126,7 @@ const Index = () => {
     );
   };
 
-  
+
   const handleToolBar = (table) => {
     const handleExportRows = (rows) => {
       csvExporter.generateCsv(rows.map((row) => row.original));
@@ -232,14 +231,15 @@ const Index = () => {
     setIsAddBranchSidebarOpen(true);
   };
 
-  const handleAddCustomer = (customerData) => {
+  const handleAddCustomer = async (customerData) => {
     if (selectedCustomer) {
       // Update existing customer
       console.log('Updating customer', customerData);
     } else {
       // Add new customer
       dispatch(createNewCustomer(customerData))
-      console.log('Adding customer', customerData);
+      console.log('Add customer', customerData);
+      // addCustomer(newcustomer.payload);
     }
     handleCloseAddSidebar();
   };
@@ -260,42 +260,42 @@ const Index = () => {
       <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
         Customers
       </Typography>
-        <>
-          <AdminTable
-            data={customers}
-            handleToolBar={handleToolBar}
-            columns={mainTableColumns}
-            handleAdminTableRowActions={handleAdminTableRowActions}
-            handleNestedTable={handleNestedTable}
+      <>
+        <AdminTable
+          data={allcustomers}
+          handleToolBar={handleToolBar}
+          columns={mainTableColumns}
+          handleAdminTableRowActions={handleAdminTableRowActions}
+          handleNestedTable={handleNestedTable}
+        />
+        {isAddSidebarOpen && (
+          <AddEditCustomerSidebar
+            onClose={handleCloseAddSidebar}
+            onSubmit={handleAddCustomer}
+            selectedCustomer={selectedCustomer}
           />
-          {isAddSidebarOpen && (
-            <AddEditCustomerSidebar
-              onClose={handleCloseAddSidebar}
-              onSubmit={handleAddCustomer}
-              selectedCustomer={selectedCustomer}
-            />
-          )}
-          {isAddBranchSidebarOpen && (
-            <AddEditBranchSidebar
-              onClose={handleCloseAddBranchSidebar}
-              onSubmit={handleAddBranch}
-              selectedBranch={selectedBranch}
-              selectedCustomer={selectedCustomer}
-            />
-          )}
-          <DeleteCustomerModal
-            isOpen={isDeleteModalOpen}
-            onClose={handleCloseDeleteModal}
-            onDelete={handleConfirmDeleteCustomer}
-            title='Customer'
+        )}
+        {isAddBranchSidebarOpen && (
+          <AddEditBranchSidebar
+            onClose={handleCloseAddBranchSidebar}
+            onSubmit={handleAddBranch}
+            selectedBranch={selectedBranch}
+            selectedCustomer={selectedCustomer}
           />
-           <DeleteBranchModal
-            isOpen={isDeleteModalOpen}
-            onClose={handleCloseDeleteModal}
-            onDelete={handleConfirmDeleteBranch}
-            title='Branch'
-          />
-        </>
+        )}
+        <DeleteCustomerModal
+          isOpen={isDeleteModalOpen}
+          onClose={handleCloseDeleteModal}
+          onDelete={handleConfirmDeleteCustomer}
+          title='Customer'
+        />
+        <DeleteBranchModal
+          isOpen={isDeleteModalOpen}
+          onClose={handleCloseDeleteModal}
+          onDelete={handleConfirmDeleteBranch}
+          title='Branch'
+        />
+      </>
     </Layout>
   );
 };
