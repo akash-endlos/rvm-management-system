@@ -166,7 +166,7 @@ const Index = () => {
             <Typography variant="h5" style={{ fontWeight: 'bold', color: 'teal' }}>
               {config?.header}
             </Typography>
-            <AdminNestedTable handleAdminNestedTableRowActions={handleAdminNestedTableRowActions} columns={config?.columns} data={config?.data} />
+            {config?.data?.length>0 && <AdminNestedTable handleAdminNestedTableRowActions={handleAdminNestedTableRowActions} columns={config?.columns} data={config?.data} />}
           </>
         ))}
       </>
@@ -206,8 +206,20 @@ const Index = () => {
   const handleConfirmDeleteCustomer = () => {
     // Perform delete operation on selectedCustomer
     console.log('Deleting customer', selectedCustomer);
-    setIsDeleteModalOpen(false);
+  
+    // Assuming you're making an asynchronous API call to delete the customer
+    dispatch(deleteCustomer(selectedCustomer))
+      .then(() => {
+        toast.success('Customer Delete Successfully')
+        setIsDeleteModalOpen(false);
+      })
+      .catch((error) => {
+        // Error occurred during delete operation
+        console.error('Error deleting customer:', error);
+        // Handle the error here, such as showing an error message to the user
+      });
   };
+  
   const handleConfirmDeleteBranch = () => {
     // Perform delete operation on selectedCustomer
     console.log('Deleting branch', selectedBranch);

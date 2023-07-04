@@ -27,7 +27,8 @@ export const fetchCustomer = createAsyncThunk(
 export const deleteCustomer = createAsyncThunk(
   'customers/delete',
   async (customerId) => {
-    await deleteCustomerApi(customerId);
+    console.log(customerId._id);
+    await deleteCustomerApi(customerId._id);
     return customerId;
   }
 );
@@ -52,8 +53,7 @@ const customerSlice = createSlice({
       state.push(newCustomer);
     })  
     .addCase(deleteCustomer.fulfilled, (state, { payload }) => {
-      const deletedCustomerId = payload.id; 
-      const updatedState = state.filter((customer) => customer.id !== deletedCustomerId);
+      const updatedState = state.filter((customer) => customer._id !== payload._id);
       return updatedState;
     });  
   },
