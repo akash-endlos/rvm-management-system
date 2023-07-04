@@ -34,10 +34,10 @@ export const getCustomerApi = async (customerId) => {
 
 export const updateCustomerApi = async (customerId, customerData) => {
   try {
-    const response = await axiosInstance.put(`/customers/${customerId}`, customerData);
+    const response = await axiosInstance.put(`customer/update?id=${customerId}`, customerData);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw Error(error.response.data.message);
   }
 };
 

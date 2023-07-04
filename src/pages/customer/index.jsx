@@ -22,7 +22,7 @@ import * as yup from 'yup';
 import AdminNestedTable from '@/components/AdminTable/AdminNestedTable';
 import AdminTable from '@/components/AdminTable/AdminTable';
 import Layout from '@/layout/Layout';
-import { addCustomer, createNewCustomer, deleteCustomer, fetchAllCustomers, setCustomers } from '@/redux/reducers/customerSlice';
+import { addCustomer, createNewCustomer, deleteCustomer, fetchAllCustomers, setCustomers, updateCustomer } from '@/redux/reducers/customerSlice';
 import AddEditCustomerSidebar from '@/components/customer/AddEditCustomerSidebar';
 import { FiGitBranch } from 'react-icons/fi';
 import AddEditBranchSidebar from '@/components/customer/AddEditBranchSidebar';
@@ -204,19 +204,13 @@ const Index = () => {
   }
 
   const handleConfirmDeleteCustomer = () => {
-    // Perform delete operation on selectedCustomer
-    console.log('Deleting customer', selectedCustomer);
-  
-    // Assuming you're making an asynchronous API call to delete the customer
     dispatch(deleteCustomer(selectedCustomer))
       .then(() => {
         toast.success('Customer Delete Successfully')
         setIsDeleteModalOpen(false);
       })
       .catch((error) => {
-        // Error occurred during delete operation
         console.error('Error deleting customer:', error);
-        // Handle the error here, such as showing an error message to the user
       });
   };
   
@@ -244,6 +238,19 @@ const Index = () => {
   const handleAddCustomer = async (customerData) => {
     if (selectedCustomer) {
       // Update existing customer
+      const newCustomer={
+        id:selectedCustomer._id,
+        name:customerData.name
+      }
+      dispatch(updateCustomer(newCustomer))
+      .then(() => {
+        // Handle success case here
+        toast.success('Customer update successfully');
+      })
+      .catch((error) => {
+        // Handle error case here
+        console.error('Error updating customer:', error);
+      });
       console.log('Updating customer', customerData);
     } else {
       // Add new customer
