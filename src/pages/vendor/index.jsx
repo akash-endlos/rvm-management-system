@@ -1,16 +1,29 @@
 import Layout from '@/layout/Layout'
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
   Typography,
-  Box
+  Box,
+  Button,
+  Tooltip,
+  IconButton
 } from '@mui/material';
 import AdminTable from '@/components/AdminTable/AdminTable';
-import { fetchAllVendors } from '@/redux/reducers/vendorSlice';
+import { createNewVendor, fetchAllVendors } from '@/redux/reducers/vendorSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import AdminNestedTable from '@/components/AdminTable/AdminNestedTable';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import { ExportToCsv } from 'export-to-csv';
+import { Delete, Edit } from '@mui/icons-material';
+import { FiGitBranch } from 'react-icons/fi';
+import AddEditVendorSidebar from '@/components/vendor/AddEditVendorSidebar';
+import DeleteVendorModal from '@/components/vendor/DeleteVendorModal';
+import { toast } from 'react-hot-toast';
 
 const index = () => {
   const allvendors = useSelector((state) => state.vendor)
+  const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
+  const [isDeleteVendorModalOpen, setIsDeleteVendorModalOpen] = useState(false);
+  const [selectedVendor, setSelectedVendor] = useState(null)
   console.log(allvendors);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -40,13 +53,25 @@ const index = () => {
     ],
     []
   );
+  const csvOptions = {
+    fieldSeparator: ',',
+    quoteStrings: '"',
+    decimalSeparator: '.',
+    showLabels: true,
+    useBom: true,
+    useKeysAsHeaders: false,
+    headers: mainTableColumns.map((c) => c.header),
+  };
+
+  const csvExporter = new ExportToCsv(csvOptions);
+
   const handleToolBar = (table) => {
     const handleExportRows = (rows) => {
       csvExporter.generateCsv(rows.map((row) => row.original));
     };
     return (
       <Box sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}>
-        {/* <Button
+        <Button
           disabled={table.getPrePaginationRowModel().rows.length === 0}
           onClick={() => handleExportRows(table.getPrePaginationRowModel().rows)}
           startIcon={<FileDownloadIcon />}
@@ -64,20 +89,48 @@ const index = () => {
         </Button>
         <Button variant="contained" onClick={handleOpenAddSidebar}>
           Add Customer
-        </Button> */}
+        </Button>
       </Box>
     );
+  };
+  const handleOpenAddSidebar = () => {
+    setSelectedVendor(null)
+    setIsAddSidebarOpen(true);
+  };
+  const handleAddVendor = async (vendorData) => {
+    if (selectedVendor) {
+      // Update existing customer
+      console.log('Updating vendor', vendorData);
+    } else {
+      // Add new customer
+      try {
+        dispatch(createNewVendor(vendorData))
+        toast.success('Vendor Added Successfully')
+      } catch (error) {
+        console.log(error);
+      }
+      console.log('Add vendor', vendorData);
+    }
+    handleCloseAddSidebar();
+  };
+  const handleEditVendor = (vendorData) => {
+    setSelectedVendor(vendorData);
+    setIsAddSidebarOpen(true);
+  };
+  const handleDeleteVendor = (vendorData) => {
+    setSelectedVendor(vendorData);
+    setIsDeleteVendorModalOpen(true);
   };
   const handleAdminTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
-        {/* <Tooltip arrow placement="left" title="Edit Customer">
-          <IconButton onClick={() => handleEditCustomer(row.original)}>
+        <Tooltip arrow placement="left" title="Edit Customer">
+          <IconButton onClick={() => handleEditVendor(row.original)}>
             <Edit />
           </IconButton>
         </Tooltip>
         <Tooltip arrow placement="right" title="Delete Customer">
-          <IconButton color="error" onClick={() => handleDeleteCustomer(row.original)}>
+          <IconButton color="error" onClick={() => handleDeleteVendor(row.original)}>
             <Delete />
           </IconButton>
         </Tooltip>
@@ -85,7 +138,7 @@ const index = () => {
           <IconButton color="secondary" onClick={() => handleOpenAddBranchSidebar(row.original)}>
             <FiGitBranch />
           </IconButton>
-        </Tooltip> */}
+        </Tooltip>
       </Box>
     );
   };
@@ -126,18 +179,41 @@ const index = () => {
       </>
     );
   };
+  const handleCloseAddSidebar = () => {
+    setIsAddSidebarOpen(false);
+  };
+  const handleCloseDeleteModal = () => {
+    setIsDeleteVendorModalOpen(false);
+  };
+  const handleConfirmDeleteVendor = () => {
+    console.log('Deleting branch', selectedVendor);
+    setIsDeleteVendorModalOpen(false);
+  };
   return (
     <Layout>
       <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
         Vendors
       </Typography>
       <AdminTable
-          data={allvendors}
-          handleToolBar={handleToolBar}
-          columns={mainTableColumns}
-          handleAdminTableRowActions={handleAdminTableRowActions}
-          handleNestedTable={handleNestedTable}
+        data={allvendors}
+        handleToolBar={handleToolBar}
+        columns={mainTableColumns}
+        handleAdminTableRowActions={handleAdminTableRowActions}
+        handleNestedTable={handleNestedTable}
+      />
+      {isAddSidebarOpen && (
+        <AddEditVendorSidebar
+          onClose={handleCloseAddSidebar}
+          onSubmit={handleAddVendor}
+          selectedVendor={selectedVendor}
         />
+      )}
+      <DeleteVendorModal
+        isOpen={isDeleteVendorModalOpen}
+        onClose={handleCloseDeleteModal}
+        onDelete={handleConfirmDeleteVendor}
+        title='Vendor'
+      />
     </Layout>
   )
 }

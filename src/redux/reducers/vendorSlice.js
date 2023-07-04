@@ -57,8 +57,9 @@ const vendorSlice = createSlice({
         return vendorsWithIndex;
       })
       .addCase(createNewVendor.fulfilled, (state, { payload }) => {
+        console.log(payload);
         const newVendor = {
-          ...payload.payload.Vendor,
+          ...payload.payload.vendor,
           index: 1,
         };
         const updatedState = state.map((vendor) => ({
