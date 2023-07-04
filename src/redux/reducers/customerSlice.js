@@ -33,14 +33,14 @@ const customerSlice = createSlice({
     .addCase(fetchAllCustomers.fulfilled, (state, action) => {
       const customersWithIndex = action.payload.map((customer, index) => ({
         ...customer,
-        index: index + 1, // Adding index starting from 1
+        index: index + 1, 
       }));
       return customersWithIndex;
     })
     .addCase(createNewCustomer.fulfilled, (state, { payload }) => {
       const newCustomer = {
         ...payload.payload.Customer,
-        index: state.length + 1, // Calculate index based on the current length of the state array
+        index: state.length + 1, 
       };
       state.push(newCustomer);
     });    
