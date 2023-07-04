@@ -75,11 +75,15 @@ const customerSlice = createSlice({
         const updatedIndex = state.findIndex((customer) => customer._id === updatedCustomer._id);
         if (updatedIndex !== -1) {
           const newState = [...state]; // Create a new array
-          newState[updatedIndex] = updatedCustomer; // Update the specific customer
+          newState[updatedIndex] = {
+            ...updatedCustomer,
+            index: state[updatedIndex].index // Keep the existing index
+          };
           return newState;
         }
         return state;
-      });
+      })
+      
       
   },
 });
