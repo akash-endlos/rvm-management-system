@@ -65,7 +65,7 @@ const AddEditCustomerSidebar = ({ onClose, onSubmit, selectedCustomer }) => {
           <TextField fullWidth name="name" {...register('name')} />
           <FormHelperText>{errors.name?.message}</FormHelperText>
         </div>
-        <div style={{ marginBottom: '10px' }}>
+       {!selectedCustomer && <div style={{ marginBottom: '10px' }}>
           <InputLabel id="vendorId-label">Vendor ID</InputLabel>
           <Select
             fullWidth
@@ -82,8 +82,8 @@ const AddEditCustomerSidebar = ({ onClose, onSubmit, selectedCustomer }) => {
           </Select>
 
           <FormHelperText>{errors.vendorId?.message}</FormHelperText>
-        </div>
-        <div style={{ marginBottom: '10px' }}>
+        </div>}
+        {!selectedCustomer && <div style={{ marginBottom: '10px' }}>
           <InputLabel>Branch Name (Optional)</InputLabel>
           <TextField
             fullWidth
@@ -92,7 +92,7 @@ const AddEditCustomerSidebar = ({ onClose, onSubmit, selectedCustomer }) => {
             error={!!errors.branchName}
             helperText={errors.branchName?.message}
           />
-        </div>
+        </div>}
         <Button
           type="submit"
           color="primary"
