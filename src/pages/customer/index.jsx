@@ -22,16 +22,18 @@ import * as yup from 'yup';
 import AdminNestedTable from '@/components/AdminTable/AdminNestedTable';
 import AdminTable from '@/components/AdminTable/AdminTable';
 import Layout from '@/layout/Layout';
-import { addCustomer, createNewCustomer, deleteCustomer, fetchAllCustomers, setCustomers, updateCustomer } from '@/redux/reducers/customerSlice';
+import { addCustomer, createNewCustomer, deleteCustomer, fetchAllCustomers, fetchCustomer, setCustomers, updateCustomer } from '@/redux/reducers/customerSlice';
 import AddEditCustomerSidebar from '@/components/customer/AddEditCustomerSidebar';
 import { FiGitBranch } from 'react-icons/fi';
 import AddEditBranchSidebar from '@/components/customer/AddEditBranchSidebar';
 import DeleteCustomerModal from '@/components/customer/DeleteCustomerModal';
 import { toast } from 'react-hot-toast';
 import DeleteBranchModal from '@/components/customer/DeleteBranchModal';
+import { createNewBranch } from '@/redux/reducers/branchSlice';
 
 const Index = () => {
   const allcustomers = useSelector((state) => state.customer)
+  console.log(allcustomers);
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchData = async () => {
@@ -261,14 +263,23 @@ const Index = () => {
     }
     handleCloseAddSidebar();
   };
-
-  const handleAddBranch = (branchData) => {
+  const handleAddBranch = async (branchData) => {
     if (selectedBranch) {
       // Update existing branch
       console.log('Updating branch', branchData);
     } else {
+      const addNewData={
+        customerId:selectedCustomer?._id,
+        name:branchData?.branchName
+      }
       // Add new branch
-      console.log('Adding branch', branchData);
+      try {
+        await dispatch(createNewBranch(addNewData))
+        await dispatch(fetchAllCustomers())
+      } catch (error) {
+        console.log(error);
+      }
+      // console.log('Adding branch', addNewData,branchData);
     }
     handleCloseAddBranchSidebar();
   };

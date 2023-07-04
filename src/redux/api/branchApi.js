@@ -20,7 +20,7 @@ export const getBranchApi = async (branchId) => {
 
 export const createBranchApi = async (branchData) => {
   try {
-    const response = await axiosInstance.post('/branches', branchData);
+    const response = await axiosInstance.post('/branch/add', branchData);
     return response.data;
   } catch (error) {
     throw Error(error.response.data.error);
