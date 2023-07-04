@@ -29,7 +29,7 @@ export const createBranchApi = async (branchData) => {
 
 export const updateBranchApi = async (branchId, branchData) => {
   try {
-    const response = await axiosInstance.put(`/branches/${branchId}`, branchData);
+    const response = await axiosInstance.put(`/branch/update?id=${branchId}`, branchData);
     return response.data;
   } catch (error) {
     throw Error(error.response.data.error);
@@ -38,7 +38,7 @@ export const updateBranchApi = async (branchId, branchData) => {
 
 export const deleteBranchApi = async (branchId) => {
   try {
-    const response = await axiosInstance.delete(`/branches/${branchId}`);
+    const response = await axiosInstance.delete(`/branch/delete?id=${branchId}`);
     return response.data;
   } catch (error) {
     throw Error(error.response.data.error);

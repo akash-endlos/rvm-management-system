@@ -29,7 +29,8 @@ import AddEditBranchSidebar from '@/components/customer/AddEditBranchSidebar';
 import DeleteCustomerModal from '@/components/customer/DeleteCustomerModal';
 import { toast } from 'react-hot-toast';
 import DeleteBranchModal from '@/components/customer/DeleteBranchModal';
-import { createNewBranch } from '@/redux/reducers/branchSlice';
+import { createNewBranch, deleteBranch, updateBranch } from '@/redux/reducers/branchSlice';
+import { updateBranchApi } from '@/redux/api/branchApi';
 
 const Index = () => {
   const allcustomers = useSelector((state) => state.customer)
@@ -211,7 +212,14 @@ const Index = () => {
       });
   };
   
-  const handleConfirmDeleteBranch = () => {
+  const handleConfirmDeleteBranch = async () => {
+    try {
+      await dispatch(deleteBranch(selectedBranch?._id))
+      await dispatch(fetchAllCustomers())
+      toast.success('Delete Branch SuccessFully')
+    } catch (error) {
+      console.log(error);
+    }
     // Perform delete operation on selectedCustomer
     console.log('Deleting branch', selectedBranch);
     setIsDeleteBranchModalOpen(false);
@@ -266,6 +274,13 @@ const Index = () => {
   const handleAddBranch = async (branchData) => {
     if (selectedBranch) {
       // Update existing branch
+      const updateNewData={
+        id:selectedBranch?._id,
+        name:branchData?.branchName
+      }
+      await dispatch(updateBranch(updateNewData))
+      await dispatch(fetchAllCustomers())
+      toast.success('Branch Update Successfully')
       console.log('Updating branch', branchData);
     } else {
       const addNewData={
@@ -276,6 +291,7 @@ const Index = () => {
       try {
         await dispatch(createNewBranch(addNewData))
         await dispatch(fetchAllCustomers())
+        toast.success('Branch Added Successfullly')
       } catch (error) {
         console.log(error);
       }
