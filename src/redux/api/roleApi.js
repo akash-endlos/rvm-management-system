@@ -11,7 +11,7 @@ export const getAllRolesApi = async () => {
 
 export const createRoleApi = async (roleData) => {
   try {
-    const response = await axiosInstance.post('/roles/add', roleData);
+    const response = await axiosInstance.post('/userrole/', roleData);
     return response.data;
   } catch (error) {
     throw Error(error.response.data.error);

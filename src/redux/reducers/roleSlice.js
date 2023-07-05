@@ -56,7 +56,7 @@ const roleSlice = createSlice({
       })
       .addCase(createNewRole.fulfilled, (state, { payload }) => {
         const newRole = {
-          ...payload.payload.Role,
+          ...payload.payload.userRole,
           index: 1,
         };
         const updatedState = state.map((role) => ({

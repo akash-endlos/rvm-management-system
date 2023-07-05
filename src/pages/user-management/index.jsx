@@ -2,7 +2,7 @@ import AdminNestedTable from '@/components/AdminTable/AdminNestedTable'
 import AdminTable from '@/components/AdminTable/AdminTable'
 import Layout from '@/layout/Layout'
 import { fetchAllCustomers } from '@/redux/reducers/customerSlice'
-import { fetchAllRoles } from '@/redux/reducers/roleSlice'
+import { createNewRole, fetchAllRoles } from '@/redux/reducers/roleSlice'
 import { Delete, Edit } from '@mui/icons-material'
 import { Box, Button, IconButton, Tooltip, Typography } from '@mui/material'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -152,7 +152,7 @@ const index = () => {
       console.log('Updating customer', customerData);
     } else {
       // Add new customer
-      
+      dispatch(createNewRole(customerData))
       console.log('Add customer', customerData);
       // addCustomer(newcustomer.payload);
     }
