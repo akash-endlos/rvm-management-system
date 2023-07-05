@@ -9,8 +9,8 @@ import { FiGitBranch } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux'
 
 const index = () => {
-  const allcustomers = useSelector((state) => state.roles)
-  console.log(allcustomers);
+  const allusers = useSelector((state) => state.roles)
+  console.log(allusers);
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchData = async () => {
@@ -135,7 +135,7 @@ const index = () => {
     </Typography>
       <>
         <AdminTable
-          data={allcustomers}
+          data={allusers}
           handleToolBar={handleToolBar}
           columns={mainTableColumns}
           handleAdminTableRowActions={handleAdminTableRowActions}
