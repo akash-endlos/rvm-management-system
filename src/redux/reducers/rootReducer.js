@@ -5,6 +5,7 @@ import { customerReducer } from './customerSlice';
 import authReducer from './authSlice';
 import { vendorReducer } from './vendorSlice';
 import { branchReducer } from './branchSlice';
+import { inventoryTypeReducer } from './inventoryTypeSlice';
 
 const persistConfig = {
   key: 'root',
@@ -15,7 +16,8 @@ const rootReducer = combineReducers({
   auth: authReducer,
   customer: customerReducer,
   vendor:vendorReducer,
-  branch:branchReducer
+  branch:branchReducer,
+  inventory:inventoryTypeReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
