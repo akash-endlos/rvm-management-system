@@ -25,6 +25,35 @@ const SidebarLayout = ({ children }) => {
       url: '/customer',
       icon: <AiOutlineUserAdd />,
     },
+     {
+      title: 'Inventory',
+      url: '#',
+      icon: <AiOutlineUserAdd />,
+      children: [
+        {
+          title: 'Inventory Type',
+          url: '#',
+          icon: <AiOutlineUserAdd />,
+        },
+        {
+          title: 'Inventory Details',
+          url: '#',
+          icon: <AiOutlineUserAdd />,
+          // children: [
+          //   {
+          //     title: 'Sub Sub Item 1',
+          //     url: '#',
+          //     icon: <AiOutlineUserAdd />,
+          //   },
+          //   {
+          //     title: 'Sub Sub Item 2',
+          //     url: '#',
+          //     icon: <AiOutlineUserAdd />,
+          //   }
+          // ]
+        }
+      ]
+    },
     
     // {
     //   title: 'Item1',
