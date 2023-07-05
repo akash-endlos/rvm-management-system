@@ -4,12 +4,16 @@ import Layout from '@/layout/Layout'
 import { fetchAllCustomers } from '@/redux/reducers/customerSlice'
 import { fetchAllRoles } from '@/redux/reducers/roleSlice'
 import { Delete, Edit } from '@mui/icons-material'
-import { Box, IconButton, Tooltip, Typography } from '@mui/material'
-import React, { useEffect, useMemo } from 'react'
+import { Box, Button, IconButton, Tooltip, Typography } from '@mui/material'
+import React, { useEffect, useMemo, useState } from 'react'
 import { FiGitBranch } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux'
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import AddEditRoleSidebar from '@/components/user-management/AddEditRoleSidebar'
 
 const index = () => {
+  const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
+  const [selectedRole, setSelectedRole] = useState(null);
   const allusers = useSelector((state) => state.roles)
   console.log(allusers);
   const dispatch = useDispatch();
@@ -41,7 +45,10 @@ const index = () => {
     ],
     []
   );
-
+  const handleOpenAddSidebar = () => {
+    setSelectedRole(null);
+    setIsAddSidebarOpen(true);
+  };
   const handleToolBar = (table) => {
     const handleExportRows = (rows) => {
       csvExporter.generateCsv(rows.map((row) => row.original));
@@ -49,7 +56,7 @@ const index = () => {
     
     return (
       <Box sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}>
-        {/* <Button
+        <Button
           disabled={table.getPrePaginationRowModel().rows.length === 0}
           onClick={() => handleExportRows(table.getPrePaginationRowModel().rows)}
           startIcon={<FileDownloadIcon />}
@@ -66,8 +73,8 @@ const index = () => {
           Export Selected Rows
         </Button>
         <Button variant="contained" onClick={handleOpenAddSidebar}>
-          Add Customer
-        </Button> */}
+          Add Role
+        </Button>
       </Box>
     );
   };
@@ -134,6 +141,22 @@ const index = () => {
       </>
     );
   };
+  
+  const handleCloseAddSidebar = () => {
+    setIsAddSidebarOpen(false);
+  };
+  const handleAddRole = async (customerData) => {
+    if (selectedCustomer) {
+      // Update existing customer
+
+      console.log('Updating customer', customerData);
+    } else {
+      // Add new customer
+      console.log('Add customer', customerData);
+      // addCustomer(newcustomer.payload);
+    }
+    handleCloseAddSidebar();
+  };
   return (
     <Layout> <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
       User Management
@@ -145,7 +168,15 @@ const index = () => {
           columns={mainTableColumns}
           handleAdminTableRowActions={handleAdminTableRowActions}
           handleNestedTable={handleNestedTable}
-        /></></Layout>
+        />
+          {isAddSidebarOpen && (
+          <AddEditRoleSidebar
+            onClose={handleCloseAddSidebar}
+            onSubmit={handleAddRole}
+            selectedRole={selectedRole}
+          />
+        )}
+        </></Layout>
   )
 }
 
