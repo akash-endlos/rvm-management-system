@@ -20,7 +20,7 @@ export const getInventoryTypeApi = async (inventoryTypeId) => {
 
 export const createInventoryTypeApi = async (inventoryTypeData) => {
   try {
-    const response = await axiosInstance.post('/inventory-type/add', inventoryTypeData);
+    const response = await axiosInstance.post('/inventrytype/add', inventoryTypeData);
     return response.data;
   } catch (error) {
     throw Error(error.response.data.error);

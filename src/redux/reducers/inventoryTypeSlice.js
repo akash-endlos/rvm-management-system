@@ -62,7 +62,7 @@ const inventoryTypeSlice = createSlice({
       })
       .addCase(createNewInventoryType.fulfilled, (state, { payload }) => {
         const newInventoryType = {
-          ...payload,
+          ...payload.payload.Customer,
           index: 1,
         };
         const updatedState = state.map((inventoryType) => ({

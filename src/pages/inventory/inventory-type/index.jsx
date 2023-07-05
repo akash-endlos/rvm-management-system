@@ -9,7 +9,7 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import AdminTable from '@/components/AdminTable/AdminTable';
 import Layout from '@/layout/Layout';
 import { addCustomer, createNewCustomer, deleteCustomer, fetchAllCustomers, fetchCustomer, setCustomers, updateCustomer } from '@/redux/reducers/customerSlice';
-import { fetchAllInventoryTypes } from '@/redux/reducers/inventoryTypeSlice';
+import { createNewInventoryType, fetchAllInventoryTypes } from '@/redux/reducers/inventoryTypeSlice';
 import AddEditInventoryType from '@/components/inventory-type/AddEditInventoryType';
 
 
@@ -125,6 +125,11 @@ const Index = () => {
       console.log('Updating customer', inventoryTypeData);
     } else {
       // Add new customer
+      try {
+        await dispatch(createNewInventoryType(inventoryTypeData))
+      } catch (error) {
+        console.log(error);
+      }
       console.log('Add InventoryType', inventoryTypeData);
       // addCustomer(newcustomer.payload);
     }
