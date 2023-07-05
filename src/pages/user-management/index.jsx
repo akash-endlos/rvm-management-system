@@ -14,10 +14,12 @@ import { toast } from 'react-hot-toast'
 import DeleteRoleModal from '@/components/user-management/DeleteRoleModal'
 import AddEditUserSidebar from '@/components/user-management/AddEditUserSidebar'
 import { createUser, updateUser } from '@/redux/reducers/userSlice'
+import DeleteUserModal from '@/components/user-management/DeleteUserModal'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
   const [isDeleteRoleModalOpen, setIsDeleteRoleModalOpen] = useState(false);
+  const [isDeleteUserModalOpen, setIsDeleteUserModalOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState(null);
   const [isAddUserSidebarOpen, setIsAddUserSidebarOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -119,6 +121,10 @@ const index = () => {
     setSelectedUser(branchData);
     setIsAddUserSidebarOpen(true);
   };
+  const handleDeleteBranch = (userData) => {
+    setSelectedUser(userData);
+    setIsDeleteUserModalOpen(true);
+  };
   const handleAdminNestedTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
@@ -179,6 +185,7 @@ const index = () => {
     } else {
       // Add new customer
       dispatch(createNewRole(roleData))
+      handleCloseAddSidebar();
       console.log('Add customer', roleData);
       // addCustomer(newcustomer.payload);
     }
@@ -229,6 +236,21 @@ const index = () => {
     }
     handleCloseAddRoleSidebar();
   };
+  const handleCloseDeleteUserModal=()=>{
+    setIsDeleteUserModalOpen(false)
+  }
+  const handleConfirmDeleteUser = async () => {
+    try {
+      // await dispatch(deleteBranch(selectedBranch?._id))
+      // await dispatch(fetchAllCustomers())
+      toast.success('Delete User SuccessFully')
+    } catch (error) {
+      console.log(error);
+    }
+    // Perform delete operation on selectedCustomer
+    console.log('Deleting user', selectedUser);
+    handleCloseDeleteUserModal(false);
+  };
   return (
     <Layout> <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
       User Management
@@ -255,13 +277,19 @@ const index = () => {
           title='Role'
         />
         {isAddUserSidebarOpen && (
-          <AddEditUserSidebar
+          <AddEditUserSidebar 
             onClose={handleCloseAddRoleSidebar}
             onSubmit={handleAddUser}
             selectedUser={selectedUser}
             // selectedCustomer={selectedCustomer}
           />
         )}
+          <DeleteUserModal
+          isOpen={isDeleteUserModalOpen}
+          onClose={handleCloseDeleteUserModal}
+          onDelete={handleConfirmDeleteUser}
+          title='User'
+        />
         </></Layout>
   )
 }
