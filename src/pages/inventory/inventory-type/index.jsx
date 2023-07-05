@@ -10,6 +10,7 @@ import AdminTable from '@/components/AdminTable/AdminTable';
 import Layout from '@/layout/Layout';
 import { addCustomer, createNewCustomer, deleteCustomer, fetchAllCustomers, fetchCustomer, setCustomers, updateCustomer } from '@/redux/reducers/customerSlice';
 import { fetchAllInventoryTypes } from '@/redux/reducers/inventoryTypeSlice';
+import AddEditInventoryType from '@/components/inventory-type/AddEditInventoryType';
 
 
 const Index = () => {
@@ -67,7 +68,7 @@ const Index = () => {
           Export Selected Rows
         </Button>
         <Button variant="contained" onClick={handleOpenAddSidebar}>
-          Add Customer
+          Add InventoryType
         </Button>
       </Box>
     );
@@ -114,6 +115,21 @@ const Index = () => {
       </>
     );
   };
+  const handleCloseAddSidebar = () => {
+    setIsAddSidebarOpen(false);
+  };
+
+  const handleAddInventoryType = async (inventoryTypeData) => {
+    if (selectedInventoryType) {
+      // Update existing customer
+      console.log('Updating customer', inventoryTypeData);
+    } else {
+      // Add new customer
+      console.log('Add InventoryType', inventoryTypeData);
+      // addCustomer(newcustomer.payload);
+    }
+    handleCloseAddSidebar();
+  };
   return (
     <Layout>
       <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
@@ -127,6 +143,13 @@ const Index = () => {
           handleAdminTableRowActions={handleAdminTableRowActions}
           handleNestedTable={handleNestedTable}
         />
+        {isAddSidebarOpen && (
+          <AddEditInventoryType
+            onClose={handleCloseAddSidebar}
+            onSubmit={handleAddInventoryType}
+            selectedInventoryType={selectedInventoryType}
+          />
+        )}
       </>
     </Layout>
   );
