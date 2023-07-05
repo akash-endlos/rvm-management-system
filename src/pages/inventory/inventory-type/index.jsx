@@ -2,6 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Button,
+  IconButton,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,8 +11,10 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import AdminTable from '@/components/AdminTable/AdminTable';
 import Layout from '@/layout/Layout';
 import { addCustomer, createNewCustomer, deleteCustomer, fetchAllCustomers, fetchCustomer, setCustomers, updateCustomer } from '@/redux/reducers/customerSlice';
-import { createNewInventoryType, fetchAllInventoryTypes } from '@/redux/reducers/inventoryTypeSlice';
+import { createNewInventoryType, fetchAllInventoryTypes, updateInventoryType } from '@/redux/reducers/inventoryTypeSlice';
 import AddEditInventoryType from '@/components/inventory-type/AddEditInventoryType';
+import { Delete, Edit } from '@mui/icons-material';
+import { FiGitBranch } from 'react-icons/fi';
 
 
 const Index = () => {
@@ -73,11 +77,15 @@ const Index = () => {
       </Box>
     );
   };
+  const handleEditInventoryType = (inventoryData) => {
+    setSelectedInventoryType(inventoryData);
+    setIsAddSidebarOpen(true);
+  };
   const handleAdminTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
-        {/* <Tooltip arrow placement="left" title="Edit Customer">
-          <IconButton onClick={() => handleEditCustomer(row.original)}>
+        <Tooltip arrow placement="left" title="Edit Customer">
+          <IconButton onClick={() => handleEditInventoryType(row.original)}>
             <Edit />
           </IconButton>
         </Tooltip>
@@ -90,7 +98,7 @@ const Index = () => {
           <IconButton color="secondary" onClick={() => handleOpenAddBranchSidebar(row.original)}>
             <FiGitBranch />
           </IconButton>
-        </Tooltip> */}
+        </Tooltip>
       </Box>
     );
   };
@@ -122,6 +130,16 @@ const Index = () => {
   const handleAddInventoryType = async (inventoryTypeData) => {
     if (selectedInventoryType) {
       // Update existing customer
+      const updatedNewInventoryType={
+        id:selectedInventoryType._id,
+        name:inventoryTypeData.name
+      }
+      try {
+        await dispatch(updateInventoryType(updatedNewInventoryType))
+        await dispatch(fetchAllInventoryTypes())
+      } catch (error) {
+        console.log(error);
+      }
       console.log('Updating customer', inventoryTypeData);
     } else {
       // Add new customer

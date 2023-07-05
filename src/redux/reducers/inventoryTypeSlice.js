@@ -42,7 +42,7 @@ export const deleteInventoryType = createAsyncThunk(
 export const updateInventoryType = createAsyncThunk(
   'inventoryTypes/update',
   async (inventoryTypeData) => {
-    const response = await updateInventoryTypeApi(inventoryTypeData.id, inventoryTypeData);
+    const response = await updateInventoryTypeApi(inventoryTypeData.id, {name:inventoryTypeData.name});
     return response;
   }
 );
