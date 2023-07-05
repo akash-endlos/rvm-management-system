@@ -6,6 +6,7 @@ import {
   MenuItem,
   InputLabel,
   FormHelperText,
+  Typography,
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -60,6 +61,9 @@ const AddEditCustomerSidebar = ({ onClose, onSubmit, selectedCustomer }) => {
       }}
     >
       <form onSubmit={handleSubmit(handleFormSubmit)}>
+      <Typography variant="h5" style={{ fontWeight: 'bold', color: 'teal' }}>
+              Customer
+            </Typography>
         <div style={{ marginBottom: '10px' }}>
           <InputLabel>Name</InputLabel>
           <TextField fullWidth name="name" {...register('name')} />

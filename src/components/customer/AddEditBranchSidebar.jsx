@@ -6,6 +6,7 @@ import {
   MenuItem,
   InputLabel,
   FormHelperText,
+  Typography,
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -47,6 +48,9 @@ const AddEditBranchSidebar = ({ onClose, onSubmit, selectedBranch }) => {
       }}
     >
       <form onSubmit={handleSubmit(handleFormSubmit)}>
+        <Typography variant="h5" style={{ fontWeight: 'bold', color: 'teal' }}>
+          Branch
+        </Typography>
         <div style={{ marginBottom: '10px' }}>
           <InputLabel>Branch Name</InputLabel>
           <TextField

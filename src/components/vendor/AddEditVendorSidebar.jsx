@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Button, TextField, InputLabel, FormHelperText } from '@mui/material';
+import { Button, TextField, InputLabel, FormHelperText, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -51,6 +51,9 @@ const AddEditVendorSidebar = ({ onClose, onSubmit, selectedVendor }) => {
       }}
     >
       <form onSubmit={handleSubmit(handleFormSubmit)}>
+      <Typography variant="h5" style={{ fontWeight: 'bold', color: 'teal' }}>
+              Vendor
+            </Typography>
         <div style={{ marginBottom: '10px' }}>
           <InputLabel>Name</InputLabel>
           <TextField fullWidth name="name" {...register('name')} />
