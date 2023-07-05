@@ -12,11 +12,15 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import AddEditRoleSidebar from '@/components/user-management/AddEditRoleSidebar'
 import { toast } from 'react-hot-toast'
 import DeleteRoleModal from '@/components/user-management/DeleteRoleModal'
+import AddEditUserSidebar from '@/components/user-management/AddEditUserSidebar'
+import { createUser, updateUser } from '@/redux/reducers/userSlice'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
   const [isDeleteRoleModalOpen, setIsDeleteRoleModalOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState(null);
+  const [isAddUserSidebarOpen, setIsAddUserSidebarOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
   const allusers = useSelector((state) => state.roles)
   console.log(allusers);
   const dispatch = useDispatch();
@@ -85,6 +89,11 @@ const index = () => {
     setSelectedRole(roleData);
     setIsAddSidebarOpen(true);
   };
+  const handleOpenAddUserSidebar = (roleData) => {
+    setSelectedUser(null);
+    setIsAddUserSidebarOpen(true);
+    setSelectedRole(roleData);
+  };
   const handleAdminTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
@@ -99,19 +108,22 @@ const index = () => {
           </IconButton>
         </Tooltip>
         <Tooltip arrow placement="right" title="Add Branch">
-          <IconButton color="secondary" onClick={() => handleOpenAddBranchSidebar(row.original)}>
+          <IconButton color="secondary" onClick={() => handleOpenAddUserSidebar(row.original)}>
             <FiGitBranch />
           </IconButton>
         </Tooltip>
       </Box>
     );
   };
-
+  const handleEditUser = (branchData) => {
+    setSelectedUser(branchData);
+    setIsAddUserSidebarOpen(true);
+  };
   const handleAdminNestedTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip arrow placement="left" title="Edit Customer">
-          <IconButton onClick={() => handleEditBranch(row.original)}>
+          <IconButton onClick={() => handleEditUser(row.original)}>
             <Edit />
           </IconButton>
         </Tooltip>
@@ -163,7 +175,7 @@ const index = () => {
       handleCloseAddSidebar();
       await dispatch(fetchAllRoles())
       toast.success('Updating tole Successfully')
-      console.log('Updating customer', roleData);
+      console.log('Updating role', roleData);
     } else {
       // Add new customer
       dispatch(createNewRole(roleData))
@@ -190,6 +202,33 @@ const index = () => {
     setSelectedRole(roleData);
     setIsDeleteRoleModalOpen(true);
   };
+  const handleCloseAddRoleSidebar = () => {
+    setIsAddUserSidebarOpen(false);
+  };
+  const handleAddUser = async (userData) => {
+    if (selectedUser) {
+      const newUpdateUser={
+        role:selectedRole._id,
+        data:userData
+       }
+       console.log(newUpdateUser);
+      await dispatch(updateUser(newUpdateUser))
+     await dispatch(fetchAllRoles())
+      console.log('Updating branch', userData);
+    } else {
+         const newAddUser={
+          role:selectedRole._id,
+          name:userData.name,
+          mobile:userData.mobile,
+          password:userData.password,
+          email:userData.email
+         }
+        await dispatch(createUser(newAddUser))
+       await dispatch(fetchAllRoles())
+      console.log('Adding branch',newAddUser);
+    }
+    handleCloseAddRoleSidebar();
+  };
   return (
     <Layout> <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
       User Management
@@ -215,6 +254,14 @@ const index = () => {
           onDelete={handleConfirmDeleteRole}
           title='Role'
         />
+        {isAddUserSidebarOpen && (
+          <AddEditUserSidebar
+            onClose={handleCloseAddRoleSidebar}
+            onSubmit={handleAddUser}
+            selectedUser={selectedUser}
+            // selectedCustomer={selectedCustomer}
+          />
+        )}
         </></Layout>
   )
 }

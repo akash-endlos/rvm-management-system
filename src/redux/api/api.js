@@ -75,7 +75,7 @@ function refreshAccessToken() {
     }
 
     axiosInstance
-      .post('user/refresh-token', { refreshToken })
+      .post('/auth/refreshtoken', { refreshToken })
       .then((response) => {
         const { accessToken, refreshToken } = response.data;
         resolve({ accessToken, refreshToken });
