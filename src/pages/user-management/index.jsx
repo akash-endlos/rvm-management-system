@@ -1,3 +1,4 @@
+import AdminNestedTable from '@/components/AdminTable/AdminNestedTable'
 import AdminTable from '@/components/AdminTable/AdminTable'
 import Layout from '@/layout/Layout'
 import { fetchAllCustomers } from '@/redux/reducers/customerSlice'
@@ -112,20 +113,24 @@ const index = () => {
     const nestedTableConfigurations = [
       {
         header: 'branches',
-        columns: [{ header: 'Name', accessorKey: 'name' }],
-        data: row?.original?.branches,
+        columns: [
+          { header: 'Name', accessorKey: 'name' },
+          { header: 'Mobile', accessorKey: 'mobile' },
+          { header: 'Email', accessorKey: 'email' }
+      ],
+        data: row?.original?.users,
       },
     ];
     return (
       <>
-        {/* {nestedTableConfigurations.map((config, index) => (
+        {nestedTableConfigurations.map((config, index) => (
           <>
             <Typography variant="h5" style={{ fontWeight: 'bold', color: 'teal' }}>
               {config?.header}
             </Typography>
             <AdminNestedTable handleAdminNestedTableRowActions={handleAdminNestedTableRowActions} columns={config?.columns} data={config?.data} />
           </>
-        ))} */}
+        ))}
       </>
     );
   };
