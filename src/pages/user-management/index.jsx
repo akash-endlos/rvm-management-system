@@ -160,6 +160,7 @@ const index = () => {
       }
       // Update existing customer
       await dispatch(updateRole(updateRoleData))
+      handleCloseAddSidebar();
       await dispatch(fetchAllRoles())
       toast.success('Updating tole Successfully')
       console.log('Updating customer', roleData);
@@ -169,7 +170,7 @@ const index = () => {
       console.log('Add customer', roleData);
       // addCustomer(newcustomer.payload);
     }
-    handleCloseAddSidebar();
+   
   };
   const handleCloseDeleteRoleModal=()=>{
     setIsDeleteRoleModalOpen(false)
