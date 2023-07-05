@@ -11,7 +11,7 @@ export const getAllInventoryBrandsApi = async () => {
 
 export const createInventoryBrandApi = async (inventoryBrandData) => {
   try {
-    const response = await axiosInstance.post('/inventory-brands/add', inventoryBrandData);
+    const response = await axiosInstance.post('/inventrybrand/', inventoryBrandData);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.error);
@@ -29,7 +29,7 @@ export const getInventoryBrandApi = async (brandId) => {
 
 export const updateInventoryBrandApi = async (brandId, inventoryBrandData) => {
   try {
-    const response = await axiosInstance.put(`/inventory-brands/update?id=${brandId}`, inventoryBrandData);
+    const response = await axiosInstance.put(`/inventrybrand/${brandId}`, inventoryBrandData);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.error);
@@ -38,7 +38,7 @@ export const updateInventoryBrandApi = async (brandId, inventoryBrandData) => {
 
 export const deleteInventoryBrandApi = async (brandId) => {
   try {
-    const response = await axiosInstance.delete(`/inventory-brands/delete?id=${brandId}`);
+    const response = await axiosInstance.delete(`/inventrybrand/${brandId}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.error);

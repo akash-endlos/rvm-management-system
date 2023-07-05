@@ -21,12 +21,16 @@ import AdminNestedTable from '@/components/AdminTable/AdminNestedTable';
 import AddEditInventoryDetail from '@/components/inventory-type/AddEditInventoryBrand';
 import { createNewInventoryDetail, updateInventoryDetail } from '@/redux/reducers/inventoryDetailSlice';
 import AddEditInventoryBrand from '@/components/inventory-type/AddEditInventoryBrand';
+import { createNewInventoryBrand, deleteInventoryBrand, updateInventoryBrand } from '@/redux/reducers/inventoryBrandSlice';
+import DeleteBrandModal from '@/components/inventory-type/DeleteBrandModal';
+import { ExportToCsv } from 'export-to-csv';
 
 
 const Index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
   const [selectedInventoryType, setSelectedInventoryType] = useState(null);
   const [isDeleteInventoryTypeModalOpen, setIsDeleteInventoryTypeModalOpen] = useState(false);
+  const [isDeleteInventoryBrandModalOpen, setIsDeleteInventoryBrandModalOpen] = useState(false);
   const [isAddInventoryDetailSidebarOpen, setIsAddInventoryDetailSidebarOpen] = useState(false);
   const [selectedInventoryDetail, setSelectedInventoryDetail] = useState(null);
   const allinventoryType = useSelector((state) => state.inventory)
@@ -58,6 +62,20 @@ const Index = () => {
     setSelectedInventoryType(null);
     setIsAddSidebarOpen(true);
   };
+  const csvOptions = {
+    fieldSeparator: ',',
+    quoteStrings: '"',
+    decimalSeparator: '.',
+    showLabels: true,
+    useBom: true,
+    useKeysAsHeaders: false,
+    headers: mainTableColumns.map((c) => c.header),
+  };
+
+  const csvExporter = new ExportToCsv(csvOptions);
+
+
+
   const handleToolBar = (table) => {
     const handleExportRows = (rows) => {
       csvExporter.generateCsv(rows.map((row) => row.original));
@@ -117,11 +135,19 @@ const Index = () => {
       </Box>
     );
   };
+  const handleEditInventoryDetail = (brandData) => {
+    setSelectedInventoryDetail(brandData);
+    setIsAddInventoryDetailSidebarOpen(true);
+  };
+  const handleDeleteBranch = (branchData) => {
+    setSelectedInventoryDetail(branchData);
+    setIsDeleteInventoryBrandModalOpen(true);
+  };
   const handleAdminNestedTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip arrow placement="left" title="Edit Customer">
-          <IconButton onClick={() => handleEditBranch(row.original)}>
+          <IconButton onClick={() => handleEditInventoryDetail(row.original)}>
             <Edit />
           </IconButton>
         </Tooltip>
@@ -163,9 +189,9 @@ const Index = () => {
   const handleAddInventoryType = async (inventoryTypeData) => {
     if (selectedInventoryType) {
       // Update existing customer
-      const updatedNewInventoryType={
-        id:selectedInventoryType._id,
-        name:inventoryTypeData.name
+      const updatedNewInventoryType = {
+        id: selectedInventoryType._id,
+        name: inventoryTypeData.name
       }
       try {
         await dispatch(updateInventoryType(updatedNewInventoryType))
@@ -208,11 +234,37 @@ const Index = () => {
   const handleAddInventoryDetail = async (inventoryDetailData) => {
     if (selectedInventoryDetail) {
       // Update existing branch
-      console.log('Updating branch', inventoryDetailData);
+      const updatedBrandData={
+        id:selectedInventoryDetail._id,
+        name:inventoryDetailData.branchName
+      }
+      dispatch(updateInventoryBrand(updatedBrandData))
+      await dispatch(fetchAllInventoryTypes())
+      console.log('Updating branch', updatedBrandData);
     } else {
-      console.log('Adding branch', inventoryDetailData);
+      const newinventoryBrandData = {
+        inventryTypeId: selectedInventoryType?._id,
+        name: inventoryDetailData?.branchName
+      }
+      await dispatch(createNewInventoryBrand(newinventoryBrandData))
+      await dispatch(fetchAllInventoryTypes())
     }
     handleCloseAddInventoryDetailSidebar();
+  };
+  const handleCloseDeleteBrandModal=()=>{
+    setIsDeleteInventoryBrandModalOpen(false)
+  }
+  const handleConfirmDeleteBrand = async () => {
+    try {
+      await dispatch(deleteInventoryBrand(selectedInventoryDetail))
+      await dispatch(fetchAllInventoryTypes())
+      toast.success('Delete Brand SuccessFully')
+    } catch (error) {
+      console.log(error);
+    }
+    // Perform delete operation on selectedCustomer
+    console.log('Deleting branch', selectedInventoryDetail);
+    handleCloseDeleteBrandModal();
   };
   return (
     <Layout>
@@ -239,14 +291,20 @@ const Index = () => {
             onClose={handleCloseAddInventoryDetailSidebar}
             onSubmit={handleAddInventoryDetail}
             selectedInventoryDetail={selectedInventoryDetail}
-            // selectedCustomer={selectedCustomer}
+          // selectedCustomer={selectedCustomer}
           />
         )}
-         <DeleteInventoryTypeModal
+        <DeleteInventoryTypeModal
           isOpen={isDeleteInventoryTypeModalOpen}
           onClose={handleCloseDeleteModal}
           onDelete={handleConfirmDeleteInventoryType}
           title='Inventory Type'
+        />
+         <DeleteBrandModal
+          isOpen={isDeleteInventoryBrandModalOpen}
+          onClose={handleCloseDeleteBrandModal}
+          onDelete={handleConfirmDeleteBrand}
+          title='Brand'
         />
       </>
     </Layout>

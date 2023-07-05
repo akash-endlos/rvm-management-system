@@ -52,7 +52,7 @@ const AddEditInventoryBrand = ({ onClose, onSubmit, selectedInventoryDetail }) =
           Inventory Brand
         </Typography>
         <div style={{ marginBottom: '10px' }}>
-          <InputLabel>Branch Name</InputLabel>
+          <InputLabel>Brand Name</InputLabel>
           <TextField
             fullWidth
             name="branchName"
