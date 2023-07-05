@@ -38,7 +38,7 @@ export const updateInventoryTypeApi = async (inventoryTypeId, inventoryTypeData)
 
 export const deleteInventoryTypeApi = async (inventoryTypeId) => {
   try {
-    const response = await axiosInstance.delete(`/inventory-type/delete?id=${inventoryTypeId}`);
+    const response = await axiosInstance.delete(`/inventrytype/delete?id=${inventoryTypeId}`);
     return response.data;
   } catch (error) {
     throw Error(error.response.data.error);

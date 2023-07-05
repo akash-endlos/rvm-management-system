@@ -11,15 +11,18 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import AdminTable from '@/components/AdminTable/AdminTable';
 import Layout from '@/layout/Layout';
 import { addCustomer, createNewCustomer, deleteCustomer, fetchAllCustomers, fetchCustomer, setCustomers, updateCustomer } from '@/redux/reducers/customerSlice';
-import { createNewInventoryType, fetchAllInventoryTypes, updateInventoryType } from '@/redux/reducers/inventoryTypeSlice';
+import { createNewInventoryType, deleteInventoryType, fetchAllInventoryTypes, updateInventoryType } from '@/redux/reducers/inventoryTypeSlice';
 import AddEditInventoryType from '@/components/inventory-type/AddEditInventoryType';
 import { Delete, Edit } from '@mui/icons-material';
 import { FiGitBranch } from 'react-icons/fi';
+import DeleteInventoryTypeModal from '@/components/inventory-type/DeleteInventoryTypeModal';
+import { toast } from 'react-hot-toast';
 
 
 const Index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
   const [selectedInventoryType, setSelectedInventoryType] = useState(null);
+  const [isDeleteInventoryTypeModalOpen, setIsDeleteInventoryTypeModalOpen] = useState(false);
   const allinventoryType = useSelector((state) => state.inventory)
   console.log(allinventoryType);
   const dispatch = useDispatch();
@@ -90,7 +93,7 @@ const Index = () => {
           </IconButton>
         </Tooltip>
         <Tooltip arrow placement="right" title="Delete Customer">
-          <IconButton color="error" onClick={() => handleDeleteCustomer(row.original)}>
+          <IconButton color="error" onClick={() => handleDeleteInventoryType(row.original)}>
             <Delete />
           </IconButton>
         </Tooltip>
@@ -126,7 +129,9 @@ const Index = () => {
   const handleCloseAddSidebar = () => {
     setIsAddSidebarOpen(false);
   };
-
+  const handleCloseDeleteModal = () => {
+    setIsDeleteInventoryTypeModalOpen(false);
+  };
   const handleAddInventoryType = async (inventoryTypeData) => {
     if (selectedInventoryType) {
       // Update existing customer
@@ -153,6 +158,20 @@ const Index = () => {
     }
     handleCloseAddSidebar();
   };
+  const handleDeleteInventoryType = (inventoryData) => {
+    setSelectedInventoryType(inventoryData);
+    setIsDeleteInventoryTypeModalOpen(true);
+  };
+  const handleConfirmDeleteInventoryType = () => {
+    dispatch(deleteInventoryType(selectedInventoryType._id))
+      .then(() => {
+        handleCloseDeleteModal()
+        toast.success('InventoryType Delete Successfully')
+      })
+      .catch((error) => {
+        console.error('Error deleting customer:', error);
+      });
+  }
   return (
     <Layout>
       <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
@@ -173,6 +192,12 @@ const Index = () => {
             selectedInventoryType={selectedInventoryType}
           />
         )}
+         <DeleteInventoryTypeModal
+          isOpen={isDeleteInventoryTypeModalOpen}
+          onClose={handleCloseDeleteModal}
+          onDelete={handleConfirmDeleteInventoryType}
+          title='Inventory Type'
+        />
       </>
     </Layout>
   );
