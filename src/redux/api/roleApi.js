@@ -2,9 +2,8 @@ import axiosInstance from './api';
 
 export const getAllRolesApi = async () => {
   try {
-    const response = await axiosInstance.get('/roles/getAll');
-    console.log(response.data);
-    return response?.data?.payload?.Roles;
+    const response = await axiosInstance.get('/userrole/');
+    return response?.data;
   } catch (error) {
     throw Error(error.response.data.error);
   }

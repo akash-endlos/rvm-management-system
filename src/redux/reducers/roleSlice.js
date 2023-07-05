@@ -5,7 +5,7 @@ export const fetchAllRoles = createAsyncThunk(
   'roles/fetchAll',
   async () => {
     const response = await getAllRolesApi();
-    return response;
+    return response.data;
   }
 );
 
@@ -48,7 +48,7 @@ const roleSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllRoles.fulfilled, (state, action) => {
-        const rolesWithIndex = action.payload.map((role, index) => ({
+        const rolesWithIndex = action.payload.userRole.map((role, index) => ({
           ...role,
           index: index + 1,
         }));

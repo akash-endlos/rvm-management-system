@@ -6,6 +6,7 @@ import authReducer from './authSlice';
 import { vendorReducer } from './vendorSlice';
 import { branchReducer } from './branchSlice';
 import { inventoryTypeReducer } from './inventoryTypeSlice';
+import { roleReducer } from './roleSlice';
 
 const persistConfig = {
   key: 'root',
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   vendor:vendorReducer,
   branch:branchReducer,
   inventory:inventoryTypeReducer,
+  roles:roleReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
