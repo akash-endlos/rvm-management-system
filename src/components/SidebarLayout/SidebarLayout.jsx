@@ -27,17 +27,17 @@ const SidebarLayout = ({ children }) => {
     },
      {
       title: 'Inventory',
-      url: '#',
+      // url: '#',
       icon: <AiOutlineUserAdd />,
       children: [
         {
           title: 'Inventory Type',
-          url: '#',
+          url: '/inventory/inventory-type',
           icon: <AiOutlineUserAdd />,
         },
         {
           title: 'Inventory Details',
-          url: '#',
+          url: '/inventory/inventory-details',
           icon: <AiOutlineUserAdd />,
           // children: [
           //   {
