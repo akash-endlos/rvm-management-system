@@ -324,7 +324,7 @@ const Index = () => {
             onClose={handleCloseAddBranchSidebar}
             onSubmit={handleAddBranch}
             selectedBranch={selectedBranch}
-            selectedCustomer={selectedCustomer}
+            // selectedCustomer={selectedCustomer}
           />
         )}
         <DeleteCustomerModal
