@@ -94,7 +94,7 @@ const index = () => {
           Export Selected Rows
         </Button>
         <Button variant="contained" onClick={handleOpenAddSidebar}>
-          Add Customer
+          Add Vendor
         </Button>
       </Box>
     );
