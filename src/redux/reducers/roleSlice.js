@@ -37,7 +37,7 @@ export const deleteRole = createAsyncThunk(
 export const updateRole = createAsyncThunk(
   'roles/update',
   async (roleData) => {
-    const response = await updateRoleApi(roleData.id, { name: roleData.name });
+    const response = await updateRoleApi(roleData.id, roleData.data);
     return response;
   }
 );
@@ -76,7 +76,7 @@ const roleSlice = createSlice({
         return rolesWithUpdatedIndex;
       })
       .addCase(updateRole.fulfilled, (state, { payload }) => {
-        const updatedRole = payload.payload.updatedRole;
+        const updatedRole = payload.payload.userRole;
         const updatedIndex = state.findIndex((role) => role._id === updatedRole._id);
         if (updatedIndex !== -1) {
           const newState = [...state]; // Create a new array

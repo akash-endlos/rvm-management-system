@@ -29,7 +29,7 @@ export const getRoleApi = async (roleId) => {
 
 export const updateRoleApi = async (roleId, roleData) => {
   try {
-    const response = await axiosInstance.put(`/roles/update?id=${roleId}`, roleData);
+    const response = await axiosInstance.put(`/userrole/${roleId}`, roleData);
     return response.data;
   } catch (error) {
     throw Error(error.response.data.message);
@@ -38,7 +38,7 @@ export const updateRoleApi = async (roleId, roleData) => {
 
 export const deleteRoleApi = async (roleId) => {
   try {
-    const response = await axiosInstance.delete(`/roles/delete?id=${roleId}`);
+    const response = await axiosInstance.delete(`/userrole/${roleId}`);
     return response.data;
   } catch (error) {
     throw Error(error.response.data.error);

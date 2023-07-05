@@ -2,7 +2,7 @@ import AdminNestedTable from '@/components/AdminTable/AdminNestedTable'
 import AdminTable from '@/components/AdminTable/AdminTable'
 import Layout from '@/layout/Layout'
 import { fetchAllCustomers } from '@/redux/reducers/customerSlice'
-import { createNewRole, fetchAllRoles } from '@/redux/reducers/roleSlice'
+import { createNewRole, deleteRole, fetchAllRoles, updateRole } from '@/redux/reducers/roleSlice'
 import { Delete, Edit } from '@mui/icons-material'
 import { Box, Button, IconButton, Tooltip, Typography } from '@mui/material'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -10,9 +10,12 @@ import { FiGitBranch } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux'
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import AddEditRoleSidebar from '@/components/user-management/AddEditRoleSidebar'
+import { toast } from 'react-hot-toast'
+import DeleteRoleModal from '@/components/user-management/DeleteRoleModal'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
+  const [isDeleteRoleModalOpen, setIsDeleteRoleModalOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState(null);
   const allusers = useSelector((state) => state.roles)
   console.log(allusers);
@@ -78,6 +81,10 @@ const index = () => {
       </Box>
     );
   };
+  const handleEditCustomer = (roleData) => {
+    setSelectedRole(roleData);
+    setIsAddSidebarOpen(true);
+  };
   const handleAdminTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
@@ -87,7 +94,7 @@ const index = () => {
           </IconButton>
         </Tooltip>
         <Tooltip arrow placement="right" title="Delete Customer">
-          <IconButton color="error" onClick={() => handleDeleteCustomer(row.original)}>
+          <IconButton color="error" onClick={() => handleDeleteRole(row.original)}>
             <Delete />
           </IconButton>
         </Tooltip>
@@ -145,18 +152,42 @@ const index = () => {
   const handleCloseAddSidebar = () => {
     setIsAddSidebarOpen(false);
   };
-  const handleAddRole = async (customerData) => {
+  const handleAddRole = async (roleData) => {
     if (selectedRole) {
+      const updateRoleData={
+        id:selectedRole?._id,
+        data:roleData
+      }
       // Update existing customer
-
-      console.log('Updating customer', customerData);
+      await dispatch(updateRole(updateRoleData))
+      await dispatch(fetchAllRoles())
+      toast.success('Updating tole Successfully')
+      console.log('Updating customer', roleData);
     } else {
       // Add new customer
-      dispatch(createNewRole(customerData))
-      console.log('Add customer', customerData);
+      dispatch(createNewRole(roleData))
+      console.log('Add customer', roleData);
       // addCustomer(newcustomer.payload);
     }
     handleCloseAddSidebar();
+  };
+  const handleCloseDeleteRoleModal=()=>{
+    setIsDeleteRoleModalOpen(false)
+  }
+  const handleConfirmDeleteRole = async () => {
+    try {
+      await dispatch(deleteRole(selectedRole));
+     await handleCloseDeleteRoleModal();
+      await dispatch(fetchAllCustomers());
+      toast.success('Role Deleted Successfully');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+  const handleDeleteRole = (roleData) => {
+    setSelectedRole(roleData);
+    setIsDeleteRoleModalOpen(true);
   };
   return (
     <Layout> <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
@@ -177,6 +208,12 @@ const index = () => {
             selectedRole={selectedRole}
           />
         )}
+        <DeleteRoleModal
+          isOpen={isDeleteRoleModalOpen}
+          onClose={handleCloseDeleteRoleModal}
+          onDelete={handleConfirmDeleteRole}
+          title='Role'
+        />
         </></Layout>
   )
 }
