@@ -39,7 +39,8 @@ export const updateUserApi = async (userId, userData) => {
 
 export const deleteUserApi = async (userId) => {
   try {
-    const response = await axiosInstance.delete(`/users/${userId}`);
+    const response = await axiosInstance.delete(`/user/${userId}`);
+    console.log(response);
     return response.data;
   } catch (error) {
     throw Error(error.response.data.error);
