@@ -1,9 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Button,
   TextField,
-  Select,
-  MenuItem,
   InputLabel,
   FormHelperText,
   Typography,
@@ -11,23 +9,13 @@ import {
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchAllVendors } from '@/redux/reducers/vendorSlice';
 
 const schema = yup.object().shape({
-  name: yup.string().required('Name is required'),
-  vendorId: yup.string().required('Vendor ID is required'),
-  branchName: yup.string().optional(),
+  roleName: yup.string().required('Role name is required'),
+  description: yup.string().required('Description is required'),
 });
 
 const AddEditRoleSidebar = ({ onClose, onSubmit, selectedRole }) => {
-  const vendors = useSelector((state) => state?.vendor?.vendors)
-  console.log(vendors);
-  const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(fetchAllVendors())
-  }, [])
-  console.log(selectedRole?.vendorId);
   const {
     handleSubmit,
     register,
@@ -35,9 +23,8 @@ const AddEditRoleSidebar = ({ onClose, onSubmit, selectedRole }) => {
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      name: selectedRole?.name || '',
-      vendorId: selectedRole?.vendorId || '',
-      branchName: selectedRole?.branchName || '',
+      roleName: selectedRole?.roleName || '',
+      description: selectedRole?.description || '',
     },
   });
 
@@ -61,42 +48,24 @@ const AddEditRoleSidebar = ({ onClose, onSubmit, selectedRole }) => {
       }}
     >
       <form onSubmit={handleSubmit(handleFormSubmit)}>
-      <Typography variant="h5" style={{ fontWeight: 'bold', color: 'teal' }}>
-              Customer
-            </Typography>
+        <Typography variant="h5" style={{ fontWeight: 'bold', color: 'teal' }}>
+          Role
+        </Typography>
         <div style={{ marginBottom: '10px' }}>
-          <InputLabel>Name</InputLabel>
-          <TextField fullWidth name="name" {...register('name')} />
-          <FormHelperText>{errors.name?.message}</FormHelperText>
+          <InputLabel>Role Name</InputLabel>
+          <TextField fullWidth name="roleName" {...register('roleName')} />
+          <FormHelperText>{errors.roleName?.message}</FormHelperText>
         </div>
-       {!selectedRole && <div style={{ marginBottom: '10px' }}>
-          <InputLabel id="vendorId-label">Vendor ID</InputLabel>
-          <Select
-            fullWidth
-            labelId="vendorId-label"
-            name="vendorId"
-            {...register('vendorId', { required: true })}
-            defaultValue={selectedRole?.vendorId || ''}
-          >
-            {vendors?.length>0 && vendors?.map((item, index) => (
-              <MenuItem key={index} value={item?._id}>
-                {item?.name}
-              </MenuItem>
-            ))}
-          </Select>
-
-          <FormHelperText>{errors.vendorId?.message}</FormHelperText>
-        </div>}
-        {!selectedRole && <div style={{ marginBottom: '10px' }}>
-          <InputLabel>Branch Name (Optional)</InputLabel>
+        <div style={{ marginBottom: '10px' }}>
+          <InputLabel>Description</InputLabel>
           <TextField
             fullWidth
-            name="branchName"
-            {...register('branchName')}
-            error={!!errors.branchName}
-            helperText={errors.branchName?.message}
+            name="description"
+            {...register('description')}
+            error={!!errors.description}
+            helperText={errors.description?.message}
           />
-        </div>}
+        </div>
         <Button
           type="submit"
           color="primary"

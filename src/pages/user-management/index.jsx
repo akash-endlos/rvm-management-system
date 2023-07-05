@@ -146,12 +146,13 @@ const index = () => {
     setIsAddSidebarOpen(false);
   };
   const handleAddRole = async (customerData) => {
-    if (selectedCustomer) {
+    if (selectedRole) {
       // Update existing customer
 
       console.log('Updating customer', customerData);
     } else {
       // Add new customer
+      
       console.log('Add customer', customerData);
       // addCustomer(newcustomer.payload);
     }
