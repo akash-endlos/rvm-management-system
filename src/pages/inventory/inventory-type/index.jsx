@@ -17,12 +17,18 @@ import { Delete, Edit } from '@mui/icons-material';
 import { FiGitBranch } from 'react-icons/fi';
 import DeleteInventoryTypeModal from '@/components/inventory-type/DeleteInventoryTypeModal';
 import { toast } from 'react-hot-toast';
+import AdminNestedTable from '@/components/AdminTable/AdminNestedTable';
+import AddEditInventoryDetail from '@/components/inventory-type/AddEditInventoryBrand';
+import { createNewInventoryDetail, updateInventoryDetail } from '@/redux/reducers/inventoryDetailSlice';
+import AddEditInventoryBrand from '@/components/inventory-type/AddEditInventoryBrand';
 
 
 const Index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
   const [selectedInventoryType, setSelectedInventoryType] = useState(null);
   const [isDeleteInventoryTypeModalOpen, setIsDeleteInventoryTypeModalOpen] = useState(false);
+  const [isAddInventoryDetailSidebarOpen, setIsAddInventoryDetailSidebarOpen] = useState(false);
+  const [selectedInventoryDetail, setSelectedInventoryDetail] = useState(null);
   const allinventoryType = useSelector((state) => state.inventory)
   console.log(allinventoryType);
   const dispatch = useDispatch();
@@ -84,6 +90,12 @@ const Index = () => {
     setSelectedInventoryType(inventoryData);
     setIsAddSidebarOpen(true);
   };
+  const handleOpenAddInventoryDetailSidebar = (customerData) => {
+    setSelectedInventoryDetail(null);
+    setIsAddInventoryDetailSidebarOpen(true);
+    setSelectedInventoryType(customerData);
+  };
+
   const handleAdminTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
@@ -98,8 +110,24 @@ const Index = () => {
           </IconButton>
         </Tooltip>
         <Tooltip arrow placement="right" title="Add Branch">
-          <IconButton color="secondary" onClick={() => handleOpenAddBranchSidebar(row.original)}>
+          <IconButton color="secondary" onClick={() => handleOpenAddInventoryDetailSidebar(row.original)}>
             <FiGitBranch />
+          </IconButton>
+        </Tooltip>
+      </Box>
+    );
+  };
+  const handleAdminNestedTableRowActions = (row, table) => {
+    return (
+      <Box sx={{ display: 'flex', gap: '1rem' }}>
+        <Tooltip arrow placement="left" title="Edit Customer">
+          <IconButton onClick={() => handleEditBranch(row.original)}>
+            <Edit />
+          </IconButton>
+        </Tooltip>
+        <Tooltip arrow placement="right" title="Delete Customer">
+          <IconButton color="error" onClick={() => handleDeleteBranch(row.original)}>
+            <Delete />
           </IconButton>
         </Tooltip>
       </Box>
@@ -108,21 +136,21 @@ const Index = () => {
   const handleNestedTable = (row) => {
     const nestedTableConfigurations = [
       {
-        header: 'branches',
+        header: 'Inventory Details',
         columns: [{ header: 'Name', accessorKey: 'name' }],
-        data: row?.original?.branches,
+        data: row?.original?.invetrybrands,
       },
     ];
     return (
       <>
-        {/* {nestedTableConfigurations.map((config, index) => (
+        {nestedTableConfigurations.map((config, index) => (
           <>
             <Typography variant="h5" style={{ fontWeight: 'bold', color: 'teal' }}>
               {config?.header}
             </Typography>
             <AdminNestedTable handleAdminNestedTableRowActions={handleAdminNestedTableRowActions} columns={config?.columns} data={config?.data} />
           </>
-        ))} */}
+        ))}
       </>
     );
   };
@@ -142,6 +170,7 @@ const Index = () => {
       try {
         await dispatch(updateInventoryType(updatedNewInventoryType))
         await dispatch(fetchAllInventoryTypes())
+        toast.success('Updated Inventory Type Successfully')
       } catch (error) {
         console.log(error);
       }
@@ -150,6 +179,7 @@ const Index = () => {
       // Add new customer
       try {
         await dispatch(createNewInventoryType(inventoryTypeData))
+        toast.success('Added Inventory Type Successfully')
       } catch (error) {
         console.log(error);
       }
@@ -172,6 +202,18 @@ const Index = () => {
         console.error('Error deleting customer:', error);
       });
   }
+  const handleCloseAddInventoryDetailSidebar = () => {
+    setIsAddInventoryDetailSidebarOpen(false);
+  };
+  const handleAddInventoryDetail = async (inventoryDetailData) => {
+    if (selectedInventoryDetail) {
+      // Update existing branch
+      console.log('Updating branch', inventoryDetailData);
+    } else {
+      console.log('Adding branch', inventoryDetailData);
+    }
+    handleCloseAddInventoryDetailSidebar();
+  };
   return (
     <Layout>
       <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
@@ -190,6 +232,14 @@ const Index = () => {
             onClose={handleCloseAddSidebar}
             onSubmit={handleAddInventoryType}
             selectedInventoryType={selectedInventoryType}
+          />
+        )}
+        {isAddInventoryDetailSidebarOpen && (
+          <AddEditInventoryBrand
+            onClose={handleCloseAddInventoryDetailSidebar}
+            onSubmit={handleAddInventoryDetail}
+            selectedInventoryDetail={selectedInventoryDetail}
+            // selectedCustomer={selectedCustomer}
           />
         )}
          <DeleteInventoryTypeModal
