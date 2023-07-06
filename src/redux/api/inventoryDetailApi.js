@@ -1,6 +1,6 @@
 import axiosInstance from './api';
 
-export const getInventoryDetailApi = async (inventoryId) => {
+export const getInventoryDetailsApi = async (inventoryId) => {
   try {
     const response = await axiosInstance.get(`/inventory-details/${inventoryId}`);
     return response.data;

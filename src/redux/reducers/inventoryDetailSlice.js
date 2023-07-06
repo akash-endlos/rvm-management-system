@@ -1,21 +1,22 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import {
-  getInventoryDetailApi,
+  getInventoryDetailsApi,
   createInventoryDetailApi,
   updateInventoryDetailApi,
-  deleteInventoryDetailApi,
+  deleteInventoryDetailApi
 } from '../api/inventoryDetailApi';
 
-export const fetchInventoryDetail = createAsyncThunk(
-  'inventoryDetail/fetchOne',
-  async (inventoryId) => {
-    const response = await getInventoryDetailApi(inventoryId);
+// Async Thunks
+export const fetchInventoryDetails = createAsyncThunk(
+  'inventoryDetails/fetchAll',
+  async () => {
+    const response = await getInventoryDetailsApi();
     return response;
   }
 );
 
-export const createNewInventoryDetail = createAsyncThunk(
-  'inventoryDetail/create',
+export const createInventoryDetail = createAsyncThunk(
+  'inventoryDetails/create',
   async (inventoryDetailData) => {
     const response = await createInventoryDetailApi(inventoryDetailData);
     return response;
@@ -23,41 +24,70 @@ export const createNewInventoryDetail = createAsyncThunk(
 );
 
 export const updateInventoryDetail = createAsyncThunk(
-  'inventoryDetail/update',
-  async ({ inventoryId, inventoryDetailData }) => {
-    const response = await updateInventoryDetailApi(inventoryId, inventoryDetailData);
+  'inventoryDetails/update',
+  async (inventoryDetailData) => {
+    const response = await updateInventoryDetailApi(inventoryDetailData);
     return response;
   }
 );
 
 export const deleteInventoryDetail = createAsyncThunk(
-  'inventoryDetail/delete',
-  async (inventoryId) => {
-    await deleteInventoryDetailApi(inventoryId);
-    return inventoryId;
+  'inventoryDetails/delete',
+  async (inventoryDetailId) => {
+    await deleteInventoryDetailApi(inventoryDetailId);
+    return inventoryDetailId;
   }
 );
 
+// Slice
 const inventoryDetailSlice = createSlice({
-  name: 'inventoryDetail',
-  initialState: {},
+  name: 'inventoryDetails',
+  initialState: [],
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchInventoryDetail.fulfilled, (state, { payload }) => {
-        return payload;
+      .addCase(fetchInventoryDetails.fulfilled, (state, action) => {
+        const inventoryDetailsWithIndex = action.payload.map((inventoryDetail, index) => ({
+          ...inventoryDetail,
+          index: index + 1,
+        }));
+        return inventoryDetailsWithIndex;
       })
-      .addCase(createNewInventoryDetail.fulfilled, (state, { payload }) => {
-        return payload;
+      .addCase(createInventoryDetail.fulfilled, (state, action) => {
+        const newInventoryDetail = {
+          ...action.payload,
+          index: 1,
+        };
+        const updatedState = state.map((inventoryDetail) => ({
+          ...inventoryDetail,
+          index: inventoryDetail.index + 1,
+        }));
+        state.unshift(newInventoryDetail);
+        state.length = updatedState.length + 1;
+        state.splice(1, updatedState.length, ...updatedState);
       })
-      .addCase(updateInventoryDetail.fulfilled, (state, { payload }) => {
-        return payload;
+      .addCase(updateInventoryDetail.fulfilled, (state, action) => {
+        const updatedInventoryDetail = action.payload;
+        const updatedIndex = state.findIndex((inventoryDetail) => inventoryDetail.id === updatedInventoryDetail.id);
+        if (updatedIndex !== -1) {
+          const newState = [...state];
+          newState[updatedIndex] = {
+            ...updatedInventoryDetail,
+            index: state[updatedIndex].index,
+          };
+          return newState;
+        }
+        return state;
       })
-      .addCase(deleteInventoryDetail.fulfilled, () => {
-        return {};
+      .addCase(deleteInventoryDetail.fulfilled, (state, action) => {
+        const updatedState = state.filter((inventoryDetail) => inventoryDetail.id !== action.payload);
+        const inventoryDetailsWithUpdatedIndex = updatedState.map((inventoryDetail, index) => ({
+          ...inventoryDetail,
+          index: index + 1,
+        }));
+        return inventoryDetailsWithUpdatedIndex;
       });
   },
 });
 
-export const { setInventoryDetail, addInventoryDetail } = inventoryDetailSlice.actions;
-export const inventoryDetailReducer = inventoryDetailSlice.reducer;
+export default inventoryDetailSlice.reducer;
