@@ -4,7 +4,7 @@ import Layout from '@/layout/Layout'
 import { fetchAllCustomers } from '@/redux/reducers/customerSlice'
 import { createNewRole, deleteRole, fetchAllRoles, updateRole } from '@/redux/reducers/roleSlice'
 import { Delete, Edit } from '@mui/icons-material'
-import { Box, Button, IconButton, Tooltip, Typography } from '@mui/material'
+import { Box, Button, Chip, IconButton, TableCell, Tooltip, Typography } from '@mui/material'
 import React, { useEffect, useMemo, useState } from 'react'
 import { FiGitBranch } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux'
@@ -13,8 +13,9 @@ import AddEditRoleSidebar from '@/components/user-management/AddEditRoleSidebar'
 import { toast } from 'react-hot-toast'
 import DeleteRoleModal from '@/components/user-management/DeleteRoleModal'
 import AddEditUserSidebar from '@/components/user-management/AddEditUserSidebar'
-import { createUser, updateUser } from '@/redux/reducers/userSlice'
+import { createUser, deleteUser, updateUser } from '@/redux/reducers/userSlice'
 import DeleteUserModal from '@/components/user-management/DeleteUserModal'
+import { deleteUserApi } from '@/redux/api/userApi'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
@@ -50,6 +51,15 @@ const index = () => {
         accessorKey: 'description',
         header: 'Description',
         size: 150,
+      },
+      {
+        accessorKey: 'isActive',
+        header: 'Active/Disabled',
+        size: 150,
+        Cell: ({ renderedCellValue }) => {
+          return(
+            <Chip label={renderedCellValue ? 'Active' : 'Disabled'} color={renderedCellValue ? 'primary' : 'default'} />
+        )},
       },
     ],
     []
@@ -241,8 +251,8 @@ const index = () => {
   }
   const handleConfirmDeleteUser = async () => {
     try {
-      // await dispatch(deleteBranch(selectedBranch?._id))
-      // await dispatch(fetchAllCustomers())
+      await dispatch(deleteUser(selectedUser?._id))
+      await dispatch(fetchAllRoles())
       toast.success('Delete User SuccessFully')
     } catch (error) {
       console.log(error);
