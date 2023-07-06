@@ -162,7 +162,7 @@ const Index = () => {
   const handleNestedTable = (row) => {
     const nestedTableConfigurations = [
       {
-        header: 'Inventory Details',
+        header: 'Inventory Brand',
         columns: [{ header: 'Name', accessorKey: 'name' }],
         data: row?.original?.invetrybrands,
       },

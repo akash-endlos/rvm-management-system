@@ -1,6 +1,6 @@
 import AdminTable from '@/components/AdminTable/AdminTable'
 import Layout from '@/layout/Layout'
-import { fetchInventoryDetails } from '@/redux/reducers/inventoryDetailSlice'
+import { createInventoryDetail, fetchInventoryDetails } from '@/redux/reducers/inventoryDetailSlice'
 import { fetchAllRoles } from '@/redux/reducers/roleSlice'
 import { Delete, Edit } from '@mui/icons-material'
 import { Box, IconButton, Tooltip, Typography,Button } from '@mui/material'
@@ -8,15 +8,18 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { FiGitBranch } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux'
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import { createNewInventoryBrand, deleteInventoryBrand, fetchAllInventoryBrands, updateInventoryBrand } from '@/redux/reducers/inventoryBrandSlice'
+import { createNewInventoryBrand, deleteInventoryBrand, fetchAllInventoryBrands, fetchInventoryBrand, updateInventoryBrand } from '@/redux/reducers/inventoryBrandSlice'
 import AddEditInventoryBrand from '@/components/inventory-type/AddEditInventoryBrand'
 import AddEditInventoryBrandSidebar from '@/components/inventory-brand/AddEditInventoryBrandSidebar'
 import DeleteBrandModal from '@/components/inventory-type/DeleteBrandModal'
 import { toast } from 'react-hot-toast'
 import AddEditInventoryDetailSidebar from '@/components/inventory-brand/AddEditInventoryDetailSidebar'
+import AdminNestedTable from '@/components/AdminTable/AdminNestedTable'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
+  const [inventoryTypeId, setInventoryTypeId] = useState(null)
+  const [brands, setBrands] = useState([])
   const [selectedInventoryBrand, setSelectedInventoryBrand] = useState(null);
   const [isDeleteBrandModalOpen, setIsDeleteBrandModalOpen] = useState(false);
   const [isAddDetailSidebarOpen, setIsAddDetailSidebarOpen] = useState(false); // New state for AddEditDetailSidebar
@@ -26,11 +29,24 @@ const index = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchData = async () => {
-      await dispatch(fetchAllInventoryBrands());
+     const data = await dispatch(fetchAllInventoryBrands());
+     setBrands(data.payload.payload.brands)
+     console.log(data.payload.payload.brands);
     };
 
     fetchData();
   }, [dispatch]);
+  useEffect(() => {
+     if(inventoryTypeId)
+     {
+      const fetchBrandsData = async () => {
+        await dispatch(fetchInventoryBrand(inventoryTypeId));
+      };
+  
+      fetchBrandsData();
+     }
+  }, [inventoryTypeId])
+  
   const mainTableColumns = useMemo(
     () => [
       {
@@ -89,6 +105,8 @@ const index = () => {
     setIsDeleteBrandModalOpen(true);
   };
   const handleOpenAddDetailSidebar = (brandData) => {
+    console.log(brandData.inventryTypeId);
+    setInventoryTypeId(brandData.inventryTypeId)
     setSelectedDetail(null);
     setIsAddDetailSidebarOpen(true);
     setSelectedInventoryBrand(brandData);
@@ -134,21 +152,41 @@ const index = () => {
   const handleNestedTable = (row) => {
     const nestedTableConfigurations = [
       {
-        header: 'branches',
-        columns: [{ header: 'Name', accessorKey: 'name' }],
-        data: row?.original?.branches,
+        header: 'Inventory Details',
+        columns: [
+        {
+          accessorKey: 'invoiceNo',
+          header: 'Invoice',
+          size: 150,
+        },
+        {
+          accessorKey: 'serialNumber',
+          header: 'Serial Number',
+          size: 150,
+        },
+        {
+          accessorKey: 'purchaseDate',
+          header: 'Purchase Date',
+          size: 150,
+        },
+        {
+          accessorKey: 'warrantyExpired',
+          header: 'Warranty Expired',
+          size: 150,
+        },],
+        data: row?.original?.invetries,
       },
     ];
     return (
       <>
-        {/* {nestedTableConfigurations.map((config, index) => (
+        {nestedTableConfigurations.map((config, index) => (
           <>
             <Typography variant="h5" style={{ fontWeight: 'bold', color: 'teal' }}>
               {config?.header}
             </Typography>
             <AdminNestedTable handleAdminNestedTableRowActions={handleAdminNestedTableRowActions} columns={config?.columns} data={config?.data} />
           </>
-        ))} */}
+        ))}
       </>
     );
   };
@@ -196,7 +234,23 @@ const index = () => {
     if (selectedDetail) {
       console.log('Updating branch', detailData);
     } else {
-      console.log('Adding branch', detailData);
+      const newDetailData = {
+        inventryTypeId: selectedInventoryBrand.inventryTypeId,
+        invoiceNo: detailData.invoiceNo,
+        serialNumber:detailData.serialNumber,
+        purchaseDate:detailData.purchaseDate,
+        warrantyExpired:detailData.warrantyExpired,
+        ...(detailData.brandName
+          ? { brandName: detailData.brandName }
+          : { brandId: detailData.brandId }
+        ),
+      };
+      try {
+          await dispatch(createInventoryDetail(newDetailData))  
+      } catch (error) {
+        console.log(error);
+      }
+      console.log('Adding branch', newDetailData);
     }
     handleCloseAddDetailSidebar();
   };
@@ -231,6 +285,7 @@ const index = () => {
             onClose={handleCloseAddDetailSidebar}
             onSubmit={handleAddBranch}
             selectedDetail={selectedDetail}
+            brands={brands}
             // selectedCustomer={selectedCustomer}
           />
         )}

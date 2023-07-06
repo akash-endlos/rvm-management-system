@@ -20,7 +20,7 @@ export const createInventoryBrandApi = async (inventoryBrandData) => {
 
 export const getInventoryBrandApi = async (brandId) => {
   try {
-    const response = await axiosInstance.get(`/inventory-brands/${brandId}`);
+    const response = await axiosInstance.get(`inventrytype/get?id=${brandId}&type=allInventries`);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.error);

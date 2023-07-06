@@ -11,7 +11,7 @@ export const getInventoryDetailsApi = async () => {
 
 export const createInventoryDetailApi = async (inventoryDetailData) => {
   try {
-    const response = await axiosInstance.post('/inventory-details', inventoryDetailData);
+    const response = await axiosInstance.post('/inventry/add', inventoryDetailData);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.error);
