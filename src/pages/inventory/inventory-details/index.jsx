@@ -18,7 +18,6 @@ import AdminNestedTable from '@/components/AdminTable/AdminNestedTable'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
-  const [inventoryTypeId, setInventoryTypeId] = useState(null)
   const [brands, setBrands] = useState([])
   const [selectedInventoryBrand, setSelectedInventoryBrand] = useState(null);
   const [isDeleteBrandModalOpen, setIsDeleteBrandModalOpen] = useState(false);
@@ -36,16 +35,6 @@ const index = () => {
 
     fetchData();
   }, [dispatch]);
-  useEffect(() => {
-     if(inventoryTypeId)
-     {
-      const fetchBrandsData = async () => {
-        await dispatch(fetchInventoryBrand(inventoryTypeId));
-      };
-  
-      fetchBrandsData();
-     }
-  }, [inventoryTypeId])
   
   const mainTableColumns = useMemo(
     () => [
@@ -105,8 +94,6 @@ const index = () => {
     setIsDeleteBrandModalOpen(true);
   };
   const handleOpenAddDetailSidebar = (brandData) => {
-    console.log(brandData.inventryTypeId);
-    setInventoryTypeId(brandData.inventryTypeId)
     setSelectedDetail(null);
     setIsAddDetailSidebarOpen(true);
     setSelectedInventoryBrand(brandData);
@@ -132,12 +119,15 @@ const index = () => {
       </Box>
     );
   };
-
+  const handleEditDetail = (detailData) => {
+    setSelectedDetail(detailData);
+    setIsAddDetailSidebarOpen(true);
+  };
   const handleAdminNestedTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip arrow placement="left" title="Edit Customer">
-          <IconButton onClick={() => handleEditBranch(row.original)}>
+          <IconButton onClick={() => handleEditDetail(row.original)}>
             <Edit />
           </IconButton>
         </Tooltip>
@@ -230,28 +220,26 @@ const index = () => {
   const handleCloseAddDetailSidebar = () => {
     setIsAddDetailSidebarOpen(false);
   };
-  const handleAddBranch = async (detailData) => {
+  const handleAddDetail = async (detailData) => {
     if (selectedDetail) {
       console.log('Updating branch', detailData);
     } else {
-      const newDetailData = {
-        inventryTypeId: selectedInventoryBrand.inventryTypeId,
-        invoiceNo: detailData.invoiceNo,
-        serialNumber:detailData.serialNumber,
-        purchaseDate:detailData.purchaseDate,
-        warrantyExpired:detailData.warrantyExpired,
-        ...(detailData.brandName
-          ? { brandName: detailData.brandName }
-          : { brandId: detailData.brandId }
-        ),
-      };
       try {
+        const newDetailData = {
+          brandId: selectedInventoryBrand._id,
+          inventryTypeId: selectedInventoryBrand.inventryTypeId,
+          invoiceNo: detailData.invoiceNo,
+          serialNumber:detailData.serialNumber,
+          purchaseDate:detailData.purchaseDate,
+          warrantyExpired:detailData.warrantyExpired,
+        };
+        console.log(newDetailData);
           await dispatch(createInventoryDetail(newDetailData))  
           await dispatch(fetchAllInventoryBrands())
       } catch (error) {
         console.log(error);
       }
-      console.log('Adding branch', newDetailData);
+      // console.log('Adding branch', newDetailData);
     }
     handleCloseAddDetailSidebar();
   };
@@ -284,7 +272,7 @@ const index = () => {
         {isAddDetailSidebarOpen && (
           <AddEditInventoryDetailSidebar
             onClose={handleCloseAddDetailSidebar}
-            onSubmit={handleAddBranch}
+            onSubmit={handleAddDetail}
             selectedDetail={selectedDetail}
             brands={brands}
             // selectedCustomer={selectedCustomer}
