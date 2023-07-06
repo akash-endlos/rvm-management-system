@@ -83,7 +83,7 @@ const inventoryBrandSlice = createSlice({
         return inventoryBrandsWithUpdatedIndex;
       })
       .addCase(updateInventoryBrand.fulfilled, (state, { payload }) => {
-        const updatedInventoryBrand = payload.payload.updatedInventoryBrand;
+        const updatedInventoryBrand = payload.payload.brand;
         const updatedIndex = state.findIndex((inventoryBrand) => inventoryBrand._id === updatedInventoryBrand._id);
         if (updatedIndex !== -1) {
           const newState = [...state];

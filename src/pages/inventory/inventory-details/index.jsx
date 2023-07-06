@@ -193,7 +193,11 @@ const index = () => {
   const handleAddBrand = async (brandData) => {
     if (selectedInventoryBrand) {
       // Update existing customer
-      dispatch(updateInventoryBrand(brandData))
+      const updatedBrandData={
+        id:selectedInventoryBrand._id,
+        name:brandData.name
+      }
+      dispatch(updateInventoryBrand(updatedBrandData))
       await dispatch(fetchAllInventoryBrands())
       console.log('Updating customer', brandData);
     } else {
