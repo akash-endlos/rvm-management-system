@@ -9,6 +9,7 @@ import { inventoryTypeReducer } from './inventoryTypeSlice';
 import { roleReducer } from './roleSlice';
 import inventoryDetailReducer from './inventoryDetailSlice'
 import { inventoryBrandReducer } from './inventoryBrandSlice';
+import { problemReducer } from './problemSlice';
 const persistConfig = {
   key: 'root',
   storage,
@@ -22,7 +23,8 @@ const rootReducer = combineReducers({
   inventory:inventoryTypeReducer,
   inventoryBrand:inventoryBrandReducer,
   inventoryDetail:inventoryDetailReducer,
-  roles:roleReducer
+  roles:roleReducer,
+  problem:problemReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
