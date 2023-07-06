@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import {
   Button,
   TextField,
@@ -11,6 +12,7 @@ import {
   Radio,
   RadioGroup,
   FormControlLabel,
+  Chip,
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -18,12 +20,14 @@ import * as yup from 'yup';
 
 const schema = yup.object().shape({
   invoiceNo: yup.string().required('Invoice No is required'),
-  serialNumber: yup.string().required('Serial Number is required'),
+  serialNumbers: yup.array().of(yup.string()).required('Serial Numbers are required'),
 });
-
 
 const AddEditInventoryDetailSidebar = ({ onClose, onSubmit, selectedDetail, brands }) => {
   console.log(selectedDetail);
+
+  const [serialNumbers, setSerialNumbers] = useState(selectedDetail?.serialNumbers || []);
+
   const {
     handleSubmit,
     register,
@@ -32,14 +36,26 @@ const AddEditInventoryDetailSidebar = ({ onClose, onSubmit, selectedDetail, bran
     resolver: yupResolver(schema),
     defaultValues: {
       invoiceNo: selectedDetail?.invoiceNo || '',
-      serialNumber: selectedDetail?.serialNumber || '',
+      serialNumbers: selectedDetail?.serialNumbers || [],
       purchaseDate: selectedDetail?.purchaseDate || undefined,
       warrantyExpired: selectedDetail?.warrantyExpired || undefined,
     },
   });
 
   const handleFormSubmit = (data) => {
-    onSubmit(data);
+    onSubmit({ ...data, serialNumbers });
+  };
+
+  const handleAddSerialNumber = () => {
+    const newSerialNumber = document.getElementById('newSerialNumber').value;
+    setSerialNumbers([...serialNumbers, newSerialNumber]);
+    document.getElementById('newSerialNumber').value = '';
+  };
+
+  const handleRemoveSerialNumber = (index) => {
+    const updatedSerialNumbers = [...serialNumbers];
+    updatedSerialNumbers.splice(index, 1);
+    setSerialNumbers(updatedSerialNumbers);
   };
 
   return (
@@ -72,17 +88,29 @@ const AddEditInventoryDetailSidebar = ({ onClose, onSubmit, selectedDetail, bran
             helperText={errors.invoiceNo?.message}
           />
         </div>
-        <div style={{ marginBottom: '10px' }}>
-          <InputLabel>Serial Number <small>eg:- ABC-XYZ-MNP,ZXC-MNB-JHU</small></InputLabel>
-          <TextField
-            fullWidth
-            name="serialNumber"
-            {...register('serialNumber')}
-            error={!!errors.serialNumber}
-            helperText={errors.serialNumber?.message}
-          />
-        </div>
 
+        <div style={{ marginBottom: '10px' }}>
+          <InputLabel>Serial Numbers</InputLabel>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
+            {serialNumbers.map((serialNumber, index) => (
+              <Chip
+                key={index}
+                label={serialNumber}
+                onDelete={() => handleRemoveSerialNumber(index)}
+              />
+            ))}
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <TextField
+              fullWidth
+              id="newSerialNumber"
+              placeholder="Enter a new serial number"
+            />
+            <Button variant="outlined" color="primary" onClick={handleAddSerialNumber}>
+              Add
+            </Button>
+          </div>
+        </div>
         <div style={{ marginBottom: '10px' }}>
           <InputLabel>Purchase Date</InputLabel>
           <TextField
@@ -95,6 +123,7 @@ const AddEditInventoryDetailSidebar = ({ onClose, onSubmit, selectedDetail, bran
             }}
           />
         </div>
+
         <div style={{ marginBottom: '10px' }}>
           <InputLabel>Warranty Expired</InputLabel>
           <TextField
@@ -108,12 +137,7 @@ const AddEditInventoryDetailSidebar = ({ onClose, onSubmit, selectedDetail, bran
           />
         </div>
 
-        <Button
-          type="submit"
-          color="primary"
-          variant="contained"
-          style={{ marginRight: '10px' }}
-        >
+        <Button type="submit" color="primary" variant="contained" style={{ marginRight: '10px' }}>
           {selectedDetail ? 'Update' : 'Submit'}
         </Button>
         <Button onClick={onClose}>Cancel</Button>

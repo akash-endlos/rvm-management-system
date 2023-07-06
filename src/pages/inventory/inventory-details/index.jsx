@@ -229,7 +229,7 @@ const index = () => {
           brandId: selectedInventoryBrand._id,
           inventryTypeId: selectedInventoryBrand.inventryTypeId,
           invoiceNo: detailData.invoiceNo,
-          serialNumber:detailData.serialNumber,
+          serialNumber:detailData.serialNumbers,
           purchaseDate:detailData.purchaseDate,
           warrantyExpired:detailData.warrantyExpired,
         };
