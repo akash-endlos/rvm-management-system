@@ -15,7 +15,7 @@ const schema = yup.object().shape({
   }),
 });
 
-const AddEditProblemSidebar = ({ onClose, onSubmit, selectedCustomer }) => {
+const AddEditProblemSidebar = ({ onClose, onSubmit, selectedProblem }) => {
   const {
     handleSubmit,
     register,
@@ -24,10 +24,10 @@ const AddEditProblemSidebar = ({ onClose, onSubmit, selectedCustomer }) => {
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      name: selectedCustomer?.name || '',
-      description: selectedCustomer?.description || '',
-      category: selectedCustomer?.category || '',
-      problemType: selectedCustomer?.category === 'Hardware' ? '' : undefined,
+      name: selectedProblem?.name || '',
+      description: selectedProblem?.description || '',
+      category: selectedProblem?.category || '',
+      problemType: selectedProblem?.category === 'Hardware' ? '' : undefined,
     },
   });
 console.log(watch('category'));
@@ -94,7 +94,7 @@ console.log(watch('category'));
           variant="contained"
           style={{ marginRight: '10px' }}
         >
-          {selectedCustomer ? 'Update' : 'Submit'}
+          {selectedProblem ? 'Update' : 'Submit'}
         </Button>
         <Button onClick={onClose}>Cancel</Button>
       </form>

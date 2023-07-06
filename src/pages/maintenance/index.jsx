@@ -53,7 +53,7 @@ const index = () => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip arrow placement="left" title="Edit Customer">
-          <IconButton onClick={() => handleEditCustomer(row.original)}>
+          <IconButton onClick={() => handleEditProblem(row.original)}>
             <Edit />
           </IconButton>
         </Tooltip>
@@ -154,6 +154,10 @@ const index = () => {
       console.log('Updating customer', problemData);
     }
     handleCloseAddSidebar();
+  };
+  const handleEditProblem = (problemData) => {
+    setSelectedProblem(problemData);
+    setIsAddSidebarOpen(true);
   };
   return (
     <Layout>
