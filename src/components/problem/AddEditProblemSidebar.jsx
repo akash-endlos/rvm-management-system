@@ -54,16 +54,6 @@ console.log(watch('category'));
           Problem
         </Typography>
         <div style={{ marginBottom: '10px' }}>
-          <FormLabel variant="body1" >Name</FormLabel>
-          <TextField fullWidth name="name" {...register('name')} />
-          <Typography variant="body2" color="error">{errors.name?.message}</Typography>
-        </div>
-        <div style={{ marginBottom: '10px' }}>
-          <FormLabel variant="body1" >Description</FormLabel>
-          <TextField fullWidth name="description" {...register('description')} />
-          <Typography variant="body2" color="error">{errors.description?.message}</Typography>
-        </div>
-        <div style={{ marginBottom: '10px' }}>
           <FormLabel variant="body1" >Category</FormLabel>
           <Select
             fullWidth
@@ -88,6 +78,16 @@ console.log(watch('category'));
             <Typography variant="body2" color="error">{errors.problemType?.message}</Typography>
           </div>)
         }
+        <div style={{ marginBottom: '10px' }}>
+          <FormLabel variant="body1" >Name</FormLabel>
+          <TextField fullWidth name="name" {...register('name')} />
+          <Typography variant="body2" color="error">{errors.name?.message}</Typography>
+        </div>
+        <div style={{ marginBottom: '10px' }}>
+          <FormLabel variant="body1" >Description</FormLabel>
+          <TextField fullWidth name="description" {...register('description')} />
+          <Typography variant="body2" color="error">{errors.description?.message}</Typography>
+        </div>
         <Button
           type="submit"
           color="primary"
