@@ -64,6 +64,16 @@ const SidebarLayout = ({ children }) => {
       url: '/user-management',
       icon: <AiOutlineUserAdd />,
     },
+    {
+      title: 'Machine',
+      url: '/machine',
+      icon: <AiOutlineUserAdd />,
+    },
+    {
+      title: 'Ticket',
+      url: '/ticket',
+      icon: <AiOutlineUserAdd />,
+    },
     // {
     //   title: 'Item1',
     //   url: '#',
