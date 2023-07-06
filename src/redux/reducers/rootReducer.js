@@ -7,7 +7,8 @@ import { vendorReducer } from './vendorSlice';
 import { branchReducer } from './branchSlice';
 import { inventoryTypeReducer } from './inventoryTypeSlice';
 import { roleReducer } from './roleSlice';
-
+import inventoryDetailReducer from './inventoryDetailSlice'
+import { inventoryBrandReducer } from './inventoryBrandSlice';
 const persistConfig = {
   key: 'root',
   storage,
@@ -19,6 +20,8 @@ const rootReducer = combineReducers({
   vendor:vendorReducer,
   branch:branchReducer,
   inventory:inventoryTypeReducer,
+  inventoryBrand:inventoryBrandReducer,
+  inventoryDetail:inventoryDetailReducer,
   roles:roleReducer
 });
 

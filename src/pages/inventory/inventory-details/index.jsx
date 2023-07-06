@@ -1,19 +1,32 @@
 import AdminTable from '@/components/AdminTable/AdminTable'
 import Layout from '@/layout/Layout'
+import { fetchInventoryDetails } from '@/redux/reducers/inventoryDetailSlice'
 import { fetchAllRoles } from '@/redux/reducers/roleSlice'
 import { Delete, Edit } from '@mui/icons-material'
-import { Box, IconButton, Tooltip, Typography } from '@mui/material'
-import React, { useEffect, useMemo } from 'react'
+import { Box, IconButton, Tooltip, Typography,Button } from '@mui/material'
+import React, { useEffect, useMemo, useState } from 'react'
 import { FiGitBranch } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux'
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import { createNewInventoryBrand, deleteInventoryBrand, fetchAllInventoryBrands, updateInventoryBrand } from '@/redux/reducers/inventoryBrandSlice'
+import AddEditInventoryBrand from '@/components/inventory-type/AddEditInventoryBrand'
+import AddEditInventoryBrandSidebar from '@/components/inventory-brand/AddEditInventoryBrandSidebar'
+import DeleteBrandModal from '@/components/inventory-type/DeleteBrandModal'
+import { toast } from 'react-hot-toast'
+import AddEditInventoryDetailSidebar from '@/components/inventory-brand/AddEditInventoryDetailSidebar'
 
 const index = () => {
-  const allusers = useSelector((state) => state.roles)
-  console.log(allusers);
+  const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
+  const [selectedInventoryBrand, setSelectedInventoryBrand] = useState(null);
+  const [isDeleteBrandModalOpen, setIsDeleteBrandModalOpen] = useState(false);
+  const [isAddDetailSidebarOpen, setIsAddDetailSidebarOpen] = useState(false); // New state for AddEditDetailSidebar
+  const [selectedDetail, setSelectedDetail] = useState(null); // New state for AddEditBranchSidebar
+  const allinventoryBrands = useSelector((state) => state.inventoryBrand)
+  console.log(allinventoryBrands);
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchData = async () => {
-      await dispatch(fetchAllRoles());
+      await dispatch(fetchAllInventoryBrands());
     };
 
     fetchData();
@@ -30,9 +43,14 @@ const index = () => {
         header: 'Name',
         size: 150,
       },
+      
     ],
     []
   );
+  const handleOpenAddSidebar = () => {
+    setSelectedInventoryBrand(null);
+    setIsAddSidebarOpen(true);
+  };
   const handleToolBar = (table) => {
     const handleExportRows = (rows) => {
       csvExporter.generateCsv(rows.map((row) => row.original));
@@ -40,7 +58,7 @@ const index = () => {
     
     return (
       <Box sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}>
-        {/* <Button
+        <Button
           disabled={table.getPrePaginationRowModel().rows.length === 0}
           onClick={() => handleExportRows(table.getPrePaginationRowModel().rows)}
           startIcon={<FileDownloadIcon />}
@@ -57,26 +75,39 @@ const index = () => {
           Export Selected Rows
         </Button>
         <Button variant="contained" onClick={handleOpenAddSidebar}>
-          Add Customer
-        </Button> */}
+          Add Brand
+        </Button>
       </Box>
     );
+  };
+  const handleEditBrand = (brandData) => {
+    setSelectedInventoryBrand(brandData);
+    setIsAddSidebarOpen(true);
+  };
+  const handleDeleteBrand = (brandData) => {
+    setSelectedInventoryBrand(brandData);
+    setIsDeleteBrandModalOpen(true);
+  };
+  const handleOpenAddDetailSidebar = (brandData) => {
+    setSelectedDetail(null);
+    setIsAddDetailSidebarOpen(true);
+    setSelectedInventoryBrand(brandData);
   };
   const handleAdminTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip arrow placement="left" title="Edit Customer">
-          <IconButton onClick={() => handleEditCustomer(row.original)}>
+          <IconButton onClick={() => handleEditBrand(row.original)}>
             <Edit />
           </IconButton>
         </Tooltip>
         <Tooltip arrow placement="right" title="Delete Customer">
-          <IconButton color="error" onClick={() => handleDeleteCustomer(row.original)}>
+          <IconButton color="error" onClick={() => handleDeleteBrand(row.original)}>
             <Delete />
           </IconButton>
         </Tooltip>
         <Tooltip arrow placement="right" title="Add Branch">
-          <IconButton color="secondary" onClick={() => handleOpenAddBranchSidebar(row.original)}>
+          <IconButton color="secondary" onClick={() => handleOpenAddDetailSidebar(row.original)}>
             <FiGitBranch />
           </IconButton>
         </Tooltip>
@@ -121,19 +152,88 @@ const index = () => {
       </>
     );
   };
+  const handleCloseAddSidebar = () => {
+    setIsAddSidebarOpen(false);
+  };
+  const handleAddBrand = async (brandData) => {
+    if (selectedInventoryBrand) {
+      // Update existing customer
+      dispatch(updateInventoryBrand(brandData))
+      await dispatch(fetchAllInventoryBrands())
+      console.log('Updating customer', brandData);
+    } else {
+      await dispatch(createNewInventoryBrand(brandData))
+      await dispatch(fetchAllInventoryBrands())
+      console.log('Updating customer', brandData);
+    }
+    handleCloseAddSidebar();
+  };
+  const handleCloseDeleteModal = () => {
+    setIsDeleteBrandModalOpen(false);
+  };
+  const handleConfirmDeleteBrand =  async() => {
+    try {
+      await dispatch(deleteInventoryBrand(selectedInventoryBrand))
+      await setIsDeleteBrandModalOpen(false);
+      toast.success('Brand Delete Successfully')
+    } catch (error) {
+      
+    }
+    // dispatch(deleteInventoryBrand(selectedInventoryBrand))
+    //   .then(async () => {
+    //     toast.success('Brand Delete Successfully')
+    //   await handleCloseDeleteModal()
+    //   await dispatch(fetchAllInventoryBrands())
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error deleting customer:', error);
+    //   });
+  };
+  const handleCloseAddDetailSidebar = () => {
+    setIsAddDetailSidebarOpen(false);
+  };
+  const handleAddBranch = async (detailData) => {
+    if (selectedDetail) {
+      console.log('Updating branch', detailData);
+    } else {
+      console.log('Adding branch', detailData);
+    }
+    handleCloseAddDetailSidebar();
+  };
   return (
     <Layout>
         <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
-        Inventory Details
+        Inventory Brand
       </Typography>
       <>
         <AdminTable
-          data={allusers}
+          data={allinventoryBrands}
           handleToolBar={handleToolBar}
           columns={mainTableColumns}
           handleAdminTableRowActions={handleAdminTableRowActions}
           handleNestedTable={handleNestedTable}
         />
+        {isAddSidebarOpen && (
+          <AddEditInventoryBrandSidebar
+            onClose={handleCloseAddSidebar}
+            onSubmit={handleAddBrand}
+            selectedInventoryBrand={selectedInventoryBrand}
+          />
+        )}
+        <DeleteBrandModal
+          isOpen={isDeleteBrandModalOpen}
+          onClose={handleCloseDeleteModal}
+          onDelete={handleConfirmDeleteBrand}
+          title='Brand'
+        />
+        {isAddDetailSidebarOpen && (
+          <AddEditInventoryDetailSidebar
+            onClose={handleCloseAddDetailSidebar}
+            onSubmit={handleAddBranch}
+            selectedDetail={selectedDetail}
+            // selectedCustomer={selectedCustomer}
+          />
+        )}
         </>
     </Layout>
   )

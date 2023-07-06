@@ -11,6 +11,7 @@ export const fetchAllInventoryBrands = createAsyncThunk(
   'inventoryBrands/fetchAll',
   async () => {
     const response = await getAllInventoryBrandsApi();
+    console.log(response);
     return response;
   }
 );
@@ -54,7 +55,7 @@ const inventoryBrandSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllInventoryBrands.fulfilled, (state, action) => {
-        const inventoryBrandsWithIndex = action.payload.map((inventoryBrand, index) => ({
+        const inventoryBrandsWithIndex = action.payload.payload.brands.map((inventoryBrand, index) => ({
           ...inventoryBrand,
           index: index + 1,
         }));

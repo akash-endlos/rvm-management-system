@@ -2,8 +2,8 @@ import axiosInstance from './api';
 
 export const getAllInventoryBrandsApi = async () => {
   try {
-    const response = await axiosInstance.get('/inventory-brands');
-    return response?.data?.payload?.InventoryBrand;
+    const response = await axiosInstance.get('/inventrybrand/');
+    return response?.data;
   } catch (error) {
     throw new Error(error.response.data.error);
   }

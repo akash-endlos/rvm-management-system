@@ -47,7 +47,7 @@ const inventoryDetailSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchInventoryDetails.fulfilled, (state, action) => {
-        const inventoryDetailsWithIndex = action.payload.map((inventoryDetail, index) => ({
+        const inventoryDetailsWithIndex = action.payload.payload.allInventry.map((inventoryDetail, index) => ({
           ...inventoryDetail,
           index: index + 1,
         }));
