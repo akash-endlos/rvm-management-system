@@ -1,6 +1,6 @@
 import AdminTable from '@/components/AdminTable/AdminTable'
 import Layout from '@/layout/Layout'
-import { createInventoryDetail, fetchInventoryDetails } from '@/redux/reducers/inventoryDetailSlice'
+import { createInventoryDetail, deleteInventoryDetail, fetchInventoryDetails } from '@/redux/reducers/inventoryDetailSlice'
 import { fetchAllRoles } from '@/redux/reducers/roleSlice'
 import { Delete, Edit } from '@mui/icons-material'
 import { Box, IconButton, Tooltip, Typography,Button } from '@mui/material'
@@ -15,6 +15,7 @@ import DeleteBrandModal from '@/components/inventory-type/DeleteBrandModal'
 import { toast } from 'react-hot-toast'
 import AddEditInventoryDetailSidebar from '@/components/inventory-brand/AddEditInventoryDetailSidebar'
 import AdminNestedTable from '@/components/AdminTable/AdminNestedTable'
+import DeleteDetailModal from '@/components/inventory-brand/DeleteDetailModal'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
@@ -23,6 +24,7 @@ const index = () => {
   const [isDeleteBrandModalOpen, setIsDeleteBrandModalOpen] = useState(false);
   const [isAddDetailSidebarOpen, setIsAddDetailSidebarOpen] = useState(false); // New state for AddEditDetailSidebar
   const [selectedDetail, setSelectedDetail] = useState(null); // New state for AddEditBranchSidebar
+  const [isDeleteDetailModalOpen, setIsDeleteDetailModalOpen] = useState(false);
   const allinventoryBrands = useSelector((state) => state.inventoryBrand)
   console.log(allinventoryBrands);
   const dispatch = useDispatch();
@@ -123,6 +125,11 @@ const index = () => {
     setSelectedDetail(detailData);
     setIsAddDetailSidebarOpen(true);
   };
+  const handleDeleteDetail = (detailData) => {
+    setSelectedDetail(detailData);
+    setIsDeleteDetailModalOpen(true);
+  };
+
   const handleAdminNestedTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
@@ -132,7 +139,7 @@ const index = () => {
           </IconButton>
         </Tooltip>
         <Tooltip arrow placement="right" title="Delete Customer">
-          <IconButton color="error" onClick={() => handleDeleteBranch(row.original)}>
+          <IconButton color="error" onClick={() => handleDeleteDetail(row.original)}>
             <Delete />
           </IconButton>
         </Tooltip>
@@ -243,6 +250,23 @@ const index = () => {
     }
     handleCloseAddDetailSidebar();
   };
+  const handleCloseDeleteDetailModal=()=>{
+    setIsDeleteDetailModalOpen(false)
+  }
+    
+  const handleConfirmDeleteDetail= async () => {
+    try {
+      await dispatch(deleteInventoryDetail(selectedDetail?._id))
+       setIsDeleteDetailModalOpen(false);
+      await dispatch(fetchAllInventoryBrands())
+      toast.success('Delete Detail SuccessFully')
+    } catch (error) {
+      console.log(error);
+    }
+    // Perform delete operation on selectedCustomer
+    console.log('Deleting detail', selectedDetail);
+   
+  };
   return (
     <Layout>
         <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
@@ -278,6 +302,12 @@ const index = () => {
             // selectedCustomer={selectedCustomer}
           />
         )}
+          <DeleteDetailModal
+          isOpen={isDeleteDetailModalOpen}
+          onClose={handleCloseDeleteDetailModal}
+          onDelete={handleConfirmDeleteDetail}
+          title='Detail'
+        />
         </>
     </Layout>
   )

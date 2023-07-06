@@ -20,7 +20,8 @@ import * as yup from 'yup';
 
 const schema = yup.object().shape({
   invoiceNo: yup.string().required('Invoice No is required'),
-  serialNumbers: yup.array().of(yup.string()).required('Serial Numbers are required'),
+  // serialNumber: yup.string().required('SerialNumber No is required'),
+  // serialNumbers: yup.array().of(yup.string()).required('Serial Numbers are required'),
 });
 
 const AddEditInventoryDetailSidebar = ({ onClose, onSubmit, selectedDetail, brands }) => {
@@ -36,13 +37,15 @@ const AddEditInventoryDetailSidebar = ({ onClose, onSubmit, selectedDetail, bran
     resolver: yupResolver(schema),
     defaultValues: {
       invoiceNo: selectedDetail?.invoiceNo || '',
-      serialNumbers: selectedDetail?.serialNumbers || [],
+      serialNumbers: selectedDetail?.serialNumber || [],
+      serialNumber:selectedDetail?.serialNumber,
       purchaseDate: selectedDetail?.purchaseDate || undefined,
       warrantyExpired: selectedDetail?.warrantyExpired || undefined,
     },
   });
 
   const handleFormSubmit = (data) => {
+    console.log(data);
     onSubmit({ ...data, serialNumbers });
   };
 
@@ -89,7 +92,7 @@ const AddEditInventoryDetailSidebar = ({ onClose, onSubmit, selectedDetail, bran
           />
         </div>
 
-        <div style={{ marginBottom: '10px' }}>
+        {!selectedDetail && <div style={{ marginBottom: '10px' }}>
           <InputLabel>Serial Numbers</InputLabel>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
             {serialNumbers.map((serialNumber, index) => (
@@ -110,7 +113,17 @@ const AddEditInventoryDetailSidebar = ({ onClose, onSubmit, selectedDetail, bran
               Add
             </Button>
           </div>
-        </div>
+        </div>}
+        {selectedDetail && <div style={{ marginBottom: '10px' }}>
+          <InputLabel>Invoice No</InputLabel>
+          <TextField
+            fullWidth
+            name="serialNumber"
+            {...register('serialNumber')}
+            error={!!errors.serialNumber}
+            helperText={errors.serialNumber?.message}
+          />
+        </div>}
         <div style={{ marginBottom: '10px' }}>
           <InputLabel>Purchase Date</InputLabel>
           <TextField
