@@ -247,6 +247,7 @@ const index = () => {
       };
       try {
           await dispatch(createInventoryDetail(newDetailData))  
+          await dispatch(fetchAllInventoryBrands())
       } catch (error) {
         console.log(error);
       }
