@@ -16,7 +16,7 @@ const SidebarLayout = ({ children }) => {
       icon: <AiOutlineUserAdd />,
     },
     {
-      title: 'Vendor',
+      title: 'Reseller',
       url: '/vendor',
       icon: <AiOutlineUserAdd />,
     },

@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { FiGitBranch } from 'react-icons/fi'
 import AdminNestedTable from '@/components/AdminTable/AdminNestedTable'
+import AddEditMachineSidebar from '@/components/machine/AddEditMachineSidebar'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
@@ -40,11 +41,15 @@ const index = () => {
     setSelectedMachine(null);
     setIsAddSidebarOpen(true);
   };
+  const handleEditMachine = (machineData) => {
+    setSelectedMachine(machineData);
+    setIsAddSidebarOpen(true);
+  };
   const handleAdminTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip arrow placement="left" title="Edit Customer">
-          <IconButton onClick={() => handleEditCustomer(row.original)}>
+          <IconButton onClick={() => handleEditMachine(row.original)}>
             <Edit />
           </IconButton>
         </Tooltip>
@@ -126,20 +131,41 @@ const index = () => {
       </Box>
     );
   };
-
+  const handleCloseAddSidebar = () => {
+    setIsAddSidebarOpen(false);
+  };
+  const handleAddMachine = async (customerData) => {
+    if (selectedCustomer) {
+      // Update existing customer
+      console.log('Updating customer', customerData);
+    } else {
+      // Add new customer
+      // addCustomer(newcustomer.payload);
+      console.log('Updating customer', customerData);
+    }
+    handleCloseAddSidebar();
+  };
   return (
     <Layout>
        <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
         Machines
       </Typography>
       <>
-        <AdminTable
+        <AdminTable 
           data={allcustomers}
           handleToolBar={handleToolBar}
           columns={mainTableColumns}
           handleAdminTableRowActions={handleAdminTableRowActions}
           handleNestedTable={handleNestedTable}
-        /></>
+        />
+        {isAddSidebarOpen && (
+          <AddEditMachineSidebar
+            onClose={handleCloseAddSidebar}
+            onSubmit={handleAddMachine}
+            selectedMachine={selectedMachine}
+          />
+        )}
+        </>
     </Layout>
   )
 }

@@ -4,7 +4,7 @@ import Layout from '@/layout/Layout'
 import { fetchAllCustomers } from '@/redux/reducers/customerSlice'
 import { createNewRole, deleteRole, fetchAllRoles, updateRole } from '@/redux/reducers/roleSlice'
 import { Delete, Edit } from '@mui/icons-material'
-import { Box, Button, Chip, IconButton, TableCell, Tooltip, Typography } from '@mui/material'
+import { Box, Button, Chip, IconButton, Input, TableCell, Tooltip, Typography } from '@mui/material'
 import React, { useEffect, useMemo, useState } from 'react'
 import { FiGitBranch } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux'
@@ -167,6 +167,22 @@ const index = () => {
               return(
                 <Chip label={renderedCellValue ? 'Active' : 'Disabled'} color={renderedCellValue ? 'primary' : 'default'} />
             )},
+            Filter: ({ column }) => (
+                <Input
+                  onChange={(newValue) => {
+                    console.log(newValue.nativeEvent);
+                    column.setFilterValue(newValue);
+                  }}
+                  slotProps={{
+                    textField: {
+                      helperText: 'Filter Mode: Less Than',
+                      sx: { minWidth: '120px' },
+                      variant: 'standard',
+                    },
+                  }}
+                  value={column.getFilterValue()}
+                />
+            ),
           },
       ],
         data: row?.original?.users,
@@ -232,7 +248,6 @@ const index = () => {
     setIsAddUserSidebarOpen(false);
   };
   const handleAddUser = async (userData) => {
-    console.log(selectedUser._id);
     if (selectedUser) {
       const newUpdateUser={
         id:selectedUser._id,

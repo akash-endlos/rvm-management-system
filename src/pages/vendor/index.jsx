@@ -94,7 +94,7 @@ const index = () => {
           Export Selected Rows
         </Button>
         <Button variant="contained" onClick={handleOpenAddSidebar}>
-          Add Vendor
+          Add Reseller
         </Button>
       </Box>
     );
@@ -274,7 +274,7 @@ const index = () => {
   return (
     <Layout>
       <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
-        Vendors
+        Reseller
       </Typography>
       <AdminTable
         data={allvendors}
