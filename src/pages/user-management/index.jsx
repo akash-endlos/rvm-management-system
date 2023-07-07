@@ -158,7 +158,16 @@ const index = () => {
         columns: [
           { header: 'Name', accessorKey: 'name' },
           { header: 'Mobile', accessorKey: 'mobile' },
-          { header: 'Email', accessorKey: 'email' }
+          { header: 'Email', accessorKey: 'email' },
+          {
+            accessorKey: 'isActive',
+            header: 'Active/Disabled',
+            size: 150,
+            Cell: ({ renderedCellValue }) => {
+              return(
+                <Chip label={renderedCellValue ? 'Active' : 'Disabled'} color={renderedCellValue ? 'primary' : 'default'} />
+            )},
+          },
       ],
         data: row?.original?.users,
       },
