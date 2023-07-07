@@ -32,8 +32,38 @@ const index = () => {
         size: 150,
       },
       {
-        accessorKey: 'name',
-        header: 'Name',
+        accessorKey: 'machineId',
+        header: 'Machine ID',
+        size: 150,
+      },
+      {
+        accessorKey: 'reseller.name',
+        header: 'Reseller',
+        size: 150,
+      },
+      {
+        accessorKey: 'customer.name',
+        header: 'Customer',
+        size: 150,
+      },
+      {
+        accessorKey: 'branch.name',
+        header: 'Branch',
+        size: 150,
+      },
+      {
+        accessorKey: 'warrentyStartDate',
+        header: 'Warranty Start Date',
+        size: 150,
+      },
+      {
+        accessorKey: 'warrentyExpire',
+        header: 'Warranty Expire Date',
+        size: 150,
+      },
+      {
+        accessorKey: 'warrentystatus',
+        header: 'Status',
         size: 150,
       },
     ],
@@ -87,9 +117,16 @@ const index = () => {
   const handleNestedTable = (row) => {
     const nestedTableConfigurations = [
       {
-        header: 'branches',
-        columns: [{ header: 'Name', accessorKey: 'name' }],
-        data: row?.original?.branches,
+        header: 'Machine Inventory',
+        columns: [
+          { header: 'Invoice', accessorKey: 'invoiceNo' },
+          { header: 'Serial Number', accessorKey: 'serialNumber' },
+          { header: 'Inventry Type', accessorKey: 'inventryType' },
+          { header: 'Brand Name', accessorKey: 'brandName' },
+          { header: 'Warranty Start Date', accessorKey: 'manufacturerwarrantyExpire' },
+          { header: 'Reseller Warranty Start', accessorKey: 'resellerwarrantyExpire' },
+        ],
+        data: row?.original?.inventoryDetails,
       },
     ];
     return (
@@ -149,11 +186,11 @@ const index = () => {
   };
   return (
     <Layout>
-       <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
+      <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
         Machines
       </Typography>
       <>
-        <AdminTable 
+        <AdminTable
           data={allcustomers}
           handleToolBar={handleToolBar}
           columns={mainTableColumns}
@@ -167,7 +204,7 @@ const index = () => {
             selectedMachine={selectedMachine}
           />
         )}
-        </>
+      </>
     </Layout>
   )
 }
