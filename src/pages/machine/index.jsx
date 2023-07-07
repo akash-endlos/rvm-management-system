@@ -9,15 +9,17 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { FiGitBranch } from 'react-icons/fi'
 import AdminNestedTable from '@/components/AdminTable/AdminNestedTable'
 import AddEditMachineSidebar from '@/components/machine/AddEditMachineSidebar'
+import { fetchAllMachines } from '@/redux/reducers/machineSlice'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
   const [selectedMachine, setSelectedMachine] = useState(null);
-  const allcustomers = useSelector((state) => state.customer)
+  const allcustomers = useSelector((state) => state.machine)
+  console.log(allcustomers);
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchData = async () => {
-      await dispatch(fetchAllCustomers());
+      await dispatch(fetchAllMachines());
     };
 
     fetchData();
