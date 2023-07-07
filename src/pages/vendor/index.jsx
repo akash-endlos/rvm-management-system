@@ -258,15 +258,18 @@ const index = () => {
     }
     handleCloseAddCustomerSidebar();
   };
-  const handleConfirmDeleteCustomer = async() => {
-    console.log(selectedCustomer);
-    try {
-      await dispatch(deleteCustomer(selectedCustomer));
-      toast.success('Customer Delete Successfully');
+  const handleConfirmDeleteCustomer = () => {
+    dispatch(deleteCustomer(selectedCustomer))
+    .unwrap()
+    .then((originalPromiseResult) => {
+      console.log(originalPromiseResult);
+      toast.success('Customer Delete Successfully')
+        setIsDeleteCustomerModalOpen(false);
+    })
+    .catch((rejectedValueOrSerializedError) => {
+      toast.error(rejectedValueOrSerializedError)
       setIsDeleteCustomerModalOpen(false);
-    } catch (error) {
-      console.error('Error deleting customer:', error);
-    }    
+    })
   };
   const handleCloseCustomerDeleteModal = () => {
     setIsDeleteCustomerModalOpen(false);

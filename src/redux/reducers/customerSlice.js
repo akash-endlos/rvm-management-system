@@ -30,16 +30,19 @@ export const fetchCustomer = createAsyncThunk(
 );
 export const deleteCustomer = createAsyncThunk(
   'customers/delete',
-  async (customerId) => {
+  async (customerId, { rejectWithValue }) => {
     try {
       console.log(customerId._id);
       await deleteCustomerApi(customerId._id);
       return customerId;
     } catch (error) {
-      throw Error(error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
+
+
+
 
 export const updateCustomer = createAsyncThunk(
   'customers/update',

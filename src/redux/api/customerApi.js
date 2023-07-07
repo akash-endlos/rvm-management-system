@@ -46,6 +46,7 @@ export const deleteCustomerApi = async (customerId) => {
     const response = await axiosInstance.delete(`/customer/delete?id=${customerId}`);
     return response.data;
   } catch (error) {
+    console.log(error.response);
     throw error.response.data;
   }
 };
