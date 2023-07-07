@@ -41,6 +41,6 @@ export const deleteVendorApi = async (vendorId) => {
     const response = await axiosInstance.delete(`/vendor/${vendorId}`);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };

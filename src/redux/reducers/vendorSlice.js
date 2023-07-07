@@ -28,12 +28,17 @@ export const fetchVendor = createAsyncThunk(
 
 export const deleteVendor = createAsyncThunk(
   'vendors/delete',
-  async (vendorId) => {
-    console.log(vendorId);
-    await deleteVendorApi(vendorId);
-    return vendorId;
+  async (vendorId, { rejectWithValue }) => {
+    try {
+      console.log(vendorId);
+      await deleteVendorApi(vendorId);
+      return vendorId;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
+
 
 export const updateVendor = createAsyncThunk(
   'vendors/update',

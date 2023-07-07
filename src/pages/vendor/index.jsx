@@ -215,14 +215,16 @@ const index = () => {
   const handleCloseDeleteModal = () => {
     setIsDeleteVendorModalOpen(false);
   };
-  const handleConfirmDeleteVendor = async () => {
-    try {
-     await dispatch(deleteVendor(selectedVendor._id))
-      toast.success('Vendor Delete Successfully')
-    } catch (error) {
-      console.log(error);
-    }
-    console.log('Deleting branch', selectedVendor);
+  const handleConfirmDeleteVendor = () => {
+    dispatch(deleteVendor(selectedVendor._id)).unwrap()
+      .then(() => {
+        toast.success('Vendor Deleted Successfully');
+      })
+      .catch((error) => {
+        toast.error(error);
+      });
+  
+    console.log('Deleting vendor', selectedVendor);
     setIsDeleteVendorModalOpen(false);
   };
   const handleCloseAddCustomerSidebar = () => {
