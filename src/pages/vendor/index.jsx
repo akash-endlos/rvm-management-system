@@ -266,8 +266,8 @@ const index = () => {
       toast.success('Customer Delete Successfully')
         setIsDeleteCustomerModalOpen(false);
     })
-    .catch((rejectedValueOrSerializedError) => {
-      toast.error(rejectedValueOrSerializedError)
+    .catch((error) => {
+      toast.error(error)
       setIsDeleteCustomerModalOpen(false);
     })
   };
