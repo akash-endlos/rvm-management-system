@@ -4,7 +4,6 @@ import { loginApi, refreshTokenApi } from '../api/authApi';
 export const loginUser = createAsyncThunk('auth/loginUser', async (credentials) => {
   try {
     const response = await loginApi(credentials);
-    console.log(response);
     return response.payload;
   } catch (error) {
     throw Error(error.message);

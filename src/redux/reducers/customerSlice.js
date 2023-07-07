@@ -8,14 +8,18 @@ export const fetchAllCustomers = createAsyncThunk(
     return response;
   }
 );
-
 export const createNewCustomer = createAsyncThunk(
   'customers/create',
   async (customerData) => {
-    const response = await createCustomerApi(customerData);
-    return response;
+    try {
+      const response = await createCustomerApi(customerData);
+      return response;
+    } catch (error) {
+      throw Error(error.message);
+    }
   }
 );
+
 
 export const fetchCustomer = createAsyncThunk(
   'customers/fetchOne',
@@ -27,19 +31,29 @@ export const fetchCustomer = createAsyncThunk(
 export const deleteCustomer = createAsyncThunk(
   'customers/delete',
   async (customerId) => {
-    console.log(customerId._id);
-    await deleteCustomerApi(customerId._id);
-    return customerId;
+    try {
+      console.log(customerId._id);
+      await deleteCustomerApi(customerId._id);
+      return customerId;
+    } catch (error) {
+      throw Error(error.message);
+    }
   }
 );
 
 export const updateCustomer = createAsyncThunk(
   'customers/update',
   async (customerData) => {
-    const response = await updateCustomerApi(customerData.id,{name:customerData.name});
-    return response;
+    try {
+      const response = await updateCustomerApi(customerData.id, { name: customerData.name });
+      return response;
+    } catch (error) {
+      console.log(error);
+      throw Error(error.message);
+    }
   }
 );
+
 
 
 

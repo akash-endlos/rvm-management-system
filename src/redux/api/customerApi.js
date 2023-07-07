@@ -19,7 +19,7 @@ export const createCustomerApi = async (customerData) => {
     const response = await axiosInstance.post('/customer/add', customerData);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 
@@ -37,7 +37,7 @@ export const updateCustomerApi = async (customerId, customerData) => {
     const response = await axiosInstance.put(`customer/update?id=${customerId}`, customerData);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.message);
+    throw error.response.data;
   }
 };
 
@@ -46,6 +46,6 @@ export const deleteCustomerApi = async (customerId) => {
     const response = await axiosInstance.delete(`/customer/delete?id=${customerId}`);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
