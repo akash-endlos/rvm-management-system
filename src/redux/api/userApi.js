@@ -30,7 +30,7 @@ export const getUserApi = async (userId) => {
 
 export const updateUserApi = async (userId, userData) => {
   try {
-    const response = await axiosInstance.put(`/users/${userId}`, userData);
+    const response = await axiosInstance.put(`/user/${userId}`, userData);
     return response.data;
   } catch (error) {
     throw Error(error.response.data.error);

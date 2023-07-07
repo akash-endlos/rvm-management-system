@@ -154,7 +154,7 @@ const index = () => {
   const handleNestedTable = (row) => {
     const nestedTableConfigurations = [
       {
-        header: 'branches',
+        header: 'Users',
         columns: [
           { header: 'Name', accessorKey: 'name' },
           { header: 'Mobile', accessorKey: 'mobile' },
@@ -223,9 +223,10 @@ const index = () => {
     setIsAddUserSidebarOpen(false);
   };
   const handleAddUser = async (userData) => {
+    console.log(selectedUser._id);
     if (selectedUser) {
       const newUpdateUser={
-        role:selectedRole._id,
+        id:selectedUser._id,
         data:userData
        }
        console.log(newUpdateUser);
@@ -263,7 +264,7 @@ const index = () => {
   };
   return (
     <Layout> <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
-      User Management
+      User Role
     </Typography>
       <>
         <AdminTable
