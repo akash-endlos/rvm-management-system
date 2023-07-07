@@ -7,7 +7,7 @@ export const loginUser = createAsyncThunk('auth/loginUser', async (credentials) 
     console.log(response);
     return response.payload;
   } catch (error) {
-    throw error;
+    throw Error(error.message);
   }
 });
 

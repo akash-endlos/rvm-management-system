@@ -40,6 +40,7 @@ export default function Home() {
       reset();
       toast.success('Logged in successfully');
     } catch (error) {
+      console.log(error);
       toast.error(error.message);
     } finally {
       setLoading(false);
