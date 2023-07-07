@@ -30,35 +30,35 @@ const SidebarLayout = ({ children }) => {
       url: '/inventories',
       icon: <AiOutlineUserAdd />,
     },
-     {
-      title: 'Inventory',
-      // url: '#',
-      icon: <AiOutlineUserAdd />,
-      children: [
-        {
-          title: 'Inventory Type',
-          url: '/inventory/inventory-type',
-          icon: <AiOutlineUserAdd />,
-        },
-        {
-          title: 'Inventory Details',
-          url: '/inventory/inventory-details',
-          icon: <AiOutlineUserAdd />,
-          // children: [
-          //   {
-          //     title: 'Sub Sub Item 1',
-          //     url: '#',
-          //     icon: <AiOutlineUserAdd />,
-          //   },
-          //   {
-          //     title: 'Sub Sub Item 2',
-          //     url: '#',
-          //     icon: <AiOutlineUserAdd />,
-          //   }
-          // ]
-        }
-      ]
-    },
+    //  {
+    //   title: 'Inventory',
+    //   // url: '#',
+    //   icon: <AiOutlineUserAdd />,
+    //   children: [
+    //     {
+    //       title: 'Inventory Type',
+    //       url: '/inventory/inventory-type',
+    //       icon: <AiOutlineUserAdd />,
+    //     },
+    //     {
+    //       title: 'Inventory Details',
+    //       url: '/inventory/inventory-details',
+    //       icon: <AiOutlineUserAdd />,
+    //       // children: [
+    //       //   {
+    //       //     title: 'Sub Sub Item 1',
+    //       //     url: '#',
+    //       //     icon: <AiOutlineUserAdd />,
+    //       //   },
+    //       //   {
+    //       //     title: 'Sub Sub Item 2',
+    //       //     url: '#',
+    //       //     icon: <AiOutlineUserAdd />,
+    //       //   }
+    //       // ]
+    //     }
+    //   ]
+    // },
     {
       title: 'Maintenance',
       url: '/maintenance',
