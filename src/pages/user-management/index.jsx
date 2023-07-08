@@ -256,6 +256,7 @@ const index = () => {
     })
     .catch(error => {
       toast.error(error);
+      handleCloseDeleteRoleModal();
     });
   
   };
@@ -292,15 +293,21 @@ const index = () => {
           password:userData.password,
           email:userData.email
          }
-         dispatch(createUser(newAddUser)).unwrap()
-         .then(async() => await dispatch(fetchAllRoles()))
+         dispatch(createUser(newAddUser))
+         .unwrap()
+         .then(async () => {
+           await dispatch(fetchAllRoles());
+           toast.success('Roles fetched successfully');
+         })
          .catch(error => {
-          toast.error(error);
+           toast.error(error);
+           handleCloseAddRoleSidebar();
          });
+       
        
       console.log('Adding branch',newAddUser);
     }
-    handleCloseAddRoleSidebar();
+   
   };
   const handleCloseDeleteUserModal=()=>{
     setIsDeleteUserModalOpen(false)
@@ -309,15 +316,17 @@ const index = () => {
     dispatch(deleteUser(selectedUser?._id)).unwrap()
     .then(async () => {
       await dispatch(fetchAllRoles());
+      handleCloseDeleteUserModal()
       toast.success('Delete User Successfully');
     })
     .catch(error => {
       toast.error(error);
+      handleCloseDeleteUserModal()
     });
   
     // Perform delete operation on selectedCustomer
     console.log('Deleting user', selectedUser);
-    handleCloseDeleteUserModal(false);
+    // handleCloseDeleteUserModal(false);
   };
   return (
     <Layout> <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
