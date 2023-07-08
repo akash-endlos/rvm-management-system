@@ -202,7 +202,7 @@ const index = () => {
           </IconButton>
         </Tooltip>
         <Tooltip arrow placement="right" title="Delete Customer">
-          <IconButton color="teal" onClick={() => handleEditInventory(row.original)}>
+          <IconButton color="teal" onClick={() => handleAddInventory(row.original)}>
             <Inventory />
           </IconButton>
         </Tooltip>
