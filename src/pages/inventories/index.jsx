@@ -184,11 +184,15 @@ const index = () => {
     setSelectedInventoryBrand(brandData);
     setIsDeleteInventoryBrandModalOpen(true);
   };
+  const handleEditInventoryBrand = (inventoryBrand) => {
+    setSelectedInventoryBrand(inventoryBrand);
+    setIsAddInventoryBrandSidebarOpen(true);
+  };
   const handleAdminNestedTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip arrow placement="left" title="Edit Customer">
-          <IconButton onClick={() => handleEditBranch(row.original)}>
+          <IconButton onClick={() => handleEditInventoryBrand(row.original)}>
             <Edit />
           </IconButton>
         </Tooltip>
@@ -256,7 +260,7 @@ const index = () => {
     if (selectedInventoryBrand) {
       // Update existing branch
       const updatedBrandData = {
-        id: selectedInventoryType._id,
+        id: selectedInventoryBrand._id,
         name: inventoryBrand.branchName
       }
       dispatch(updateInventoryBrand(updatedBrandData)).unwrap()
