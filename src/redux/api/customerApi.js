@@ -9,7 +9,7 @@ export const getAllCustomersApi = async () => {
     console.log(response.data);
     return response?.data?.payload?.Customer;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 
@@ -28,7 +28,7 @@ export const getCustomerApi = async (customerId) => {
     const response = await axiosInstance.get(`/customers/${customerId}`);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 

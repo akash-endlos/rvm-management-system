@@ -21,13 +21,11 @@ const schema = yup.object().shape({
 });
 
 const AddEditCustomerSidebar = ({ onClose, onSubmit, selectedCustomer }) => {
-  const vendors = useSelector((state) => state?.vendor?.vendors)
-  console.log(vendors);
+  const vendors = useSelector((state) => state?.vendor)
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(fetchAllVendors())
   }, [])
-  console.log(selectedCustomer?.vendorId);
   const {
     handleSubmit,
     register,

@@ -4,30 +4,39 @@ import { getAllCustomersApi, createCustomerApi, getCustomerApi, deleteCustomerAp
 export const fetchAllCustomers = createAsyncThunk(
   'customers/fetchAll',
   async () => {
-    const response = await getAllCustomersApi();
-    return response;
-  }
-);
-export const createNewCustomer = createAsyncThunk(
-  'customers/create',
-  async (customerData) => {
     try {
-      const response = await createCustomerApi(customerData);
+      const response = await getAllCustomersApi();
       return response;
     } catch (error) {
-      throw Error(error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
 
+export const createNewCustomer = createAsyncThunk(
+  'customers/create',
+  async (customerData, { rejectWithValue }) => {
+    try {
+      const response = await createCustomerApi(customerData);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 export const fetchCustomer = createAsyncThunk(
   'customers/fetchOne',
-  async (customerId) => {
-    const response = await getCustomerApi(customerId);
-    return response;
+  async (customerId, { rejectWithValue }) => {
+    try {
+      const response = await getCustomerApi(customerId);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
+
 export const deleteCustomer = createAsyncThunk(
   'customers/delete',
   async (customerId, { rejectWithValue }) => {
@@ -45,16 +54,17 @@ export const deleteCustomer = createAsyncThunk(
 
 export const updateCustomer = createAsyncThunk(
   'customers/update',
-  async (customerData) => {
+  async (customerData, { rejectWithValue }) => {
     try {
       const response = await updateCustomerApi(customerData.id, { name: customerData.name });
       return response;
     } catch (error) {
       console.log(error);
-      throw Error(error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
+
 
 
 

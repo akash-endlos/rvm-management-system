@@ -36,12 +36,19 @@ const Index = () => {
   const allcustomers = useSelector((state) => state.customer)
   const dispatch = useDispatch();
   useEffect(() => {
-    const fetchData = async () => {
-      await dispatch(fetchAllCustomers());
+    const fetchData = () => {
+      dispatch(fetchAllCustomers()).unwrap()
+        .then(() => {
+          // Success
+        })
+        .catch(error => {
+          toast.error(error);
+        });
     };
-
+  
     fetchData();
   }, [dispatch]);
+  
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [isDeleteCustomerModalOpen, setIsDeleteCustomerModalOpen] = useState(false);
@@ -201,24 +208,28 @@ const Index = () => {
   }
 
   const handleConfirmDeleteCustomer = () => {
-    dispatch(deleteCustomer(selectedCustomer))
+    dispatch(deleteCustomer(selectedCustomer)).unwrap()
       .then(() => {
         toast.success('Customer Delete Successfully')
         setIsDeleteCustomerModalOpen(false);
       })
       .catch((error) => {
+        toast.error(error)
+        setIsDeleteCustomerModalOpen(false);
         console.error('Error deleting customer:', error);
       });
   };
   
   const handleConfirmDeleteBranch = async () => {
-    try {
-      await dispatch(deleteBranch(selectedBranch?._id))
-      await dispatch(fetchAllCustomers())
-      toast.success('Delete Branch SuccessFully')
-    } catch (error) {
-      console.log(error);
-    }
+    dispatch(deleteBranch(selectedBranch?._id))
+    .then(async () => {
+      await dispatch(fetchAllCustomers());
+      toast.success('Delete Branch Successfully');
+    })
+    .catch(error => {
+      toast.error(error);
+    });
+  
     // Perform delete operation on selectedCustomer
     console.log('Deleting branch', selectedBranch);
     setIsDeleteBranchModalOpen(false);
@@ -246,23 +257,25 @@ const Index = () => {
         id:selectedCustomer._id,
         name:customerData.name
       }
-      dispatch(updateCustomer(newCustomer))
+      dispatch(updateCustomer(newCustomer)).unwrap()
       .then(() => {
         // Handle success case here
         toast.success('Customer update successfully');
       })
       .catch((error) => {
         // Handle error case here
+        toast.error(error)
         console.error('Error updating customer:', error);
       });
       console.log('Updating customer', customerData);
     } else {
       // Add new customer
-      dispatch(createNewCustomer(customerData))
+      dispatch(createNewCustomer(customerData)).unwrap()
     .then(() => {
       toast.success('Customer added successfully');
     })
     .catch((error) => {
+      toast.error(error)
       console.error('Failed to add customer', error);
       // Handle the error, show an error message, or perform other actions
     });
@@ -277,9 +290,15 @@ const Index = () => {
         id:selectedBranch?._id,
         name:branchData?.branchName
       }
-      await dispatch(updateBranch(updateNewData))
-      await dispatch(fetchAllCustomers())
-      toast.success('Branch Update Successfully')
+      dispatch(updateBranch(updateNewData)).unwrap()
+      .then(async () => {
+       await dispatch(fetchAllCustomers());
+        toast.success('Branch Update Successfully');
+      })
+      .catch(error => {
+        toast.error(error);
+      });
+    
       console.log('Updating branch', branchData);
     } else {
       const addNewData={
@@ -287,13 +306,14 @@ const Index = () => {
         name:branchData?.branchName
       }
       // Add new branch
-      try {
-        await dispatch(createNewBranch(addNewData))
-        await dispatch(fetchAllCustomers())
-        toast.success('Branch Added Successfullly')
-      } catch (error) {
-        console.log(error);
-      }
+        dispatch(createNewBranch(addNewData)).unwrap()
+        .then(async() => {
+          await dispatch(fetchAllCustomers());
+          toast.success('Branch Added Successfully');
+        })
+        .catch(error => {
+          toast.error(error);
+        });
       // console.log('Adding branch', addNewData,branchData);
     }
     handleCloseAddBranchSidebar();

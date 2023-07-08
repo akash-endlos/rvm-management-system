@@ -3,29 +3,40 @@ import { createBranchApi, deleteBranchApi, updateBranchApi } from '../api/branch
 
 export const createNewBranch = createAsyncThunk(
   'branch/create',
-  async (branchData) => {
-    const response = await createBranchApi(branchData);
-    console.log(response);
-    return response;
+  async (branchData, { rejectWithValue }) => {
+    try {
+      const response = await createBranchApi(branchData);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
 export const deleteBranch = createAsyncThunk(
   'branch/delete',
-  async (branchId) => {
-    await deleteBranchApi(branchId);
-    return branchId;
+  async (branchId, { rejectWithValue }) => {
+    try {
+      await deleteBranchApi(branchId);
+      return branchId;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
 export const updateBranch = createAsyncThunk(
   'branch/update',
-  async (branchData) => {
-    console.log(branchData);
-    const response = await updateBranchApi(branchData?.id,{name:branchData?.name});
-    return response;
+  async (branchData, { rejectWithValue }) => {
+    try {
+      const response = await updateBranchApi(branchData?.id, { name: branchData?.name });
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
+
 
 const branchSlice = createSlice({
   name: 'branch',

@@ -5,7 +5,7 @@ export const getAllBranchesApi = async () => {
     const response = await axiosInstance.get('/branches');
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 
@@ -14,7 +14,7 @@ export const getBranchApi = async (branchId) => {
     const response = await axiosInstance.get(`/branches/${branchId}`);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 
@@ -23,7 +23,7 @@ export const createBranchApi = async (branchData) => {
     const response = await axiosInstance.post('/branch/add', branchData);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 
@@ -32,7 +32,7 @@ export const updateBranchApi = async (branchId, branchData) => {
     const response = await axiosInstance.put(`/branch/update?id=${branchId}`, branchData);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 
@@ -41,6 +41,6 @@ export const deleteBranchApi = async (branchId) => {
     const response = await axiosInstance.delete(`/branch/delete?id=${branchId}`);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
