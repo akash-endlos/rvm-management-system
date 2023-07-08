@@ -28,12 +28,19 @@ const index = () => {
   console.log(allusers);
   const dispatch = useDispatch();
   useEffect(() => {
-    const fetchData = async () => {
-      await dispatch(fetchAllRoles());
+    const fetchData = () => {
+      dispatch(fetchAllRoles())
+        .then(() => {
+          // Handle success
+        })
+        .catch(error => {
+          console.log(error);
+        });
     };
-
+  
     fetchData();
   }, [dispatch]);
+  
   
   const mainTableColumns = useMemo(
     () => [
@@ -212,15 +219,26 @@ const index = () => {
         data:roleData
       }
       // Update existing customer
-      await dispatch(updateRole(updateRoleData))
-      handleCloseAddSidebar();
-      await dispatch(fetchAllRoles())
-      toast.success('Updating tole Successfully')
+      dispatch(updateRole(updateRoleData)).unwrap()
+  .then(async () => {
+    handleCloseAddSidebar();
+     await dispatch(fetchAllRoles());
+    toast.success('Updating tole Successfully')
+  })
+  .catch(error => {
+    toast.error(error);
+  })
       console.log('Updating role', roleData);
     } else {
       // Add new customer
-      dispatch(createNewRole(roleData))
-      handleCloseAddSidebar();
+      dispatch(createNewRole(roleData)).unwrap()
+      .then(() => {
+        handleCloseAddSidebar();
+      })
+      .catch(error => {
+        toast.error(error);
+      });
+    
       console.log('Add customer', roleData);
       // addCustomer(newcustomer.payload);
     }
@@ -230,14 +248,16 @@ const index = () => {
     setIsDeleteRoleModalOpen(false)
   }
   const handleConfirmDeleteRole = async () => {
-    try {
-      await dispatch(deleteRole(selectedRole));
-     await handleCloseDeleteRoleModal();
+    dispatch(deleteRole(selectedRole)).unwrap()
+    .then(async () => {
+      handleCloseDeleteRoleModal();
       await dispatch(fetchAllCustomers());
       toast.success('Role Deleted Successfully');
-    } catch (error) {
-      console.log(error);
-    }
+    })
+    .catch(error => {
+      toast.error(error);
+    });
+  
   };
   
   const handleDeleteRole = (roleData) => {
@@ -254,8 +274,15 @@ const index = () => {
         data:userData
        }
        console.log(newUpdateUser);
-      await dispatch(updateUser(newUpdateUser))
-     await dispatch(fetchAllRoles())
+       dispatch(updateUser(newUpdateUser)).unwrap()
+       .then(async () => {
+         await dispatch(fetchAllRoles());
+        toast.success('User Updated Successfully');
+       })
+       .catch(error => {
+         toast.error(error);
+       });
+     
       console.log('Updating branch', userData);
     } else {
          const newAddUser={
@@ -265,8 +292,12 @@ const index = () => {
           password:userData.password,
           email:userData.email
          }
-        await dispatch(createUser(newAddUser))
-       await dispatch(fetchAllRoles())
+         dispatch(createUser(newAddUser)).unwrap()
+         .then(async() => await dispatch(fetchAllRoles()))
+         .catch(error => {
+          toast.error(error);
+         });
+       
       console.log('Adding branch',newAddUser);
     }
     handleCloseAddRoleSidebar();
@@ -275,13 +306,15 @@ const index = () => {
     setIsDeleteUserModalOpen(false)
   }
   const handleConfirmDeleteUser = async () => {
-    try {
-      await dispatch(deleteUser(selectedUser?._id))
-      await dispatch(fetchAllRoles())
-      toast.success('Delete User SuccessFully')
-    } catch (error) {
-      console.log(error);
-    }
+    dispatch(deleteUser(selectedUser?._id)).unwrap()
+    .then(async () => {
+      await dispatch(fetchAllRoles());
+      toast.success('Delete User Successfully');
+    })
+    .catch(error => {
+      toast.error(error);
+    });
+  
     // Perform delete operation on selectedCustomer
     console.log('Deleting user', selectedUser);
     handleCloseDeleteUserModal(false);
