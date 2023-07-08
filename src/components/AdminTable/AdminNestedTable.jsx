@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { MaterialReactTable } from 'material-react-table';
 
-const AdminNestedTable = ({ columns, data, heading, handleSubAdminNestedTableRowActions, handleAdminNestedTableRowActions, handleSubNestedTable, currentDepth }) => {
+const AdminNestedTable = ({ columns, data, heading, handleSubAdminNestedTableRowActions=false, handleAdminNestedTableRowActions, handleSubNestedTable, currentDepth }) => {
 
   const renderDetailPanel = useMemo(() => {
     if (currentDepth === 1) {
@@ -17,7 +17,7 @@ const AdminNestedTable = ({ columns, data, heading, handleSubAdminNestedTableRow
     if (currentDepth === 1) {
       return handleAdminNestedTableRowActions(row, table);
     } else {
-      return handleSubAdminNestedTableRowActions(row, table);
+      return handleSubAdminNestedTableRowActions ? handleSubAdminNestedTableRowActions(row, table) : null;
     }
   };
 
