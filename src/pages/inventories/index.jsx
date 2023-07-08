@@ -23,11 +23,15 @@ import { FiGitBranch } from 'react-icons/fi';
 import AdminNestedTable from '@/components/AdminTable/AdminNestedTable';
 import { toast } from 'react-hot-toast';
 import DeleteInventoryTypeModal from '@/components/inventories/DeleteInventoryType';
+import AddEditInventoryBrand from '@/components/inventories/AddEditInventoryBrand';
+import { createNewInventoryBrand, updateInventoryBrand } from '@/redux/reducers/inventoryBrandSlice';
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
   const [selectedInventoryType, setSelectedInventoryType] = useState(null);
   const [isDeleteInventoryTypeModalOpen, setIsDeleteInventoryTypeModalOpen] = useState(false);
+  const [isAddInventoryBrandSidebarOpen, setIsAddInventoryBrandSidebarOpen] = useState(false);
+  const [selectedInventoryBrand, setSelectedInventoryBrand] = useState(null);
   const allinventories = useSelector((state) => state.inventoryType)
   console.log(allinventories);
   const dispatch = useDispatch();
@@ -41,7 +45,7 @@ const index = () => {
           toast.error(error);
         });
     };
-  
+
     fetchData();
   }, [dispatch]);
   const mainTableColumns = useMemo(
@@ -67,6 +71,11 @@ const index = () => {
     setSelectedInventoryType(inventoryTypeData);
     setIsDeleteInventoryTypeModalOpen(true);
   };
+  const handleOpenAddInventoryBrandSidebar = (inventoryTypeData) => {
+    setSelectedInventoryBrand(null);
+    setIsAddInventoryBrandSidebarOpen(true);
+    setSelectedInventoryType(inventoryTypeData);
+  };
   const handleAdminTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
@@ -81,7 +90,7 @@ const index = () => {
           </IconButton>
         </Tooltip>
         <Tooltip arrow placement="right" title="Add Branch">
-          <IconButton color="secondary" onClick={() => handleOpenAddBranchSidebar(row.original)}>
+          <IconButton color="secondary" onClick={() => handleOpenAddInventoryBrandSidebar(row.original)}>
             <FiGitBranch />
           </IconButton>
         </Tooltip>
@@ -196,24 +205,24 @@ const index = () => {
         name: inventoryTypeData.name
       }
       dispatch(updateInventoryType(updatedNewInventoryType)).unwrap()
-  .then(() => {
-    dispatch(fetchAllInventoryTypes());
-    toast.success('Updated Inventory Type Successfully');
-  })
-  .catch(error => {
-    toast.error(error)
-  });
+        .then(() => {
+          dispatch(fetchAllInventoryTypes());
+          toast.success('Updated Inventory Type Successfully');
+        })
+        .catch(error => {
+          toast.error(error)
+        });
       console.log('Updating customer', inventoryTypeData);
     } else {
       // Add new customer
       dispatch(createNewInventoryType(inventoryTypeData)).unwrap()
-      .then(() => {
-        toast.success('Added Inventory Type Successfully');
-      })
-      .catch(error => {
-        toast.error(error)
-      });
-    
+        .then(() => {
+          toast.success('Added Inventory Type Successfully');
+        })
+        .catch(error => {
+          toast.error(error)
+        });
+
       console.log('Add InventoryType', inventoryTypeData);
       // addCustomer(newcustomer.payload);
     }
@@ -234,9 +243,48 @@ const index = () => {
         console.error('Error deleting customer:', error);
       });
   };
+  const handleCloseAddInventoryBrandSidebar = () => {
+    setIsAddInventoryBrandSidebarOpen(false);
+  };
+  const handleAddInventoryBrand = async (inventoryBrand) => {
+    if (selectedInventoryBrand) {
+      // Update existing branch
+      const updatedBrandData = {
+        id: selectedInventoryType._id,
+        name: inventoryBrand.branchName
+      }
+      dispatch(updateInventoryBrand(updatedBrandData)).unwrap()
+        .then(async () => {
+          await dispatch(fetchAllInventoryTypes());
+          toast.success('Brand Updated Succcessfully')
+
+        })
+        .catch(error => {
+          toast.error(error);
+        });
+
+      console.log('Updating branch', updatedBrandData);
+    } else {
+      console.log(selectedInventoryType);
+      const newinventoryBrandData = {
+        inventryTypeId: selectedInventoryType?._id,
+        name: inventoryBrand?.branchName
+      }
+      dispatch(createNewInventoryBrand(newinventoryBrandData))
+        .then(async () => {
+          await dispatch(fetchAllInventoryTypes());
+          toast.success('Brand Added Succcessfully')
+        })
+        .catch(error => {
+          toast.error(error);
+        });
+
+    }
+    handleCloseAddInventoryBrandSidebar();
+  };
   return (
     <Layout>
-         <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
+      <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
         Inventory Type
       </Typography>
       <>
@@ -247,20 +295,28 @@ const index = () => {
           handleAdminTableRowActions={handleAdminTableRowActions}
           handleNestedTable={handleNestedTable}
         />
-          {isAddSidebarOpen && (
+        {isAddSidebarOpen && (
           <AddEditInventoryType
             onClose={handleCloseAddSidebar}
             onSubmit={handleAddInventoryType}
             selectedInventoryType={selectedInventoryType}
           />
         )}
-         <DeleteInventoryTypeModal
+        <DeleteInventoryTypeModal
           isOpen={isDeleteInventoryTypeModalOpen}
           onClose={handleCloseDeleteModal}
           onDelete={handleConfirmDeleteInventoryType}
           title='Inventory Type'
         />
-        </>
+        {isAddInventoryBrandSidebarOpen && (
+          <AddEditInventoryBrand
+            onClose={handleCloseAddInventoryBrandSidebar}
+            onSubmit={handleAddInventoryBrand}
+            selectedInventoryBrand={selectedInventoryBrand}
+          // selectedCustomer={selectedCustomer}
+          />
+        )}
+      </>
     </Layout>
   )
 }
