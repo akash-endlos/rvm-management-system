@@ -24,7 +24,8 @@ import AdminNestedTable from '@/components/AdminTable/AdminNestedTable';
 import { toast } from 'react-hot-toast';
 import DeleteInventoryTypeModal from '@/components/inventories/DeleteInventoryType';
 import AddEditInventoryBrand from '@/components/inventories/AddEditInventoryBrand';
-import { createNewInventoryBrand, updateInventoryBrand } from '@/redux/reducers/inventoryBrandSlice';
+import { createNewInventoryBrand, deleteInventoryBrand, updateInventoryBrand } from '@/redux/reducers/inventoryBrandSlice';
+import DeleteInventoryBrandModal from '@/components/inventories/DeleteInventoryBrandModal';
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
@@ -32,6 +33,7 @@ const index = () => {
   const [isDeleteInventoryTypeModalOpen, setIsDeleteInventoryTypeModalOpen] = useState(false);
   const [isAddInventoryBrandSidebarOpen, setIsAddInventoryBrandSidebarOpen] = useState(false);
   const [selectedInventoryBrand, setSelectedInventoryBrand] = useState(null);
+  const [isDeleteInventoryBrandModalOpen, setIsDeleteInventoryBrandModalOpen] = useState(false);
   const allinventories = useSelector((state) => state.inventoryType)
   console.log(allinventories);
   const dispatch = useDispatch();
@@ -178,6 +180,10 @@ const index = () => {
       </>
     );
   };
+  const handleDeleteInventoryBrand = (brandData) => {
+    setSelectedInventoryBrand(brandData);
+    setIsDeleteInventoryBrandModalOpen(true);
+  };
   const handleAdminNestedTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
@@ -187,7 +193,7 @@ const index = () => {
           </IconButton>
         </Tooltip>
         <Tooltip arrow placement="right" title="Delete Customer">
-          <IconButton color="error" onClick={() => handleDeleteBranch(row.original)}>
+          <IconButton color="error" onClick={() => handleDeleteInventoryBrand(row.original)}>
             <Delete />
           </IconButton>
         </Tooltip>
@@ -232,7 +238,7 @@ const index = () => {
     setIsDeleteInventoryTypeModalOpen(false);
   };
   const handleConfirmDeleteInventoryType = () => {
-    dispatch(deleteInventoryType(selectedInventoryType._id)).unwrap()
+    dispatch(deleteInventoryType(selectedInventoryBrand._id)).unwrap()
       .then(() => {
         setIsDeleteInventoryTypeModalOpen(false);
         toast.success('InventoryType Delete Successfully')
@@ -270,7 +276,7 @@ const index = () => {
         inventryTypeId: selectedInventoryType?._id,
         name: inventoryBrand?.branchName
       }
-      dispatch(createNewInventoryBrand(newinventoryBrandData))
+      dispatch(createNewInventoryBrand(newinventoryBrandData)).unwrap()
         .then(async () => {
           await dispatch(fetchAllInventoryTypes());
           toast.success('Brand Added Succcessfully')
@@ -281,6 +287,22 @@ const index = () => {
 
     }
     handleCloseAddInventoryBrandSidebar();
+  };
+  const handleCloseDeleteInventoryBrandModal=()=>{
+    setIsDeleteInventoryBrandModalOpen(false)
+  }
+  const handleConfirmDeleteInvnetoryBrand = async () => {
+    dispatch(deleteInventoryBrand(selectedInventoryBrand)).unwrap()
+    .then(async () => {
+      await dispatch(fetchAllInventoryTypes());
+      toast.success('Delete Inventory Brand Successfully');
+    })
+    .catch(error => {
+      toast.error(error);
+    });
+  
+    // Perform delete operation on selectedCustomer
+    setIsDeleteInventoryBrandModalOpen(false);
   };
   return (
     <Layout>
@@ -316,6 +338,12 @@ const index = () => {
           // selectedCustomer={selectedCustomer}
           />
         )}
+         <DeleteInventoryBrandModal
+          isOpen={isDeleteInventoryBrandModalOpen}
+          onClose={handleCloseDeleteInventoryBrandModal}
+          onDelete={handleConfirmDeleteInvnetoryBrand}
+          title='Inventory Brand'
+        />
       </>
     </Layout>
   )
