@@ -26,6 +26,8 @@ import DeleteInventoryTypeModal from '@/components/inventories/DeleteInventoryTy
 import AddEditInventoryBrand from '@/components/inventories/AddEditInventoryBrand';
 import { createNewInventoryBrand, deleteInventoryBrand, updateInventoryBrand } from '@/redux/reducers/inventoryBrandSlice';
 import DeleteInventoryBrandModal from '@/components/inventories/DeleteInventoryBrandModal';
+import { createInventoryDetail } from '@/redux/reducers/inventoryDetailSlice';
+import AddEditInventorySidebar from '@/components/inventories/AddEditInventory';
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
@@ -206,6 +208,12 @@ const index = () => {
       </Box>
     );
   };
+  const handleOpenAddInventorySidebar = (brandData) => {
+    setSelectedInventory(null);
+    setIsAddInventorySidebarOpen(true);
+    setSelectedInventoryBrand(brandData);
+  };
+  
   const handleSubAdminNestedTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
@@ -219,8 +227,8 @@ const index = () => {
             <Delete />
           </IconButton>
         </Tooltip>
-        <Tooltip arrow placement="right" title="Delete Customer">
-          <IconButton color="teal" onClick={() => handleAddInventory(row.original)}>
+        <Tooltip arrow placement="right" title="Add Inventory">
+          <IconButton color="teal" onClick={() => handleOpenAddInventorySidebar(row.original)}>
             <Inventory />
           </IconButton>
         </Tooltip>
@@ -334,41 +342,32 @@ const index = () => {
     // Perform delete operation on selectedCustomer
     setIsDeleteInventoryBrandModalOpen(false);
   };
-  const handleAddInventory = async (inventoryBrand) => {
-    if (selectedInventoryBrand) {
-      // Update existing branch
-      const updatedBrandData = {
-        id: selectedInventoryBrand._id,
-        name: inventoryBrand.branchName
-      }
-      dispatch(updateInventoryBrand(updatedBrandData)).unwrap()
-        .then(async () => {
-          await dispatch(fetchAllInventoryTypes());
-          toast.success('Brand Updated Succcessfully')
-
-        })
-        .catch(error => {
-          toast.error(error);
-        });
-
-      console.log('Updating branch', updatedBrandData);
+  const handleAddInventory = async (inventoryData) => {
+    if (selectedInventory) {
+      console.log('Updating branch', inventoryData);
     } else {
-      console.log(selectedInventoryType);
-      const newinventoryBrandData = {
-        inventryTypeId: selectedInventoryType?._id,
-        name: inventoryBrand?.branchName
-      }
-      dispatch(createNewInventoryBrand(newinventoryBrandData)).unwrap()
+      const newDetailData = {
+        brandId: selectedInventoryBrand._id,
+        inventryTypeId: selectedInventoryBrand.inventryTypeId,
+        invoiceNo: inventoryData.invoiceNo,
+        serialNumber: inventoryData.serialNumbers,
+        purchaseDate: inventoryData.purchaseDate,
+        warrantyExpired: inventoryData.warrantyExpired,
+      };
+      
+      console.log(newDetailData);
+      
+      dispatch(createInventoryDetail(newDetailData)).unwrap()
         .then(async () => {
           await dispatch(fetchAllInventoryTypes());
-          toast.success('Brand Added Succcessfully')
+          toast.success('Added Inventory Successfully')
         })
         .catch(error => {
           toast.error(error);
         });
-
+      // console.log('Adding branch', newDetailData);
     }
-    handleCloseAddInventoryBrandSidebar();
+    handleCloseAddInventorySidebar();
   };
   return (
     <Layout>
@@ -411,7 +410,7 @@ const index = () => {
           title='Inventory Brand'
         />
         {isAddInventorySidebarOpen && (
-          <AddEditInventoryBrand
+          <AddEditInventorySidebar
             onClose={handleCloseAddInventorySidebar}
             onSubmit={handleAddInventory}
             selectedInventory={selectedInventory}
