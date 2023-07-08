@@ -23,7 +23,7 @@ const AdminNestedTable = ({ columns, data, heading, handleSubAdminNestedTableRow
           enableColumnOrdering
           enablePinning
           positionActionsColumn="last"
-          renderDetailPanel={renderDetailPanel}
+          renderDetailPanel={({row,table})=>renderDetailPanel(row,table)}
           renderRowActions={({ row, table }) => {
             if (currentDepth === 1) {
               return handleAdminNestedTableRowActions(row, table);
