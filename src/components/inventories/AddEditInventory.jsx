@@ -17,6 +17,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import moment from 'moment';
 
 const schema = yup.object().shape({
   invoiceNo: yup.string().required('Invoice No is required'),
@@ -39,8 +40,8 @@ const AddEditInventorySidebar = ({ onClose, onSubmit, selectedInventory, brands 
       invoiceNo: selectedInventory?.invoiceNo || '',
       serialNumbers: selectedInventory?.serialNumber || [],
       serialNumber:selectedInventory?.serialNumber,
-      purchaseDate: selectedInventory?.purchaseDate || undefined,
-      warrantyExpired: selectedInventory?.warrantyExpired || undefined,
+      purchaseDate: moment(selectedInventory?.purchaseDate).format('YYYY-MM-DD') || undefined,
+      warrantyExpired: moment(selectedInventory?.warrantyExpired).format('YYYY-MM-DD') || undefined,
     },
   });
 
