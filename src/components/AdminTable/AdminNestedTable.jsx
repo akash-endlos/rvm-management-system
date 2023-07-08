@@ -13,6 +13,14 @@ const AdminNestedTable = ({ columns, data, heading, handleSubAdminNestedTableRow
     }
   }, [currentDepth, handleSubNestedTable]);
 
+  const renderRowActions = ({ row, table }) => {
+    if (currentDepth === 1) {
+      return handleAdminNestedTableRowActions(row, table);
+    } else {
+      return handleSubAdminNestedTableRowActions(row, table);
+    }
+  };
+
   return (
     <> 
       {data && (
@@ -23,14 +31,8 @@ const AdminNestedTable = ({ columns, data, heading, handleSubAdminNestedTableRow
           enableColumnOrdering
           enablePinning
           positionActionsColumn="last"
-          renderDetailPanel={({row,table})=>renderDetailPanel(row,table)}
-          renderRowActions={({ row, table }) => {
-            if (currentDepth === 1) {
-              return handleAdminNestedTableRowActions(row, table);
-            } else {
-              return handleSubAdminNestedTableRowActions(row, table);
-            }
-          }}
+          renderDetailPanel={renderDetailPanel}
+          renderRowActions={renderRowActions}
           columns={columns}
           data={data}
         />
