@@ -7,31 +7,66 @@ import {
   updateUserApi,
 } from '../api/userApi';
 
-export const fetchAllUsers = createAsyncThunk('users/fetchAll', async () => {
-  const response = await getAllUsersApi();
-  return response;
-});
+export const fetchAllUsers = createAsyncThunk(
+  'users/fetchAll',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getAllUsersApi();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
-export const createUser = createAsyncThunk('users/create', async (userData) => {
-  const response = await createUserApi(userData);
-  return response;
-});
+export const createUser = createAsyncThunk(
+  'users/create',
+  async (userData, { rejectWithValue }) => {
+    try {
+      const response = await createUserApi(userData);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
-export const fetchUser = createAsyncThunk('users/fetchOne', async (userId) => {
-  const response = await getUserApi(userId);
-  return response;
-});
+export const fetchUser = createAsyncThunk(
+  'users/fetchOne',
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await getUserApi(userId);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
-export const deleteUser = createAsyncThunk('users/delete', async (userId) => {
-  console.log(userId);
-  await deleteUserApi(userId);
-  return userId;
-});
+export const deleteUser = createAsyncThunk(
+  'users/delete',
+  async (userId, { rejectWithValue }) => {
+    try {
+      await deleteUserApi(userId);
+      return userId;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
-export const updateUser = createAsyncThunk('users/update', async (userData) => {
-  const response = await updateUserApi(userData.id, userData.data);
-  return response;
-});
+export const updateUser = createAsyncThunk(
+  'users/update',
+  async (userData, { rejectWithValue }) => {
+    try {
+      const response = await updateUserApi(userData.id, userData.data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 
 const userSlice = createSlice({
   name: 'users',

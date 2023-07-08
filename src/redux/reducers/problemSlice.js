@@ -3,44 +3,64 @@ import { getAllProblemsApi, createProblemApi, getProblemApi, deleteProblemApi, u
 
 export const fetchAllProblems = createAsyncThunk(
   'problems/fetchAll',
-  async () => {
-    const response = await getAllProblemsApi();
-    return response;
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getAllProblemsApi();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
 export const createNewProblem = createAsyncThunk(
   'problems/create',
-  async (problemData) => {
-    const response = await createProblemApi(problemData);
-    return response;
+  async (problemData, { rejectWithValue }) => {
+    try {
+      const response = await createProblemApi(problemData);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
 export const fetchProblem = createAsyncThunk(
   'problems/fetchOne',
-  async (problemId) => {
-    const response = await getProblemApi(problemId);
-    return response;
+  async (problemId, { rejectWithValue }) => {
+    try {
+      const response = await getProblemApi(problemId);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
 export const deleteProblem = createAsyncThunk(
   'problems/delete',
-  async (problemId) => {
-    console.log(problemId._id);
-    await deleteProblemApi(problemId._id);
-    return problemId;
+  async (problemId, { rejectWithValue }) => {
+    try {
+      await deleteProblemApi(problemId._id);
+      return problemId;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
 export const updateProblem = createAsyncThunk(
   'problems/update',
-  async (problemData) => {
-    const response = await updateProblemApi(problemData.id, { name: problemData.name });
-    return response;
+  async (problemData, { rejectWithValue }) => {
+    try {
+      const response = await updateProblemApi(problemData.id, { name: problemData.name });
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
+
 
 const problemSlice = createSlice({
   name: 'problems',

@@ -9,45 +9,64 @@ import {
 
 export const fetchAllInventoryBrands = createAsyncThunk(
   'inventoryBrands/fetchAll',
-  async () => {
-    const response = await getAllInventoryBrandsApi();
-    console.log(response);
-    return response;
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getAllInventoryBrandsApi();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
 export const createNewInventoryBrand = createAsyncThunk(
   'inventoryBrands/create',
-  async (inventoryBrandData) => {
-    const response = await createInventoryBrandApi(inventoryBrandData);
-    return response;
+  async (inventoryBrandData, { rejectWithValue }) => {
+    try {
+      const response = await createInventoryBrandApi(inventoryBrandData);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
 export const fetchInventoryBrand = createAsyncThunk(
   'inventoryBrands/fetchOne',
-  async (inventoryBrandId) => {
-    const response = await getInventoryBrandApi(inventoryBrandId);
-    return response;
+  async (inventoryBrandId, { rejectWithValue }) => {
+    try {
+      const response = await getInventoryBrandApi(inventoryBrandId);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
 export const deleteInventoryBrand = createAsyncThunk(
   'inventoryBrands/delete',
-  async (inventoryBrandId) => {
-    console.log(inventoryBrandId._id);
-    await deleteInventoryBrandApi(inventoryBrandId._id);
-    return inventoryBrandId;
+  async (inventoryBrandId, { rejectWithValue }) => {
+    try {
+      await deleteInventoryBrandApi(inventoryBrandId._id);
+      return inventoryBrandId;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
 export const updateInventoryBrand = createAsyncThunk(
   'inventoryBrands/update',
-  async (inventoryBrandData) => {
-    const response = await updateInventoryBrandApi(inventoryBrandData.id, { name: inventoryBrandData.name });
-    return response;
+  async (inventoryBrandData, { rejectWithValue }) => {
+    try {
+      const response = await updateInventoryBrandApi(inventoryBrandData.id, { name: inventoryBrandData.name });
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
+
 
 const inventoryBrandSlice = createSlice({
   name: 'inventoryBrands',

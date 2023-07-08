@@ -3,29 +3,37 @@ import { getAllMachinesApi, createMachineApi, getMachineApi, deleteMachineApi, u
 
 export const fetchAllMachines = createAsyncThunk(
   'machines/fetchAll',
-  async () => {
-    const response = await getAllMachinesApi();
-    return response;
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getAllMachinesApi();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
 export const createNewMachine = createAsyncThunk(
   'machines/create',
-  async (machineData) => {
+  async (machineData, { rejectWithValue }) => {
     try {
       const response = await createMachineApi(machineData);
       return response;
     } catch (error) {
-      throw Error(error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
 
 export const fetchMachine = createAsyncThunk(
   'machines/fetchOne',
-  async (machineId) => {
-    const response = await getMachineApi(machineId);
-    return response;
+  async (machineId, { rejectWithValue }) => {
+    try {
+      const response = await getMachineApi(machineId);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
@@ -43,16 +51,16 @@ export const deleteMachine = createAsyncThunk(
 
 export const updateMachine = createAsyncThunk(
   'machines/update',
-  async (machineData) => {
+  async (machineData, { rejectWithValue }) => {
     try {
       const response = await updateMachineApi(machineData.id, { name: machineData.name });
       return response;
     } catch (error) {
-      console.log(error);
-      throw Error(error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
+
 
 const machineSlice = createSlice({
   name: 'machines',

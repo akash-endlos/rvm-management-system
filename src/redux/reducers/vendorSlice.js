@@ -56,11 +56,16 @@ export const deleteVendor = createAsyncThunk(
 
 export const updateVendor = createAsyncThunk(
   'vendors/update',
-  async (vendorData) => {
-    const response = await updateVendorApi(vendorData.id, vendorData.data);
-    return response;
+  async (vendorData, { rejectWithValue }) => {
+    try {
+      const response = await updateVendorApi(vendorData.id, vendorData.data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
+
 
 const vendorSlice = createSlice({
   name: 'vendors',

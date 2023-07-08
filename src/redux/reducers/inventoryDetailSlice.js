@@ -9,35 +9,52 @@ import {
 // Async Thunks
 export const fetchInventoryDetails = createAsyncThunk(
   'inventoryDetails/fetchAll',
-  async () => {
-    const response = await getInventoryDetailsApi();
-    return response;
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getInventoryDetailsApi();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
 export const createInventoryDetail = createAsyncThunk(
   'inventoryDetails/create',
-  async (inventoryDetailData) => {
-    const response = await createInventoryDetailApi(inventoryDetailData);
-    return response;
+  async (inventoryDetailData, { rejectWithValue }) => {
+    try {
+      const response = await createInventoryDetailApi(inventoryDetailData);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
 export const updateInventoryDetail = createAsyncThunk(
   'inventoryDetails/update',
-  async (inventoryDetailData) => {
-    const response = await updateInventoryDetailApi(inventoryDetailData);
-    return response;
+  async (inventoryDetailData, { rejectWithValue }) => {
+    try {
+      const response = await updateInventoryDetailApi(inventoryDetailData);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
 export const deleteInventoryDetail = createAsyncThunk(
   'inventoryDetails/delete',
-  async (inventoryDetailId) => {
-    await deleteInventoryDetailApi(inventoryDetailId);
-    return inventoryDetailId;
+  async (inventoryDetailId, { rejectWithValue }) => {
+    try {
+      await deleteInventoryDetailApi(inventoryDetailId);
+      return inventoryDetailId;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
+
 
 // Slice
 const inventoryDetailSlice = createSlice({

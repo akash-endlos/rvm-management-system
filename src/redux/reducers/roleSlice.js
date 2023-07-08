@@ -3,44 +3,64 @@ import { getAllRolesApi, createRoleApi, getRoleApi, deleteRoleApi, updateRoleApi
 
 export const fetchAllRoles = createAsyncThunk(
   'roles/fetchAll',
-  async () => {
-    const response = await getAllRolesApi();
-    return response;
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getAllRolesApi();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
 export const createNewRole = createAsyncThunk(
   'roles/create',
-  async (roleData) => {
-    const response = await createRoleApi(roleData);
-    return response;
+  async (roleData, { rejectWithValue }) => {
+    try {
+      const response = await createRoleApi(roleData);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
 export const fetchRole = createAsyncThunk(
   'roles/fetchOne',
-  async (roleId) => {
-    const response = await getRoleApi(roleId);
-    return response;
+  async (roleId, { rejectWithValue }) => {
+    try {
+      const response = await getRoleApi(roleId);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
 export const deleteRole = createAsyncThunk(
   'roles/delete',
-  async (roleId) => {
-    console.log(roleId._id);
-    await deleteRoleApi(roleId._id);
-    return roleId;
+  async (roleId, { rejectWithValue }) => {
+    try {
+      await deleteRoleApi(roleId._id);
+      return roleId;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
 export const updateRole = createAsyncThunk(
   'roles/update',
-  async (roleData) => {
-    const response = await updateRoleApi(roleData.id, roleData.data);
-    return response;
+  async (roleData, { rejectWithValue }) => {
+    try {
+      const response = await updateRoleApi(roleData.id, roleData.data);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
+
 
 const roleSlice = createSlice({
   name: 'roles',
