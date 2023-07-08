@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { MaterialReactTable } from 'material-react-table';
 
-const AdminNestedTable = ({ columns, data, heading, handleAdminNestedTableRowActions, handleSubNestedTable, currentDepth }) => {
+const AdminNestedTable = ({ columns, data, heading, handleSubAdminNestedTableRowActions, handleAdminNestedTableRowActions, handleSubNestedTable, currentDepth }) => {
 
   const renderDetailPanel = useMemo(() => {
     if (currentDepth === 1) {
@@ -24,7 +24,13 @@ const AdminNestedTable = ({ columns, data, heading, handleAdminNestedTableRowAct
           enablePinning
           positionActionsColumn="last"
           renderDetailPanel={renderDetailPanel}
-          renderRowActions={({ row, table }) => handleAdminNestedTableRowActions(row, table)}
+          renderRowActions={({ row, table }) => {
+            if (currentDepth === 1) {
+              return handleAdminNestedTableRowActions(row, table);
+            } else {
+              return handleSubAdminNestedTableRowActions(row, table);
+            }
+          }}
           columns={columns}
           data={data}
         />
