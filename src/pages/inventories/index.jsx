@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import AdminTable from '@/components/AdminTable/AdminTable';
 import AddEditInventoryType from '@/components/inventories/AddEditInventoryType';
-import { Delete, Edit } from '@mui/icons-material';
+import { Delete, Edit, Inventory } from '@mui/icons-material';
 import { FiGitBranch } from 'react-icons/fi';
 import AdminNestedTable from '@/components/AdminTable/AdminNestedTable';
 import { toast } from 'react-hot-toast';
@@ -199,6 +199,11 @@ const index = () => {
         <Tooltip arrow placement="right" title="Delete Customer">
           <IconButton color="error" onClick={() => handleDeleteInventoryBrand(row.original)}>
             <Delete />
+          </IconButton>
+        </Tooltip>
+        <Tooltip arrow placement="right" title="Delete Customer">
+          <IconButton color="teal" onClick={() => handleEditInventory(row.original)}>
+            <Inventory />
           </IconButton>
         </Tooltip>
       </Box>
