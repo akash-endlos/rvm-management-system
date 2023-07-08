@@ -64,22 +64,22 @@ const SidebarLayout = ({ children }) => {
     //     }
     //   ]
     // },
-    {
-      title: 'Maintenance',
-      url: '/maintenance',
-      icon: <AiOutlineUserAdd />,
-    },
+    // {
+    //   title: 'Maintenance',
+    //   url: '/maintenance',
+    //   icon: <AiOutlineUserAdd />,
+    // },
    
     {
       title: 'Machine',
       url: '/machine',
       icon: <AiOutlineUserAdd />,
     },
-    {
-      title: 'Ticket',
-      url: '/ticket',
-      icon: <AiOutlineUserAdd />,
-    },
+    // {
+    //   title: 'Ticket',
+    //   url: '/ticket',
+    //   icon: <AiOutlineUserAdd />,
+    // },
     // {
     //   title: 'Item1',
     //   url: '#',
