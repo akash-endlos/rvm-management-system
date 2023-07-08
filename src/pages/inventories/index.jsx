@@ -192,11 +192,15 @@ const index = () => {
     setSelectedInventoryBrand(inventoryBrand);
     setIsAddInventoryBrandSidebarOpen(true);
   };
+  const handleEditInventory = (inventoryData) => {
+    setSelectedInventory(inventoryData);
+    setIsAddInventorySidebarOpen(true);
+  };
   const handleAdminNestedTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip arrow placement="left" title="Edit Inventory">
-          <IconButton onClick={() => handleEditInventoryBrand(row.original)}>
+          <IconButton onClick={() => handleEditInventory(row.original)}>
             <Edit />
           </IconButton>
         </Tooltip>
@@ -344,7 +348,22 @@ const index = () => {
   };
   const handleAddInventory = async (inventoryData) => {
     if (selectedInventory) {
-      console.log('Updating branch', inventoryData);
+      const newUpdateDetailData = {
+        // brandId: selectedInventoryBrand._id,
+        // inventryTypeId: selectedInventoryBrand.inventryTypeId,
+        invoiceNo: inventoryData.invoiceNo,
+        serialNumber: inventoryData.serialNumber,
+        purchaseDate: inventoryData.purchaseDate,
+        warrantyExpired: inventoryData.warrantyExpired,
+      };
+      dispatch(updateInventoryType(newUpdateDetailData)).unwrap()
+      .then(async () => {
+        await dispatch(fetchAllInventoryTypes());
+        toast.success('Update Inventory Successfully')
+      })
+      .catch(error => {
+        toast.error(error);
+      });
     } else {
       const newDetailData = {
         brandId: selectedInventoryBrand._id,

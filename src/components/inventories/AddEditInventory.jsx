@@ -115,7 +115,7 @@ const AddEditInventorySidebar = ({ onClose, onSubmit, selectedInventory, brands 
           </div>
         </div>}
         {selectedInventory && <div style={{ marginBottom: '10px' }}>
-          <InputLabel>Invoice No</InputLabel>
+          <InputLabel>Serial Number</InputLabel>
           <TextField
             fullWidth
             name="serialNumber"
