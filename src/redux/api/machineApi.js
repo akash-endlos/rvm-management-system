@@ -6,7 +6,7 @@ export const getAllMachinesApi = async () => {
     console.log(response.data);
     return response?.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 
@@ -24,7 +24,7 @@ export const getMachineApi = async (machineId) => {
     const response = await axiosInstance.get(`/machines/${machineId}`);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 

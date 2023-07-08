@@ -5,7 +5,7 @@ export const getAllProblemsApi = async () => {
     const response = await axiosInstance.get('/problem/getAll');
     return response?.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 
@@ -14,7 +14,7 @@ export const createProblemApi = async (problemData) => {
     const response = await axiosInstance.post('/problem/add', problemData);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 
@@ -23,7 +23,7 @@ export const getProblemApi = async (problemId) => {
     const response = await axiosInstance.get(`/problems/${problemId}`);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 
@@ -32,7 +32,7 @@ export const updateProblemApi = async (problemId, problemData) => {
     const response = await axiosInstance.put(`problem/update?id=${problemId}`, problemData);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.message);
+    throw error.response.data;
   }
 };
 
@@ -41,6 +41,6 @@ export const deleteProblemApi = async (problemId) => {
     const response = await axiosInstance.delete(`/problem/delete?id=${problemId}`);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };

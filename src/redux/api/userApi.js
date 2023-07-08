@@ -5,7 +5,7 @@ export const getAllUsersApi = async () => {
     const response = await axiosInstance.get('/users');
     return response?.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 
@@ -15,7 +15,7 @@ export const createUserApi = async (userData) => {
     console.log(response.data);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 
@@ -24,7 +24,7 @@ export const getUserApi = async (userId) => {
     const response = await axiosInstance.get(`/users/${userId}`);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 
@@ -33,7 +33,7 @@ export const updateUserApi = async (userId, userData) => {
     const response = await axiosInstance.put(`/user/${userId}`, userData);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 
@@ -43,6 +43,6 @@ export const deleteUserApi = async (userId) => {
     console.log(response);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };

@@ -5,7 +5,7 @@ export const getAllRolesApi = async () => {
     const response = await axiosInstance.get('/userrole/');
     return response?.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 
@@ -14,7 +14,7 @@ export const createRoleApi = async (roleData) => {
     const response = await axiosInstance.post('/userrole/', roleData);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 
@@ -23,7 +23,7 @@ export const getRoleApi = async (roleId) => {
     const response = await axiosInstance.get(`/roles/${roleId}`);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 
@@ -32,7 +32,7 @@ export const updateRoleApi = async (roleId, roleData) => {
     const response = await axiosInstance.put(`/userrole/${roleId}`, roleData);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.message);
+    throw error.response.data;
   }
 };
 
@@ -41,6 +41,6 @@ export const deleteRoleApi = async (roleId) => {
     const response = await axiosInstance.delete(`/userrole/${roleId}`);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };

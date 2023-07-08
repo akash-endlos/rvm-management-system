@@ -5,7 +5,7 @@ export const getAllInventoryBrandsApi = async () => {
     const response = await axiosInstance.get('/inventrybrand/');
     return response?.data;
   } catch (error) {
-    throw new Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 
@@ -14,7 +14,7 @@ export const createInventoryBrandApi = async (inventoryBrandData) => {
     const response = await axiosInstance.post('/inventrybrand/', inventoryBrandData);
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 
@@ -23,7 +23,7 @@ export const getInventoryBrandApi = async (brandId) => {
     const response = await axiosInstance.get(`inventrytype/get?id=${brandId}&type=allInventries`);
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 
@@ -32,7 +32,7 @@ export const updateInventoryBrandApi = async (brandId, inventoryBrandData) => {
     const response = await axiosInstance.put(`/inventrybrand/${brandId}`, inventoryBrandData);
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 
@@ -41,6 +41,6 @@ export const deleteInventoryBrandApi = async (brandId) => {
     const response = await axiosInstance.delete(`/inventrybrand/${brandId}`);
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.error);
+    throw error.response.data;
   }
 };
