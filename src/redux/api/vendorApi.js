@@ -23,7 +23,7 @@ export const createVendorApi = async (vendorData) => {
     const response = await axiosInstance.post('/vendor', vendorData);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 

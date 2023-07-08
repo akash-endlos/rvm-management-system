@@ -12,9 +12,14 @@ export const fetchAllVendors = createAsyncThunk(
 
 export const createNewVendor = createAsyncThunk(
   'vendors/create',
-  async (vendorData) => {
-    const response = await createVendorApi(vendorData);
-    return response;
+  async (vendorData, { rejectWithValue }) => {
+    try {
+      const response = await createVendorApi(vendorData);
+      return response;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.message);
+    }
   }
 );
 

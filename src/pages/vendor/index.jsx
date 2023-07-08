@@ -119,14 +119,15 @@ const index = () => {
       }
       console.log('Updating vendor', vendorData);
     } else {
-      // Add new customer
-      try {
-        dispatch(createNewVendor(vendorData))
-        toast.success('Vendor Added Successfully')
-      } catch (error) {
+      dispatch(createNewVendor(vendorData)).unwrap()
+      .then(() => {
+        toast.success('Vendor Added Successfully');
+      })
+      .catch(error => {
         console.log(error);
-      }
-      console.log('Add vendor', vendorData);
+        toast.error(error)
+      });
+    console.log('Add vendor', vendorData);    
     }
     handleCloseAddSidebar();
   };
