@@ -238,7 +238,7 @@ const index = () => {
     setIsDeleteInventoryTypeModalOpen(false);
   };
   const handleConfirmDeleteInventoryType = () => {
-    dispatch(deleteInventoryType(selectedInventoryBrand._id)).unwrap()
+    dispatch(deleteInventoryType(selectedInventoryType._id)).unwrap()
       .then(() => {
         setIsDeleteInventoryTypeModalOpen(false);
         toast.success('InventoryType Delete Successfully')
