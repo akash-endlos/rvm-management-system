@@ -26,8 +26,9 @@ import DeleteInventoryTypeModal from '@/components/inventories/DeleteInventoryTy
 import AddEditInventoryBrand from '@/components/inventories/AddEditInventoryBrand';
 import { createNewInventoryBrand, deleteInventoryBrand, updateInventoryBrand } from '@/redux/reducers/inventoryBrandSlice';
 import DeleteInventoryBrandModal from '@/components/inventories/DeleteInventoryBrandModal';
-import { createInventoryDetail } from '@/redux/reducers/inventoryDetailSlice';
+import { createInventoryDetail, deleteInventoryDetail } from '@/redux/reducers/inventoryDetailSlice';
 import AddEditInventorySidebar from '@/components/inventories/AddEditInventory';
+import DeleteInventoryModal from '@/components/inventories/DeleteInventoryModal';
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
@@ -38,6 +39,7 @@ const index = () => {
   const [selectedInventoryBrand, setSelectedInventoryBrand] = useState(null);
   const [selectedInventory, setSelectedInventory] = useState(null);
   const [isDeleteInventoryBrandModalOpen, setIsDeleteInventoryBrandModalOpen] = useState(false);
+  const [isDeleteInventoryOpen, setIsDeleteInventoryOpen] = useState(false);
   const allinventories = useSelector((state) => state.inventoryType)
   console.log(allinventories);
   const dispatch = useDispatch();
@@ -196,6 +198,10 @@ const index = () => {
     setSelectedInventory(inventoryData);
     setIsAddInventorySidebarOpen(true);
   };
+  const handleDeleteInventory = (inventoryData) => {
+    setSelectedInventory(inventoryData);
+    setIsDeleteInventoryOpen(true);
+  };
   const handleAdminNestedTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
@@ -205,7 +211,7 @@ const index = () => {
           </IconButton>
         </Tooltip>
         <Tooltip arrow placement="right" title="Delete Inventory">
-          <IconButton color="error" onClick={() => handleDeleteInventoryBrand(row.original)}>
+          <IconButton color="error" onClick={() => handleDeleteInventory(row.original)}>
             <Delete />
           </IconButton>
         </Tooltip>
@@ -388,6 +394,21 @@ const index = () => {
     }
     handleCloseAddInventorySidebar();
   };
+  const handleCloseDeleteInventoryModal=()=>{
+    setIsDeleteInventoryOpen(false)
+  }
+  const handleConfirmDeleteInventory = async () => {
+    console.log(selectedInventory);
+    dispatch(deleteInventoryDetail(selectedInventory?._id)).unwrap()
+    .then(async () => {
+      await dispatch(fetchAllInventoryTypes());
+      toast.success('Delete Inventory Successfully');
+    })
+    .catch(error => {
+      toast.error(error);
+    });
+    setIsDeleteInventoryOpen(false);
+  };
   return (
     <Layout>
       <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
@@ -436,6 +457,12 @@ const index = () => {
           // selectedCustomer={selectedCustomer}
           />
         )}
+           <DeleteInventoryModal
+          isOpen={isDeleteInventoryOpen}
+          onClose={handleCloseDeleteInventoryModal}
+          onDelete={handleConfirmDeleteInventory}
+          title='Inventory'
+        />
       </>
     </Layout>
   )
