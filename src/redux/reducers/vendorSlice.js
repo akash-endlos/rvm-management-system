@@ -3,12 +3,17 @@ import { getAllVendorsApi, createVendorApi, getVendorApi, deleteVendorApi, updat
 
 export const fetchAllVendors = createAsyncThunk(
   'vendors/fetchAll',
-  async () => {
-    const response = await getAllVendorsApi();
-    console.log(response);
-    return response;
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getAllVendorsApi();
+      console.log(response);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
+
 
 export const createNewVendor = createAsyncThunk(
   'vendors/create',
@@ -25,9 +30,13 @@ export const createNewVendor = createAsyncThunk(
 
 export const fetchVendor = createAsyncThunk(
   'vendors/fetchOne',
-  async (vendorId) => {
-    const response = await getVendorApi(vendorId);
-    return response;
+  async (vendorId, { rejectWithValue }) => {
+    try {
+      const response = await getVendorApi(vendorId);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 

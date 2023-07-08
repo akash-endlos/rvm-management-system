@@ -34,7 +34,11 @@ const index = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchData = async () => {
-      await dispatch(fetchAllVendors());
+      try {
+        await dispatch(fetchAllVendors()).unwrap();
+      } catch (error) {
+       toast.error(error)
+      }
     };
 
     fetchData();
@@ -105,18 +109,18 @@ const index = () => {
   };
   const handleAddVendor = async (vendorData) => {
     if (selectedVendor) {
-      // Update existing customer
       const updatedVendorData={
         id:selectedVendor._id,
         data:vendorData
       }
       console.log(updatedVendorData);
-      try {
-        dispatch(updateVendor(updatedVendorData))
-        toast.success('Vendor Updated Successfully')
-      } catch (error) {
-        console.log(error);
-      }
+      dispatch(updateVendor(updatedVendorData)).unwrap()
+      .then(() => {
+        toast.success('Vendor Updated Successfully');
+      })
+      .catch(error => {
+       toast.error(error)
+      });
       console.log('Updating vendor', vendorData);
     } else {
       dispatch(createNewVendor(vendorData)).unwrap()
@@ -124,7 +128,6 @@ const index = () => {
         toast.success('Vendor Added Successfully');
       })
       .catch(error => {
-        console.log(error);
         toast.error(error)
       });
     console.log('Add vendor', vendorData);    
@@ -238,10 +241,9 @@ const index = () => {
         id:selectedCustomer._id,
         name:customerData.name
       }
-      await dispatch(updateCustomer(newCustomer))
-      await dispatch(fetchAllVendors())
-      .then(() => {
-        // Handle success case here
+      await dispatch(updateCustomer(newCustomer)).unwrap()
+      .then(async() => {
+        await dispatch(fetchAllVendors())
         toast.success('Customer update successfully');
       })
       console.log('Updating branch', customerData);
@@ -251,12 +253,15 @@ const index = () => {
         vendorId:selectedVendor?._id,
         branchName:customerData?.branchName
       }
-      try {
-        await dispatch(createNewCustomer(newCustomerData))
-        await dispatch(fetchAllVendors())
-      } catch (error) {
-        console.log(error);
-      }
+      await dispatch(createNewCustomer(newCustomerData)).unwrap()
+      .then(async() => {
+        toast.success('Customer update successfully');
+        await dispatch(fetchAllVendors());
+      })
+      .catch(error => {
+        toast.error(error);
+      });
+    
       console.log('Adding branch', selectedVendor._id,customerData);
     }
     handleCloseAddCustomerSidebar();
@@ -264,7 +269,8 @@ const index = () => {
   const handleConfirmDeleteCustomer = () => {
     dispatch(deleteCustomer(selectedCustomer))
     .unwrap()
-    .then((originalPromiseResult) => {
+    .then(async(originalPromiseResult) => {
+      await dispatch(fetchAllVendors());
       console.log(originalPromiseResult);
       toast.success('Customer Delete Successfully')
         setIsDeleteCustomerModalOpen(false);

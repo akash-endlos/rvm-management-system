@@ -5,7 +5,7 @@ export const getAllVendorsApi = async () => {
     const response = await axiosInstance.get('/vendor');
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 
@@ -14,7 +14,7 @@ export const getVendorApi = async (vendorId) => {
     const response = await axiosInstance.get(`/vendors/${vendorId}`);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 
@@ -32,7 +32,7 @@ export const updateVendorApi = async (vendorId, vendorData) => {
     const response = await axiosInstance.put(`/vendor/${vendorId}`, vendorData);
     return response.data;
   } catch (error) {
-    throw Error(error.response.data.error);
+    throw error.response.data;
   }
 };
 
