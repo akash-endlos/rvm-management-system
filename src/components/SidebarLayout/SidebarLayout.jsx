@@ -17,12 +17,17 @@ const SidebarLayout = ({ children }) => {
     },
     {
       title: 'Reseller',
-      url: '/vendor',
+      url: '/reseller',
       icon: <AiOutlineUserAdd />,
     },
     {
       title: 'Customer',
       url: '/customer',
+      icon: <AiOutlineUserAdd />,
+    },
+    {
+      title: 'User Management',
+      url: '/user-management',
       icon: <AiOutlineUserAdd />,
     },
     {
@@ -64,11 +69,7 @@ const SidebarLayout = ({ children }) => {
       url: '/maintenance',
       icon: <AiOutlineUserAdd />,
     },
-    {
-      title: 'User Management',
-      url: '/user-management',
-      icon: <AiOutlineUserAdd />,
-    },
+   
     {
       title: 'Machine',
       url: '/machine',
