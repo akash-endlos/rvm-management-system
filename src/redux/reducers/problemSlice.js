@@ -75,8 +75,9 @@ const problemSlice = createSlice({
         return problemsWithIndex;
       })
       .addCase(createNewProblem.fulfilled, (state, { payload }) => {
+        console.log(payload);
         const newProblem = {
-          ...payload.payload.Problem,
+          ...payload.payload.problem,
           index: 1,
         };
         const updatedState = state.map((problem) => ({

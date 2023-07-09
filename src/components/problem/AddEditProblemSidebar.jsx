@@ -3,19 +3,21 @@ import { Button, TextField, Typography, Select, MenuItem, FormLabel } from '@mui
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useSelector } from 'react-redux';
 
 const schema = yup.object().shape({
   name: yup.string().required('Name is required'),
   description: yup.string().optional(),
   category: yup.string().required('Category is required'),
-  problemType: yup.string().when('category', {
+  problemType:  yup.string().when("category", {
     is: 'Hardware',
-    then: yup.string().required('Problem Type is required'),
-    otherwise: yup.string().optional(),
-  }),
+    then: () => yup.string().required('Problem Type is required')
+  })
 });
 
 const AddEditProblemSidebar = ({ onClose, onSubmit, selectedProblem }) => {
+  const problemtype=useSelector((state)=>state.inventoryType)
+  console.log(selectedProblem);
   const {
     handleSubmit,
     register,
@@ -61,7 +63,7 @@ console.log(watch('category'));
             {...register('category')}
           >
             <MenuItem value="Hardware">Hardware</MenuItem>
-            <MenuItem value="PLC">PLC</MenuItem>
+            <MenuItem value="Plc">PLC</MenuItem>
             <MenuItem value="Software">Software</MenuItem>
             <MenuItem value="Other">Other</MenuItem>
           </Select>
@@ -71,7 +73,9 @@ console.log(watch('category'));
           <div style={{ marginBottom: '10px' }}>
             <FormLabel variant="body1">Problem Type</FormLabel>
             <Select fullWidth name="problemType" {...register('problemType')}>
-              <MenuItem value="Type 1">Type 1</MenuItem>
+              {problemtype && problemtype.map((item,index)=>(
+              <MenuItem key={index} value={item._id}>{item.name}</MenuItem>
+              ))}
               <MenuItem value="Type 2">Type 2</MenuItem>
               <MenuItem value="Type 3">Type 3</MenuItem>
             </Select>

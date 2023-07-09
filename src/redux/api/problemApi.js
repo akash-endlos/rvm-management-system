@@ -11,7 +11,7 @@ export const getAllProblemsApi = async () => {
 
 export const createProblemApi = async (problemData) => {
   try {
-    const response = await axiosInstance.post('/problem/add', problemData);
+    const response = await axiosInstance.post('/problem/', problemData);
     return response.data;
   } catch (error) {
     throw error.response.data;

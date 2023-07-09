@@ -64,15 +64,15 @@ const SidebarLayout = ({ children }) => {
     //     }
     //   ]
     // },
-    // {
-    //   title: 'Maintenance',
-    //   url: '/maintenance',
-    //   icon: <AiOutlineUserAdd />,
-    // },
-   
+    
     {
       title: 'Machine',
       url: '/machine',
+      icon: <AiOutlineUserAdd />,
+    },
+    {
+      title: 'Maintenance',
+      url: '/maintenance',
       icon: <AiOutlineUserAdd />,
     },
     // {

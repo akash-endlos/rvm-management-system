@@ -8,8 +8,9 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { Delete, Edit } from '@mui/icons-material'
 import { FiGitBranch } from 'react-icons/fi'
 import AdminNestedTable from '@/components/AdminTable/AdminNestedTable'
-import { fetchAllProblems } from '@/redux/reducers/problemSlice'
+import { createNewProblem, fetchAllProblems } from '@/redux/reducers/problemSlice'
 import AddEditProblemSidebar from '@/components/problem/AddEditProblemSidebar'
+import { toast } from 'react-hot-toast'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
@@ -151,7 +152,17 @@ const index = () => {
     } else {
       // Add new customer
       // addCustomer(newcustomer.payload);
-      console.log('Updating customer', problemData);
+      dispatch(createNewProblem(problemData))
+      .unwrap()
+      .then(() => {
+        handleCloseAddSidebar();
+        toast.success('Problem Added Successfully');
+      })
+      .catch((error) => {
+        // Handle the error here
+        toast.error(error);
+      });
+      console.log('Add customer', problemData);
     }
     handleCloseAddSidebar();
   };
