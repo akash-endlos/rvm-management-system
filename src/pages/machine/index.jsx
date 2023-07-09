@@ -174,7 +174,7 @@ const index = () => {
     setIsAddSidebarOpen(false);
   };
   const handleAddMachine = async (customerData) => {
-    if (selectedCustomer) {
+    if (selectedMachine) {
       // Update existing customer
       console.log('Updating customer', customerData);
     } else {
