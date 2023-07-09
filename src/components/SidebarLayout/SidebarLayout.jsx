@@ -2,6 +2,13 @@ import React, { useState } from 'react'
 import { AiOutlineUserAdd } from 'react-icons/ai'
 import NewSidebar from './sidebar/NewSidebar';
 import NewHeader from './header/NewHeader';
+import SellIcon from '@mui/icons-material/Sell';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import PersonIcon from '@mui/icons-material/Person';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
+import EngineeringIcon from '@mui/icons-material/Engineering';
 
 const SidebarLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -13,27 +20,27 @@ const SidebarLayout = ({ children }) => {
     {
       title: 'Dashboard',
       url: '/dashboard',
-      icon: <AiOutlineUserAdd />,
+      icon: <DashboardIcon />,
     },
     {
       title: 'Reseller',
       url: '/reseller',
-      icon: <AiOutlineUserAdd />,
+      icon: <SellIcon />,
     },
     {
       title: 'Customer',
       url: '/customer',
-      icon: <AiOutlineUserAdd />,
+      icon: <SupportAgentIcon />,
     },
     {
       title: 'User Management',
       url: '/user-management',
-      icon: <AiOutlineUserAdd />,
+      icon: <PersonIcon />,
     },
     {
       title: 'Inventories',
       url: '/inventories',
-      icon: <AiOutlineUserAdd />,
+      icon: <InventoryIcon />,
     },
     //  {
     //   title: 'Inventory',
@@ -68,12 +75,12 @@ const SidebarLayout = ({ children }) => {
     {
       title: 'Machine',
       url: '/machine',
-      icon: <AiOutlineUserAdd />,
+      icon: <PrecisionManufacturingIcon />,
     },
     {
       title: 'Maintenance',
       url: '/maintenance',
-      icon: <AiOutlineUserAdd />,
+      icon: <EngineeringIcon />,
     },
     // {
     //   title: 'Ticket',
