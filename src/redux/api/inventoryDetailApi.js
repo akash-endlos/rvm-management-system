@@ -20,7 +20,7 @@ export const createInventoryDetailApi = async (inventoryDetailData) => {
 
 export const updateInventoryDetailApi = async (inventoryDetailData) => {
   try {
-    const response = await axiosInstance.put(`/inventory-details/${inventoryDetailData.id}`, inventoryDetailData);
+    const response = await axiosInstance.put(`/inventry/update?id=${inventoryDetailData.id}`, inventoryDetailData.data);
     return response.data;
   } catch (error) {
     throw error.response.data;

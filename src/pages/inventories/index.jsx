@@ -26,7 +26,7 @@ import DeleteInventoryTypeModal from '@/components/inventories/DeleteInventoryTy
 import AddEditInventoryBrand from '@/components/inventories/AddEditInventoryBrand';
 import { createNewInventoryBrand, deleteInventoryBrand, updateInventoryBrand } from '@/redux/reducers/inventoryBrandSlice';
 import DeleteInventoryBrandModal from '@/components/inventories/DeleteInventoryBrandModal';
-import { createInventoryDetail, deleteInventoryDetail } from '@/redux/reducers/inventoryDetailSlice';
+import { createInventoryDetail, deleteInventoryDetail, updateInventoryDetail } from '@/redux/reducers/inventoryDetailSlice';
 import AddEditInventorySidebar from '@/components/inventories/AddEditInventory';
 import DeleteInventoryModal from '@/components/inventories/DeleteInventoryModal';
 
@@ -180,7 +180,7 @@ const index = () => {
             <Typography variant="h5" style={{ fontWeight: 'bold', color: 'teal' }}>
               {config?.header}
             </Typography>
-            <AdminNestedTable handleSubAdminNestedTableRowActions={handleSubAdminNestedTableRowActions} handleSubNestedTable={handleSubNestedTable} handleAdminNestedTableRowActions={handleAdminNestedTableRowActions} columns={config?.columns} data={config?.data} />
+            <AdminNestedTable handleSubAdminNestedTableRowActions={handleSubAdminNestedTableRowActions} handleSubNestedTable={handleSubNestedTable}  columns={config?.columns} data={config?.data} />
           </>
         ))}
       </>
@@ -353,16 +353,19 @@ const index = () => {
     setIsDeleteInventoryBrandModalOpen(false);
   };
   const handleAddInventory = async (inventoryData) => {
+    const updatedData={
+      inventryTypeId: '64a931e3fbfc29cf0a98c6a8',
+      invoiceNo: inventoryData.invoiceNo,
+      serialNumber: inventoryData.serialNumber,
+      purchaseDate: inventoryData.purchaseDate,
+      warrantyExpired: inventoryData.warrantyExpired,
+    }
     if (selectedInventory) {
       const newUpdateDetailData = {
-        // brandId: selectedInventoryBrand._id,
-        // inventryTypeId: selectedInventoryBrand.inventryTypeId,
-        invoiceNo: inventoryData.invoiceNo,
-        serialNumber: inventoryData.serialNumber,
-        purchaseDate: inventoryData.purchaseDate,
-        warrantyExpired: inventoryData.warrantyExpired,
+        id: selectedInventory._id,
+        data:updatedData
       };
-      dispatch(updateInventoryType(newUpdateDetailData)).unwrap()
+      dispatch(updateInventoryDetail(newUpdateDetailData)).unwrap()
       .then(async () => {
         await dispatch(fetchAllInventoryTypes());
         toast.success('Update Inventory Successfully')
