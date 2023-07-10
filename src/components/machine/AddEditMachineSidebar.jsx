@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   TextField,
@@ -8,6 +8,8 @@ import {
   FormHelperText,
   Typography,
   FormControl,
+  FormControlLabel,
+  Radio
 } from '@mui/material';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -33,13 +35,36 @@ const schema = yup.object().shape({
 });
 
 const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, inventories }) => {
-  console.log(selectedMachine);
+  const durationOptions = [
+    { value: '6', label: '6 months' },
+    { value: '12', label: '12 months' },
+    { value: 'custom', label: 'Custom' },
+  ];
+  const [selectedDuration, setSelectedDuration] = useState('');
+  const [customDuration, setCustomDuration] = useState('');
+
+  // const handleDurationChange = (event) => {
+  //   const value = event.target.value;
+
+  //   setSelectedDuration(value);
+
+  //   if (value !== 'custom') {
+  //     setCustomDuration('');
+  //   }
+  // };
+  
+console.log(typeof(selectedDuration));
+  // const handleCustomDurationChange = (event) => {
+  //   setCustomDuration(event.target.value);
+  // };
   const {
     handleSubmit,
     register,
     control,
     formState: { errors },
     defaultValues,
+    watch,
+    setValue,
     reset
   } = useForm({
     resolver: yupResolver(schema),
@@ -57,13 +82,40 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, i
     name: 'inventry',
   });
 
+
+  const handleDurationChange = (event) => {
+    const value = event.target.value;
+  
+    setSelectedDuration(value);
+  
+    if (value !== 'custom') {
+      setCustomDuration('');
+      const warrentyStart = watch('warrentyStart');
+      console.log(warrentyStart);
+      const formattedStartDate = moment(warrentyStart, 'YYYY-MM-DD');
+      const newExpiryDate = formattedStartDate.add(Number(selectedDuration), 'months');
+      setValue('warrentyExpire', newExpiryDate.format('YYYY-MM-DD'));
+    } 
+  };
+  
+  const handleCustomDurationChange = (event) => {
+    const value = event.target.value;
+    setCustomDuration(value);
+  
+    if (selectedDuration === 'custom') {
+      const warrentyStart = watch('warrentyStart');
+      const formattedStartDate = moment(warrentyStart, 'YYYY-MM-DD');
+      const newExpiryDate = formattedStartDate.add(value, 'months');
+      setValue('warrentyExpire', newExpiryDate.format('YYYY-MM-DD'));
+    }
+  };
   const handleFormSubmit = (data) => {
     const modifiedData = {
       ...data,
     };
     console.log(modifiedData);
     onSubmit(modifiedData);
-    reset()
+    reset();
   };
 
   return (
@@ -131,6 +183,28 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, i
             helperText={errors.warrentyStart?.message}
           />
         </div>
+        {durationOptions.map((option) => (
+        <FormControlLabel
+          key={option.value}
+          control={
+            <Radio
+              value={option.value}
+              checked={selectedDuration === option.value}
+              onChange={handleDurationChange}
+            />
+          }
+          label={option.label}
+        />
+      ))}
+      {selectedDuration === 'custom' && (
+        <TextField
+          label="Custom Duration"
+          name="customDuration"
+          value={customDuration}
+          onChange={handleCustomDurationChange}
+          fullWidth
+        />
+      )}
         <div style={{ marginBottom: '10px' }}>
           <InputLabel>Warranty Expire Date</InputLabel>
           <TextField
