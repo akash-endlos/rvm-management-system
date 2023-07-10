@@ -196,7 +196,7 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, i
           {errors.inventry && (
             <FormHelperText error>{errors.inventry.message}</FormHelperText>
           )}
-          <Button
+          <Button 
             onClick={() =>
               append({
                 _inventry: '',
