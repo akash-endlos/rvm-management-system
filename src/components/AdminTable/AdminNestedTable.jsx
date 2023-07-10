@@ -17,7 +17,7 @@ const AdminNestedTable = ({ columns, data, heading, handleSubAdminNestedTableRow
     if (currentDepth === 1) {
       return handleAdminNestedTableRowActions(row, table);
     } else {
-      return handleSubAdminNestedTableRowActions ? handleSubAdminNestedTableRowActions(row, table) : null;
+      return handleSubAdminNestedTableRowActions ? handleSubAdminNestedTableRowActions(row, table) : handleAdminNestedTableRowActions(row, table);
     }
   };
 
