@@ -9,9 +9,10 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { FiGitBranch } from 'react-icons/fi'
 import AdminNestedTable from '@/components/AdminTable/AdminNestedTable'
 import AddEditMachineSidebar from '@/components/machine/AddEditMachineSidebar'
-import { fetchAllMachines } from '@/redux/reducers/machineSlice'
+import { createNewMachine, fetchAllMachines } from '@/redux/reducers/machineSlice'
 import { fetchAllBranches } from '@/redux/reducers/branchSlice'
 import { fetchInventoryDetails } from '@/redux/reducers/inventoryDetailSlice'
+import { toast } from 'react-hot-toast'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
@@ -188,10 +189,17 @@ const index = () => {
   const handleAddMachine = async (customerData) => {
     if (selectedMachine) {
       // Update existing customer
+ 
       console.log('Updating customer', customerData);
     } else {
       // Add new customer
       // addCustomer(newcustomer.payload);
+      dispatch(createNewMachine(customerData)).unwrap().then(async()=>{
+        await dispatch(fetchAllMachines())
+        toast.success('Machine Added Successfully')
+     }).catch((error)=>{
+       toast.error(error)
+     })
       console.log('Updating customer', customerData);
     }
     handleCloseAddSidebar();

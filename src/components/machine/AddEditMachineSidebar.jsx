@@ -39,12 +39,13 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, i
     control,
     formState: { errors },
     defaultValues,
+    reset
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
       machineId: selectedMachine?.machineId || '',
       branchId: selectedMachine?.branch?._id || '',
-      warrentyStartDate: moment(selectedMachine?.warrentyStart).format('YYYY-MM-DD') || '',
+      warrentyStartDate: selectedMachine ? moment(selectedMachine?.warrentyStart).format('YYYY-MM-DD') : '',
       inventry: selectedMachine?.inventry || [],
     },
   });
@@ -60,6 +61,7 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, i
     };
     console.log(modifiedData);
     onSubmit(modifiedData);
+    reset()
   };
 
   return (
