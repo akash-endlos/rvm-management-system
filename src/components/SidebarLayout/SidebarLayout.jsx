@@ -9,6 +9,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
 import EngineeringIcon from '@mui/icons-material/Engineering';
+import FactoryIcon from '@mui/icons-material/Factory';
 
 const SidebarLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -81,6 +82,11 @@ const SidebarLayout = ({ children }) => {
       title: 'Maintenance',
       url: '/maintenance',
       icon: <EngineeringIcon />,
+    },
+    {
+      title: 'Vendor',
+      url: '/vendor',
+      icon: <FactoryIcon />,
     },
     // {
     //   title: 'Ticket',
