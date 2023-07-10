@@ -45,7 +45,7 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, i
       machineId: selectedMachine?.machineId || '',
       branchId: selectedMachine?.branch?._id || '',
       warrentyStartDate: moment(selectedMachine?.warrentyStart).format('YYYY-MM-DD') || '',
-      inventry: selectedMachine?.inventoryDetails || [],
+      inventry: selectedMachine?.inventry || [],
     },
   });
 
@@ -136,7 +136,7 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, i
                 <Controller
                   name={`inventry[${index}]._inventry`}
                   control={control}
-                  defaultValue={selectedMachine ? selectedMachine.inventoryDetails[index]._id : ''}
+                  defaultValue={selectedMachine ? selectedMachine?.inventoryDetails[index]?._inventry : ''}
                   rules={{ required: 'Inventory is required' }}
                   render={({ field }) => (
                     <Select {...field} fullWidth>
@@ -161,7 +161,7 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, i
                   type="date"
                   name={`inventry[${index}].warrantyStart`}
                   {...register(`inventry[${index}].warrantyStart`)}
-                  defaultValue={selectedMachine ? moment(selectedMachine.inventoryDetails[index].resellerWarrantyExpire).format('YYYY-MM-DD') : ''}
+                  defaultValue={selectedMachine ? moment(selectedMachine?.inventoryDetails[index]?.resellerWarrantyExpire).format('YYYY-MM-DD') : ''}
                   error={!!errors?.inventry?.[index]?.warrantyStart}
                   helperText={errors?.inventry?.[index]?.warrantyStart?.message}
                 />
@@ -171,7 +171,7 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, i
                   type="date"
                   name={`inventry[${index}].warrantyExpire`}
                   {...register(`inventry[${index}].warrantyExpire`)}
-                  defaultValue={selectedMachine ? moment(selectedMachine.inventoryDetails[index].resellerWarrantyExpire).format('YYYY-MM-DD') : ''}
+                  defaultValue={selectedMachine ? moment(selectedMachine?.inventoryDetails[index]?.resellerWarrantyExpire).format('YYYY-MM-DD') : ''}
                   error={!!errors?.inventry?.[index]?.warrantyExpire}
                   helperText={errors?.inventry?.[index]?.warrantyExpire?.message}
                 />
