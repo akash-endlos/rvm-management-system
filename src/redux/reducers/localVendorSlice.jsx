@@ -95,6 +95,7 @@ const localVendorSlice = createSlice({
         state.splice(1, updatedState.length, ...updatedState);
       })
       .addCase(deleteLocalVendor.fulfilled, (state, { payload }) => {
+        console.log(payload,state);
         const updatedState = state.filter((localVendor) => localVendor._id !== payload._id);
         const localVendorsWithUpdatedIndex = updatedState.map((localVendor, index) => ({
           ...localVendor,
@@ -103,7 +104,7 @@ const localVendorSlice = createSlice({
         return localVendorsWithUpdatedIndex;
       })
       .addCase(updateLocalVendor.fulfilled, (state, { payload }) => {
-        console.log(payload);
+        
         const updatedLocalVendor = payload.payload.vendor;
         const updatedIndex = state.findIndex((localVendor) => localVendor._id === updatedLocalVendor._id);
         if (updatedIndex !== -1) {

@@ -7,13 +7,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { Delete, Edit } from '@mui/icons-material'
 import { FiGitBranch } from 'react-icons/fi'
-import { createNewLocalVendor, fetchAllLocalVendors, updateLocalVendor } from '@/redux/reducers/localVendorSlice'
+import { createNewLocalVendor, deleteLocalVendor, fetchAllLocalVendors, updateLocalVendor } from '@/redux/reducers/localVendorSlice'
 import { toast } from 'react-hot-toast'
 import AddEditLocalVendorSidebar from '@/components/localVendor/AddEditLocalVendorSidebar'
+import DeleteLocalVendor from '@/components/localVendor/DeleteLocalVendor'
 
 const index = () => {
     const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
     const [selectedVendor, setSelectedVendor] = useState(null);
+    const [isDeleteLocalVendorModalOpen, setIsDeleteLocalVendorModalOpen] = useState(false);
     const alllocalVendors = useSelector((state) => state.localvendor)
     console.log(alllocalVendors);
     const dispatch = useDispatch();
@@ -60,6 +62,10 @@ const index = () => {
         setSelectedVendor(vendorData);
         setIsAddSidebarOpen(true);
       };
+      const handleDeleteCustomer = (customerData) => {
+        setSelectedVendor(customerData);
+        setIsDeleteLocalVendorModalOpen(true);
+      };
       const handleAdminTableRowActions = (row, table) => {
         return (
           <Box sx={{ display: 'flex', gap: '1rem' }}>
@@ -73,11 +79,11 @@ const index = () => {
                 <Delete />
               </IconButton>
             </Tooltip>
-            <Tooltip arrow placement="right" title="Add Branch">
+            {/* <Tooltip arrow placement="right" title="Add Branch">
               <IconButton color="secondary" onClick={() => handleOpenAddBranchSidebar(row.original)}>
                 <FiGitBranch />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
           </Box>
         );
       };
@@ -126,7 +132,7 @@ const index = () => {
       }
       console.log(selectedVendor);
       dispatch(updateLocalVendor(updatedData)).unwrap().then(()=>{
-        toast.success('Create Vendor Successfully')
+        toast.success('Updated Vendor Successfully')
     }).catch((error)=>{
         toast.error(error)
     })
@@ -140,6 +146,21 @@ const index = () => {
         console.log('Add customer', vendorData);
     }
     handleCloseAddSidebar();
+  };
+  const handleCloseDeleteLocalVendorModal=()=>{
+    setIsDeleteLocalVendorModalOpen(false)
+  }
+  const handleConfirmDeleteVendor = () => {
+    dispatch(deleteLocalVendor(selectedVendor)).unwrap()
+      .then(() => {
+        toast.success('Vendor Delete Successfully')
+        setIsDeleteLocalVendorModalOpen(false);
+      })
+      .catch((error) => {
+        toast.error(error)
+        setIsDeleteLocalVendorModalOpen(false);
+        console.error('Error deleting customer:', error);
+      });
   };
   return (
     <Layout>
@@ -160,6 +181,12 @@ const index = () => {
             selectedVendor={selectedVendor}
           />
         )}
+         <DeleteLocalVendor
+          isOpen={isDeleteLocalVendorModalOpen}
+          onClose={handleCloseDeleteLocalVendorModal}
+          onDelete={handleConfirmDeleteVendor}
+          title='Vendor'
+        />
         </>
     </Layout>
   )

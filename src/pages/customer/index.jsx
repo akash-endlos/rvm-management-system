@@ -31,6 +31,7 @@ import { toast } from 'react-hot-toast';
 import DeleteBranchModal from '@/components/customer/DeleteBranchModal';
 import { createNewBranch, deleteBranch, updateBranch } from '@/redux/reducers/branchSlice';
 import { updateBranchApi } from '@/redux/api/branchApi';
+import DeleteLocalVendor from '@/components/localVendor/DeleteLocalVendor';
 
 const Index = () => {
   const allcustomers = useSelector((state) => state.customer)
@@ -353,7 +354,7 @@ const Index = () => {
           onDelete={handleConfirmDeleteCustomer}
           title='Customer'
         />
-        <DeleteBranchModal
+        <DeleteLocalVendor
           isOpen={isDeleteBranchModalOpen}
           onClose={handleCloseDeleteBranchModal}
           onDelete={handleConfirmDeleteBranch}

@@ -39,7 +39,7 @@ export const updateLocalVendorApi = async (localVendorId, localVendorData) => {
 
 export const deleteLocalVendorApi = async (localVendorId) => {
   try {
-    const response = await axiosInstance.delete(`/localvendors/delete?id=${localVendorId}`);
+    const response = await axiosInstance.delete(`/localvendor/${localVendorId}`);
     return response.data;
   } catch (error) {
     console.log(error.response);
