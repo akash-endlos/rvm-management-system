@@ -46,9 +46,7 @@ const schema = yup.object().shape({
 
 
 
-const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine }) => {
-  const branches = useSelector((state)=>state.branch)
-  console.log(branches);
+const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches }) => {
   console.log(selectedMachine);
   const {
     handleSubmit,
@@ -61,7 +59,7 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine }) => {
     defaultValues: {
       machineId: selectedMachine?.machineId || '',
       branchId: selectedMachine?.branch._id || '',
-      warrentyStartDate: moment(selectedMachine?.warrentyStart).format('YYYY-MM-DD')  || '',
+      warrentyStartDate: moment(selectedMachine?.warrentyStart).format('YYYY-MM-DD') || '',
       inventory: selectedMachine?.inventory || [],
     },
 
@@ -94,11 +92,12 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine }) => {
         display: 'flex',
         flexDirection: 'column',
         zIndex: 999,
+        overflowY:'auto'
       }}
     >
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <Typography variant="h5" style={{ fontWeight: 'bold', color: 'teal' }}>
-         Machine Inventory
+          Machine Inventory
         </Typography>
         <div style={{ marginBottom: '10px' }}>
           <TextField
@@ -118,18 +117,25 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine }) => {
             name="branchId"
             {...register('branchId')}
             error={!!errors.branchId}
-            renderValue={(selected) => selected || 'Select Branch ID'}
+            renderValue={(selected) => {
+              const selectedBranch = branches.find((item) => item._id === selected);
+              return selectedBranch ? selectedBranch.name : 'Select Branch ID';
+            }}
           >
-            {branches && branches.map((item,index)=>(
-            <MenuItem value={item._id}>{item.name}</MenuItem>
-            ))}
+            {branches &&
+              branches.map((item) => (
+                <MenuItem key={item._id} value={item._id}>
+                  {item.name}
+                </MenuItem>
+              ))}
           </Select>
+
           {errors.branchId && (
             <FormHelperText error>{errors.branchId.message}</FormHelperText>
           )}
         </div>
         <div style={{ marginBottom: '10px' }}>
-        <InputLabel>Warranty Start Date</InputLabel>
+          <InputLabel>Warranty Start Date</InputLabel>
           <TextField
             fullWidth
             type='date'
@@ -158,7 +164,6 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine }) => {
                 type='date'
                 name={`inventory[${index}].warrantyStart`}
                 {...register(`inventory[${index}].warrantyStart`)}
-                label="Warranty Start"
                 defaultValue={item.warrantyStart}
                 error={!!errors?.inventory?.[index]?.warrantyStart}
                 helperText={errors?.inventory?.[index]?.warrantyStart?.message}
@@ -168,7 +173,6 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine }) => {
                 type='date'
                 name={`inventory[${index}].warrantyExpire`}
                 {...register(`inventory[${index}].warrantyExpire`)}
-                label="Warranty Expire"
                 defaultValue={item.warrantyExpire}
                 error={!!errors?.inventory?.[index]?.warrantyExpire}
                 helperText={errors?.inventory?.[index]?.warrantyExpire?.message}

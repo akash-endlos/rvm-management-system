@@ -2,7 +2,8 @@ import axiosInstance from './api';
 
 export const getAllBranchesApi = async () => {
   try {
-    const response = await axiosInstance.get('/branches');
+    const response = await axiosInstance.get('/branch');
+    console.log(response);
     return response.data;
   } catch (error) {
     throw error.response.data;

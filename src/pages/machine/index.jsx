@@ -10,12 +10,14 @@ import { FiGitBranch } from 'react-icons/fi'
 import AdminNestedTable from '@/components/AdminTable/AdminNestedTable'
 import AddEditMachineSidebar from '@/components/machine/AddEditMachineSidebar'
 import { fetchAllMachines } from '@/redux/reducers/machineSlice'
+import { fetchAllBranches } from '@/redux/reducers/branchSlice'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
   const [selectedMachine, setSelectedMachine] = useState(null);
   const allcustomers = useSelector((state) => state.machine)
-  console.log(allcustomers);
+  const allbranches = useSelector((state) => state.branch)
+  console.log(allbranches);
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchData = async () => {
@@ -24,6 +26,13 @@ const index = () => {
 
     fetchData();
   }, [dispatch]);
+  useEffect(() => {
+    const fetchBranches = async () => {
+      await dispatch(fetchAllBranches());
+    };
+  
+    fetchBranches();
+  }, []);
   const mainTableColumns = useMemo(
     () => [
       {
@@ -202,6 +211,7 @@ const index = () => {
             onClose={handleCloseAddSidebar}
             onSubmit={handleAddMachine}
             selectedMachine={selectedMachine}
+            branches={allbranches}
           />
         )}
       </>

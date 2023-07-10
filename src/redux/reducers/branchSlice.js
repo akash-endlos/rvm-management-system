@@ -1,5 +1,19 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { createBranchApi, deleteBranchApi, updateBranchApi } from '../api/branchApi';
+import { createBranchApi, deleteBranchApi, getAllBranchesApi, updateBranchApi } from '../api/branchApi';
+
+
+export const fetchAllBranches = createAsyncThunk(
+  'branch/getAll',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getAllBranchesApi(); // Replace with your API call to fetch all branches
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 
 export const createNewBranch = createAsyncThunk(
   'branch/create',
@@ -43,6 +57,14 @@ const branchSlice = createSlice({
   initialState: [],
   extraReducers: (builder) => {
     builder
+    .addCase(fetchAllBranches.fulfilled, (state, { payload }) => {
+      console.log(payload.payload.branches);
+      const branchesWithIndex = payload.payload.branches.map((branch, index) => ({
+        ...branch,
+        index: index + 1,
+      }));
+      return branchesWithIndex;
+    })
       .addCase(createNewBranch.fulfilled, (state, { payload }) => {
         console.log(payload);
         const newBranch = {
