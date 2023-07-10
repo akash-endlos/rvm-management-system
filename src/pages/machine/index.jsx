@@ -9,14 +9,16 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { FiGitBranch } from 'react-icons/fi'
 import AdminNestedTable from '@/components/AdminTable/AdminNestedTable'
 import AddEditMachineSidebar from '@/components/machine/AddEditMachineSidebar'
-import { createNewMachine, fetchAllMachines } from '@/redux/reducers/machineSlice'
+import { createNewMachine, deleteMachine, fetchAllMachines, updateMachine } from '@/redux/reducers/machineSlice'
 import { fetchAllBranches } from '@/redux/reducers/branchSlice'
 import { fetchInventoryDetails } from '@/redux/reducers/inventoryDetailSlice'
 import { toast } from 'react-hot-toast'
+import DeleteMachineModal from '@/components/machine/DeleteMachineModal'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
   const [selectedMachine, setSelectedMachine] = useState(null);
+  const [isDeleteMachineModalOpen, setIsDeleteMachineModalOpen] = useState(false);
   const allcustomers = useSelector((state) => state.machine)
   const allbranches = useSelector((state) => state.branch)
   const inventories = useSelector((state)=>state.inventory)
@@ -90,6 +92,10 @@ const index = () => {
     setSelectedMachine(machineData);
     setIsAddSidebarOpen(true);
   };
+  const handleDeleteMachine = (machineData) => {
+    setSelectedMachine(machineData);
+    setIsDeleteMachineModalOpen(true);
+  };
   const handleAdminTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
@@ -99,7 +105,7 @@ const index = () => {
           </IconButton>
         </Tooltip>
         <Tooltip arrow placement="right" title="Delete Customer">
-          <IconButton color="error" onClick={() => handleDeleteCustomer(row.original)}>
+          <IconButton color="error" onClick={() => handleDeleteMachine(row.original)}>
             <Delete />
           </IconButton>
         </Tooltip>
@@ -186,23 +192,47 @@ const index = () => {
   const handleCloseAddSidebar = () => {
     setIsAddSidebarOpen(false);
   };
-  const handleAddMachine = async (customerData) => {
+  const handleAddMachine = async (machineData) => {
     if (selectedMachine) {
       // Update existing customer
- 
-      console.log('Updating customer', customerData);
+      const updatedData={
+        id:selectedMachine._id,
+        data:machineData
+      }
+      dispatch(updateMachine(updatedData)).unwrap().then(async()=>{
+        await dispatch(fetchAllMachines())
+        toast.success('Machine Updated Successfully')
+     }).catch((error)=>{
+       toast.error(error)
+     })
+      console.log('Updating customer', machineData);
     } else {
       // Add new customer
       // addCustomer(newcustomer.payload);
-      dispatch(createNewMachine(customerData)).unwrap().then(async()=>{
+      dispatch(createNewMachine(machineData)).unwrap().then(async()=>{
         await dispatch(fetchAllMachines())
         toast.success('Machine Added Successfully')
      }).catch((error)=>{
        toast.error(error)
      })
-      console.log('Updating customer', customerData);
+      console.log('Updating customer', machineData);
     }
     handleCloseAddSidebar();
+  };
+  const handleCloseDeleteModal = () => {
+    setIsDeleteMachineModalOpen(false);
+  };
+  const handleConfirmDeleteMachine = () => {
+    dispatch(deleteMachine(selectedMachine)).unwrap()
+      .then(() => {
+        toast.success('Machine Delete Successfully')
+        setIsDeleteMachineModalOpen(false);
+      })
+      .catch((error) => {
+        toast.error(error)
+        setIsDeleteMachineModalOpen(false);
+        console.error('Error deleting customer:', error);
+      });
   };
   return (
     <Layout>
@@ -226,6 +256,12 @@ const index = () => {
             inventories={inventories}
           />
         )}
+         <DeleteMachineModal
+          isOpen={isDeleteMachineModalOpen}
+          onClose={handleCloseDeleteModal}
+          onDelete={handleConfirmDeleteMachine}
+          title='Machine'
+        />
       </>
     </Layout>
   )
