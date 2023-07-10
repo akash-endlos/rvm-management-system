@@ -215,7 +215,7 @@ const index = () => {
      }).catch((error)=>{
        toast.error(error)
      })
-      console.log('Updating customer', machineData);
+      console.log('Add customer', machineData);
     }
     handleCloseAddSidebar();
   };

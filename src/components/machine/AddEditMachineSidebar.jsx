@@ -18,7 +18,8 @@ import moment from 'moment';
 const schema = yup.object().shape({
   machineId: yup.string().required('Machine ID is required'),
   branchId: yup.string(),
-  warrentyStartDate: yup.string().required('Warranty Start Date is required'),
+  warrentyStart: yup.string().required('Warranty Start Date is required'),
+  warrentyExpire: yup.string().required('Warranty Expire Date is required'),
   inventry: yup
     .array()
     .of(
@@ -45,7 +46,8 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, i
     defaultValues: {
       machineId: selectedMachine?.machineId || '',
       branchId: selectedMachine?.branch?._id || '',
-      warrentyStartDate: selectedMachine ? moment(selectedMachine?.warrentyStart).format('YYYY-MM-DD') : '',
+      warrentyStart: selectedMachine ? moment(selectedMachine?.warrentyStart).format('YYYY-MM-DD') : '',
+      warrentyExpire: selectedMachine ? moment(selectedMachine?.warrentyExpire).format('YYYY-MM-DD') : '',
       inventry: selectedMachine?.inventry || [],
     },
   });
@@ -70,7 +72,7 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, i
         position: 'fixed',
         top: 0,
         right: 0,
-        width: '500px',
+        width: '800px',
         height: '100vh',
         backgroundColor: '#f0f0f0',
         padding: '1rem',
@@ -123,18 +125,28 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, i
           <TextField
             fullWidth
             type="date"
-            name="warrentyStartDate"
-            {...register('warrentyStartDate')}
-            error={!!errors.warrentyStartDate}
-            helperText={errors.warrentyStartDate?.message}
+            name="warrentyStart"
+            {...register('warrentyStart')}
+            error={!!errors.warrentyStart}
+            helperText={errors.warrentyStart?.message}
           />
         </div>
-
         <div style={{ marginBottom: '10px' }}>
+          <InputLabel>Warranty Expire Date</InputLabel>
+          <TextField
+            fullWidth
+            type="date"
+            name="warrentyExpire"
+            {...register('warrentyExpire')}
+            error={!!errors.warrentyExpire}
+            helperText={errors.warrentyExpire?.message}
+          />
+        </div>
+        <div style={{ marginBottom: '10px' }} >
           <InputLabel>Inventry</InputLabel>
           {fields.map((item, index) => {
             return (
-              <div key={item.id}>
+              <div key={item.id} className='flex'>
                 <Controller
                   name={`inventry[${index}]._inventry`}
                   control={control}

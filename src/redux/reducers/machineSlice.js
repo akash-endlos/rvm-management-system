@@ -53,6 +53,7 @@ export const updateMachine = createAsyncThunk(
   'machines/update',
   async (machineData, { rejectWithValue }) => {
     try {
+    
       const response = await updateMachineApi(machineData.id,  machineData.data);
       return response;
     } catch (error) {

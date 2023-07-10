@@ -30,6 +30,7 @@ export const getMachineApi = async (machineId) => {
 
 export const updateMachineApi = async (machineId, machineData) => {
   try {
+    console.log(machineData);
     const response = await axiosInstance.put(`/machine/update?id=${machineId}`, machineData);
     return response.data;
   } catch (error) {
