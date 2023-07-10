@@ -7,36 +7,23 @@ import {
   InputLabel,
   FormHelperText,
   Typography,
+  FormControl,
 } from '@mui/material';
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 
-// const schema = yup.object().shape({
-//   branchId: yup.string(),
-//   inventory: yup
-//     .array()
-//     .of(
-//       yup.object().shape({
-//         _inventory: yup.string().required('Inventory is required'),
-//         warrantyStart: yup.string().required('Warranty Start is required'),
-//         warrantyExpire: yup.string().required('Warranty Expire is required'),
-//       })
-//     )
-//     .required('At least one inventory item is required'),
-// });
-
 const schema = yup.object().shape({
   machineId: yup.string().required('Machine ID is required'),
   branchId: yup.string(),
   warrentyStartDate: yup.string().required('Warranty Start Date is required'),
-  inventory: yup
+  inventry: yup
     .array()
     .of(
       yup.object().shape({
-        _inventory: yup.string().required('Inventory is required'),
+        _inventry: yup.string().required('Inventory is required'),
         warrantyStart: yup.string().required('Warranty Start is required'),
         warrantyExpire: yup.string().required('Warranty Expire is required'),
       })
@@ -44,9 +31,7 @@ const schema = yup.object().shape({
     .required('At least one inventory item is required'),
 });
 
-
-
-const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches }) => {
+const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, inventories }) => {
   console.log(selectedMachine);
   const {
     handleSubmit,
@@ -58,17 +43,15 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches })
     resolver: yupResolver(schema),
     defaultValues: {
       machineId: selectedMachine?.machineId || '',
-      branchId: selectedMachine?.branch._id || '',
+      branchId: selectedMachine?.branch?._id || '',
       warrentyStartDate: moment(selectedMachine?.warrentyStart).format('YYYY-MM-DD') || '',
-      inventory: selectedMachine?.inventory || [],
+      inventry: selectedMachine?.inventoryDetails || [],
     },
-
-
   });
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'inventory',
+    name: 'inventry',
   });
 
   const handleFormSubmit = (data) => {
@@ -92,7 +75,7 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches })
         display: 'flex',
         flexDirection: 'column',
         zIndex: 999,
-        overflowY:'auto'
+        overflowY: 'auto',
       }}
     >
       <form onSubmit={handleSubmit(handleFormSubmit)}>
@@ -110,35 +93,34 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches })
           />
         </div>
 
-        <div style={{ marginBottom: '10px' }}>
-          <InputLabel>Branch ID</InputLabel>
-          <Select
-            fullWidth
+        <FormControl fullWidth error={!!errors.branchId}>
+          <Controller
             name="branchId"
-            {...register('branchId')}
-            error={!!errors.branchId}
-            renderValue={(selected) => {
-              const selectedBranch = branches.find((item) => item._id === selected);
-              return selectedBranch ? selectedBranch.name : 'Select Branch ID';
-            }}
-          >
-            {branches &&
-              branches.map((item) => (
-                <MenuItem key={item._id} value={item._id}>
-                  {item.name}
+            control={control}
+            defaultValue={selectedMachine?.branch?._id || ''}
+            rules={{ required: 'Branch ID is required' }}
+            render={({ field }) => (
+              <Select {...field} displayEmpty>
+                <MenuItem value="" disabled>
+                  Select Branch ID
                 </MenuItem>
-              ))}
-          </Select>
-
+                {branches?.map((item) => (
+                  <MenuItem key={item._id} value={item._id}>
+                    {item.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+          />
           {errors.branchId && (
             <FormHelperText error>{errors.branchId.message}</FormHelperText>
           )}
-        </div>
+        </FormControl>
         <div style={{ marginBottom: '10px' }}>
           <InputLabel>Warranty Start Date</InputLabel>
           <TextField
             fullWidth
-            type='date'
+            type="date"
             name="warrentyStartDate"
             {...register('warrentyStartDate')}
             error={!!errors.warrentyStartDate}
@@ -147,52 +129,69 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches })
         </div>
 
         <div style={{ marginBottom: '10px' }}>
-          <InputLabel>Inventory</InputLabel>
-          {fields.map((item, index) => (
-            <div key={item.id}>
-              <TextField
-                fullWidth
-                name={`inventory[${index}]._inventory`}
-                {...register(`inventory[${index}]._inventory`)}
-                label="Inventory"
-                defaultValue={item._inventory}
-                error={!!errors?.inventory?.[index]?._inventory}
-                helperText={errors?.inventory?.[index]?._inventory?.message}
-              />
-              <TextField
-                fullWidth
-                type='date'
-                name={`inventory[${index}].warrantyStart`}
-                {...register(`inventory[${index}].warrantyStart`)}
-                defaultValue={item.warrantyStart}
-                error={!!errors?.inventory?.[index]?.warrantyStart}
-                helperText={errors?.inventory?.[index]?.warrantyStart?.message}
-              />
-              <TextField
-                fullWidth
-                type='date'
-                name={`inventory[${index}].warrantyExpire`}
-                {...register(`inventory[${index}].warrantyExpire`)}
-                defaultValue={item.warrantyExpire}
-                error={!!errors?.inventory?.[index]?.warrantyExpire}
-                helperText={errors?.inventory?.[index]?.warrantyExpire?.message}
-              />
-              <Button onClick={() => remove(index)}>Remove</Button>
-            </div>
-          ))}
-          {errors.inventory && (
-            <FormHelperText error>{errors.inventory.message}</FormHelperText>
+          <InputLabel>Inventry</InputLabel>
+          {fields.map((item, index) => {
+            return (
+              <div key={item.id}>
+                <Controller
+                  name={`inventry[${index}]._inventry`}
+                  control={control}
+                  defaultValue={selectedMachine ? selectedMachine.inventoryDetails[index]._id : ''}
+                  rules={{ required: 'Inventory is required' }}
+                  render={({ field }) => (
+                    <Select {...field} fullWidth>
+                      <MenuItem value="" disabled>
+                        Select Inventory
+                      </MenuItem>
+                      {inventories?.map((inventory) => {
+                        return (
+                          <MenuItem
+                            key={inventory._id}
+                            value={inventory._id}
+                          >
+                            {inventory.serialNumber}
+                          </MenuItem>
+                        )
+                      })}
+                    </Select>
+                  )}
+                />
+                <TextField
+                  fullWidth
+                  type="date"
+                  name={`inventry[${index}].warrantyStart`}
+                  {...register(`inventry[${index}].warrantyStart`)}
+                  defaultValue={selectedMachine ? moment(selectedMachine.inventoryDetails[index].resellerWarrantyExpire).format('YYYY-MM-DD') : ''}
+                  error={!!errors?.inventry?.[index]?.warrantyStart}
+                  helperText={errors?.inventry?.[index]?.warrantyStart?.message}
+                />
+                
+                <TextField
+                  fullWidth
+                  type="date"
+                  name={`inventry[${index}].warrantyExpire`}
+                  {...register(`inventry[${index}].warrantyExpire`)}
+                  defaultValue={selectedMachine ? moment(selectedMachine.inventoryDetails[index].resellerWarrantyExpire).format('YYYY-MM-DD') : ''}
+                  error={!!errors?.inventry?.[index]?.warrantyExpire}
+                  helperText={errors?.inventry?.[index]?.warrantyExpire?.message}
+                />
+                <Button onClick={() => remove(index)}>Remove</Button>
+              </div>
+            );
+          })}
+          {errors.inventry && (
+            <FormHelperText error>{errors.inventry.message}</FormHelperText>
           )}
           <Button
             onClick={() =>
               append({
-                _inventory: '',
+                _inventry: '',
                 warrantyStart: '',
                 warrantyExpire: '',
               })
             }
           >
-            Add Inventory
+            Add Inventry
           </Button>
         </div>
         <Button

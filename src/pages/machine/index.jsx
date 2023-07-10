@@ -11,13 +11,15 @@ import AdminNestedTable from '@/components/AdminTable/AdminNestedTable'
 import AddEditMachineSidebar from '@/components/machine/AddEditMachineSidebar'
 import { fetchAllMachines } from '@/redux/reducers/machineSlice'
 import { fetchAllBranches } from '@/redux/reducers/branchSlice'
+import { fetchInventoryDetails } from '@/redux/reducers/inventoryDetailSlice'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
   const [selectedMachine, setSelectedMachine] = useState(null);
   const allcustomers = useSelector((state) => state.machine)
   const allbranches = useSelector((state) => state.branch)
-  console.log(allbranches);
+  const inventories = useSelector((state)=>state.inventory)
+  console.log(inventories);
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchData = async () => {
@@ -29,6 +31,7 @@ const index = () => {
   useEffect(() => {
     const fetchBranches = async () => {
       await dispatch(fetchAllBranches());
+      await dispatch(fetchInventoryDetails());
     };
   
     fetchBranches();
@@ -212,6 +215,7 @@ const index = () => {
             onSubmit={handleAddMachine}
             selectedMachine={selectedMachine}
             branches={allbranches}
+            inventories={inventories}
           />
         )}
       </>
