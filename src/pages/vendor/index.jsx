@@ -7,14 +7,19 @@ import { useDispatch, useSelector } from 'react-redux'
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { Delete, Edit } from '@mui/icons-material'
 import { FiGitBranch } from 'react-icons/fi'
+import { createNewLocalVendor, fetchAllLocalVendors, updateLocalVendor } from '@/redux/reducers/localVendorSlice'
+import { toast } from 'react-hot-toast'
+import AddEditLocalVendorSidebar from '@/components/localVendor/AddEditLocalVendorSidebar'
 
 const index = () => {
+    const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
     const [selectedVendor, setSelectedVendor] = useState(null);
-    const allcustomers = useSelector((state) => state.customer)
+    const alllocalVendors = useSelector((state) => state.localvendor)
+    console.log(alllocalVendors);
     const dispatch = useDispatch();
     useEffect(() => {
       const fetchData = () => {
-        dispatch(fetchAllCustomers()).unwrap()
+        dispatch(fetchAllLocalVendors()).unwrap()
           .then(() => {
             // Success
           })
@@ -38,15 +43,28 @@ const index = () => {
             header: 'Name',
             size: 150,
           },
+          {
+            accessorKey: 'email',
+            header: 'Email',
+            size: 150,
+          },
+          {
+            accessorKey: 'contact',
+            header: 'Mobile No.',
+            size: 150,
+          },
         ],
         []
       );
-
+      const handleEditVendor = (vendorData) => {
+        setSelectedVendor(vendorData);
+        setIsAddSidebarOpen(true);
+      };
       const handleAdminTableRowActions = (row, table) => {
         return (
           <Box sx={{ display: 'flex', gap: '1rem' }}>
             <Tooltip arrow placement="left" title="Edit Customer">
-              <IconButton onClick={() => handleEditCustomer(row.original)}>
+              <IconButton onClick={() => handleEditVendor(row.original)}>
                 <Edit />
               </IconButton>
             </Tooltip>
@@ -71,6 +89,7 @@ const index = () => {
     const handleExportRows = (rows) => {
       csvExporter.generateCsv(rows.map((row) => row.original));
     };
+    
     return (
       <Box sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}>
         <Button
@@ -90,10 +109,37 @@ const index = () => {
           Export Selected Rows
         </Button>
         <Button variant="contained" onClick={handleOpenAddSidebar}>
-          Add Customer
+          Add Vendor
         </Button>
       </Box>
     );
+  };
+  const handleCloseAddSidebar = () => {
+    setIsAddSidebarOpen(false);
+  };
+    const handleAddVendor = async (vendorData) => {
+    if (selectedVendor) {
+      // Update existing customer
+      const updatedData={
+        id:selectedVendor._id,
+        data:vendorData
+      }
+      console.log(selectedVendor);
+      dispatch(updateLocalVendor(updatedData)).unwrap().then(()=>{
+        toast.success('Create Vendor Successfully')
+    }).catch((error)=>{
+        toast.error(error)
+    })
+      console.log('Updating customer', vendorData);
+    } else {
+        dispatch(createNewLocalVendor(vendorData)).unwrap().then(()=>{
+            toast.success('Create Vendor Successfully')
+        }).catch((error)=>{
+            toast.error(error)
+        })
+        console.log('Add customer', vendorData);
+    }
+    handleCloseAddSidebar();
   };
   return (
     <Layout>
@@ -102,11 +148,18 @@ const index = () => {
       </Typography>
       <>
         <AdminTable
-          data={allcustomers}
+          data={alllocalVendors}
           handleToolBar={handleToolBar}
           columns={mainTableColumns}
           handleAdminTableRowActions={handleAdminTableRowActions}
         />
+        {isAddSidebarOpen && (
+          <AddEditLocalVendorSidebar
+            onClose={handleCloseAddSidebar}
+            onSubmit={handleAddVendor}
+            selectedVendor={selectedVendor}
+          />
+        )}
         </>
     </Layout>
   )

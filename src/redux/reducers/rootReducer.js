@@ -11,6 +11,7 @@ import inventoryDetailReducer from './inventoryDetailSlice'
 import { inventoryBrandReducer } from './inventoryBrandSlice';
 import { problemReducer } from './problemSlice';
 import { machineReducer } from './machineSlice';
+import { localVendorReducer } from './localVendorSlice';
 const persistConfig = {
   key: 'root',
   storage,
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   roles:roleReducer,
   problem:problemReducer,
   machine:machineReducer,
+  localvendor:localVendorReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
