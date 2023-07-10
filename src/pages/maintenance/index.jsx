@@ -8,13 +8,15 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { Delete, Edit } from '@mui/icons-material'
 import { FiGitBranch } from 'react-icons/fi'
 import AdminNestedTable from '@/components/AdminTable/AdminNestedTable'
-import { createNewProblem, fetchAllProblems } from '@/redux/reducers/problemSlice'
+import { createNewProblem, deleteProblem, fetchAllProblems, updateProblem } from '@/redux/reducers/problemSlice'
 import AddEditProblemSidebar from '@/components/problem/AddEditProblemSidebar'
 import { toast } from 'react-hot-toast'
+import DeleteProblemModal from '@/components/problem/DeleteProblemModal'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
   const [selectedProblem, setSelectedProblem] = useState(null);
+  const [isDeleteProblemModalOpen, setIsDeleteProblemModalOpen] = useState(false);
   const allproblems = useSelector((state) => state.problem)
   console.log(allproblems);
   const dispatch = useDispatch();
@@ -50,6 +52,10 @@ const index = () => {
     ],
     []
   );
+  const handleDeleteProblem = (problemData) => {
+    setSelectedProblem(problemData);
+    setIsDeleteProblemModalOpen(true);
+  };
   const handleAdminTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
@@ -59,7 +65,7 @@ const index = () => {
           </IconButton>
         </Tooltip>
         <Tooltip arrow placement="right" title="Delete Customer">
-          <IconButton color="error" onClick={() => handleDeleteCustomer(row.original)}>
+          <IconButton color="error" onClick={() => handleDeleteProblem(row.original)}>
             <Delete />
           </IconButton>
         </Tooltip>
@@ -147,7 +153,20 @@ const index = () => {
   const handleAddProblem = async (problemData) => {
     if (selectedProblem) {
       // Update existing customer
-
+      const updatedProblemData={
+        id:selectedProblem._id,
+        data:problemData
+      }
+      dispatch(updateProblem(updatedProblemData))
+      .unwrap()
+      .then(() => {
+        handleCloseAddSidebar();
+        toast.success('Problem Updated Successfully');
+      })
+      .catch((error) => {
+        // Handle the error here
+        toast.error(error);
+      });
       console.log('Updating customer', problemData);
     } else {
       // Add new customer
@@ -170,6 +189,21 @@ const index = () => {
     setSelectedProblem(problemData);
     setIsAddSidebarOpen(true);
   };
+  const handleCloseDeleteModal = () => {
+    setIsDeleteProblemModalOpen(false);
+  };
+  const handleConfirmDeleteProblem = () => {
+    dispatch(deleteProblem(selectedProblem)).unwrap()
+      .then(() => {
+        toast.success('Problem Delete Successfully')
+        setIsDeleteProblemModalOpen(false);
+      })
+      .catch((error) => {
+        toast.error(error)
+        setIsDeleteProblemModalOpen(false);
+        console.error('Error deleting customer:', error);
+      });
+  };
   return (
     <Layout>
        <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
@@ -190,6 +224,12 @@ const index = () => {
             selectedProblem={selectedProblem}
           />
         )}
+         <DeleteProblemModal
+          isOpen={isDeleteProblemModalOpen}
+          onClose={handleCloseDeleteModal}
+          onDelete={handleConfirmDeleteProblem}
+          title='Problem'
+        />
          </>
     </Layout>
   )

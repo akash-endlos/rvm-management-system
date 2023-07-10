@@ -29,7 +29,7 @@ export const getProblemApi = async (problemId) => {
 
 export const updateProblemApi = async (problemId, problemData) => {
   try {
-    const response = await axiosInstance.put(`problem/update?id=${problemId}`, problemData);
+    const response = await axiosInstance.put(`/problem/${problemId}`, problemData);
     return response.data;
   } catch (error) {
     throw error.response.data;
@@ -38,7 +38,7 @@ export const updateProblemApi = async (problemId, problemData) => {
 
 export const deleteProblemApi = async (problemId) => {
   try {
-    const response = await axiosInstance.delete(`/problem/delete?id=${problemId}`);
+    const response = await axiosInstance.delete(`/problem/${problemId}`);
     return response.data;
   } catch (error) {
     throw error.response.data;
