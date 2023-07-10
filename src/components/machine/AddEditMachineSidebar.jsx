@@ -42,21 +42,6 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, i
   ];
   const [selectedDuration, setSelectedDuration] = useState('');
   const [customDuration, setCustomDuration] = useState('');
-
-  // const handleDurationChange = (event) => {
-  //   const value = event.target.value;
-
-  //   setSelectedDuration(value);
-
-  //   if (value !== 'custom') {
-  //     setCustomDuration('');
-  //   }
-  // };
-  
-console.log(typeof(selectedDuration));
-  // const handleCustomDurationChange = (event) => {
-  //   setCustomDuration(event.target.value);
-  // };
   const {
     handleSubmit,
     register,
