@@ -359,6 +359,7 @@ const index = () => {
       serialNumber: inventoryData.serialNumber,
       purchaseDate: inventoryData.purchaseDate,
       warrantyExpired: inventoryData.warrantyExpired,
+      localVendorId:inventoryData.localVendorId,
     }
     if (selectedInventory) {
       const newUpdateDetailData = {
@@ -376,6 +377,7 @@ const index = () => {
     } else {
       const newDetailData = {
         brandId: selectedInventoryBrand._id,
+        localVendorId:inventoryData.localVendorId,
         inventryTypeId: selectedInventoryBrand.inventryTypeId,
         invoiceNo: inventoryData.invoiceNo,
         serialNumber: inventoryData.serialNumbers,

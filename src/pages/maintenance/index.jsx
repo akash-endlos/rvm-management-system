@@ -92,19 +92,19 @@ const index = () => {
       {
         header: 'branches',
         columns: [{ header: 'Name', accessorKey: 'name' }],
-        data: row?.original?.branches,
+        data: row?.original?.solutions,
       },
     ];
     return (
       <>
-        {/* {nestedTableConfigurations.map((config, index) => (
+        {nestedTableConfigurations.map((config, index) => (
           <>
             <Typography variant="h5" style={{ fontWeight: 'bold', color: 'teal' }}>
               {config?.header}
             </Typography>
             <AdminNestedTable handleAdminNestedTableRowActions={handleAdminNestedTableRowActions} columns={config?.columns} data={config?.data} />
           </>
-        ))} */}
+        ))}
       </>
     );
   };
