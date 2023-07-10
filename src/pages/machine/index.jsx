@@ -52,7 +52,7 @@ const index = () => {
         size: 150,
       },
       {
-        accessorKey: 'warrentyStartDate',
+        accessorKey: 'warrentyStart',
         header: 'Warranty Start Date',
         size: 150,
       },

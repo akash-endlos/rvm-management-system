@@ -11,6 +11,8 @@ import {
 import { useForm, useFieldArray } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useSelector } from 'react-redux';
+import moment from 'moment';
 
 // const schema = yup.object().shape({
 //   branchId: yup.string(),
@@ -45,6 +47,8 @@ const schema = yup.object().shape({
 
 
 const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine }) => {
+  const branches = useSelector((state)=>state.branch)
+  console.log(branches);
   console.log(selectedMachine);
   const {
     handleSubmit,
@@ -56,8 +60,8 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine }) => {
     resolver: yupResolver(schema),
     defaultValues: {
       machineId: selectedMachine?.machineId || '',
-      branchId: selectedMachine?.branchId || '',
-      warrentyStartDate: selectedMachine?.warrentyStartDate || '',
+      branchId: selectedMachine?.branch._id || '',
+      warrentyStartDate: moment(selectedMachine?.warrentyStart).format('YYYY-MM-DD')  || '',
       inventory: selectedMachine?.inventory || [],
     },
 
@@ -94,7 +98,7 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine }) => {
     >
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <Typography variant="h5" style={{ fontWeight: 'bold', color: 'teal' }}>
-          Inventory Brand
+         Machine Inventory
         </Typography>
         <div style={{ marginBottom: '10px' }}>
           <TextField
@@ -116,11 +120,9 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine }) => {
             error={!!errors.branchId}
             renderValue={(selected) => selected || 'Select Branch ID'}
           >
-            <MenuItem value="">None</MenuItem>
-            <MenuItem value="branch1">Branch 1</MenuItem>
-            <MenuItem value="branch2">Branch 2</MenuItem>
-            <MenuItem value="branch3">Branch 3</MenuItem>
-            {/* Add more branch options as needed */}
+            {branches && branches.map((item,index)=>(
+            <MenuItem value={item._id}>{item.name}</MenuItem>
+            ))}
           </Select>
           {errors.branchId && (
             <FormHelperText error>{errors.branchId.message}</FormHelperText>
