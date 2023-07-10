@@ -96,7 +96,7 @@ const index = () => {
   const handleNestedTable = (row) => {
     const nestedTableConfigurations = [
       {
-        header: 'branches',
+        header: 'Solutions',
         columns: [{ header: 'Name', accessorKey: 'name' }],
         data: row?.original?.solutions,
       },
