@@ -55,7 +55,7 @@ const AddEditStockSidebar = ({ onClose, onSubmit, selectedVendor }) => {
     >
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <Typography variant="h5" style={{ fontWeight: 'bold', color: 'teal' }}>
-          Customer
+          Stock
         </Typography>
         <div style={{ marginBottom: '10px' }}>
           <TextField fullWidth label="Name" name="name" {...register('name')} />
