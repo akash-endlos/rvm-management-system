@@ -140,7 +140,7 @@ const index = () => {
   const handleSubNestedTable = (row, table, currentDepth = 0, maxDepth = 1) => {
     const nestedTableConfigurations = [
       {
-        header: 'Inventory Detail',
+        header: 'Product Detail',
         columns: [{ header: 'Invoice', accessorKey: 'invoiceNo' }],
         data: currentDepth === 0 ? row?.original?.invetries : undefined,
       },
@@ -168,7 +168,7 @@ const index = () => {
   const handleNestedTable = (row) => {
     const nestedTableConfigurations = [
       {
-        header: 'Inventory Brand',
+        header: 'Product Brand',
         columns: [{ header: 'Name', accessorKey: 'name' }],
         data: row?.original?.invetrybrands,
       },
@@ -417,7 +417,7 @@ const index = () => {
   return (
     <Layout>
       <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
-        Inventory Type
+        Product Category(Type)
       </Typography>
       <>
         <AdminTable
