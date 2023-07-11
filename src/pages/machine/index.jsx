@@ -82,7 +82,7 @@ const index = () => {
         size: 150,
         Cell: ({ renderedCellValue }) => {
           return(
-            <Chip label={renderedCellValue==='Out Of Warranty' ? 'Out Of Warranty' : renderedCellValue} color={renderedCellValue==='Out Of Warranty' ? 'primary' : 'default'} />
+            <Chip label={renderedCellValue==='Out Of Warranty' ? 'Out Of Warranty' : renderedCellValue} color={renderedCellValue==='Out Of Warranty' ? 'error' : 'primary'} />
         )},
       },
     ],
