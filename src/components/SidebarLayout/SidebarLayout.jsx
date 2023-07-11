@@ -133,7 +133,7 @@ const SidebarLayout = ({ children }) => {
       <NewHeader isSidebarOpen={isSidebarOpen} handleSidebarToggle={handleSidebarToggle} />
       <NewSidebar menuItems={menuItems} setIsSidebarOpen={setIsSidebarOpen} handleSidebarToggle={handleSidebarToggle} isSidebarOpen={isSidebarOpen} />
       <div className={`p-4 mt-4 ${isSidebarOpen ? 'ml-64':''}`}>
-        <div className="border p-4 rounded-lg dark:border-gray-700 mt-14">
+        <div className=" p-4 rounded-lg  mt-14">
           {children}
         </div>
       </div>
