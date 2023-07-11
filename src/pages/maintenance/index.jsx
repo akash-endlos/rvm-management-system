@@ -49,6 +49,11 @@ const index = () => {
         header: 'Description',
         size: 150,
       },
+      {
+        accessorKey: 'category',
+        header: 'Category',
+        size: 150,
+      },
     ],
     []
   );

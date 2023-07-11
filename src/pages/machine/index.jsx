@@ -160,6 +160,7 @@ const index = () => {
     );
   };
   const handleNestedTable = (row) => {
+    console.log(row?.original?.inventoryDetails);
     const nestedTableConfigurations = [
       {
         header: 'Machine Inventory',
