@@ -24,6 +24,11 @@ const SidebarLayout = ({ children }) => {
       icon: <DashboardIcon />,
     },
     {
+      title: 'Vendor',
+      url: '/vendor',
+      icon: <FactoryIcon />,
+    },
+    {
       title: 'Reseller',
       url: '/reseller',
       icon: <SellIcon />,
@@ -82,11 +87,6 @@ const SidebarLayout = ({ children }) => {
       title: 'Maintenance',
       url: '/maintenance',
       icon: <EngineeringIcon />,
-    },
-    {
-      title: 'Vendor',
-      url: '/vendor',
-      icon: <FactoryIcon />,
     },
     // {
     //   title: 'Ticket',
