@@ -19,6 +19,7 @@
     "@reduxjs/toolkit": "^1.9.5",
     "axios": "^1.4.0",
     "dayjs": "^1.11.8",
+    "downshift": "^7.6.0",
     "export-to-csv": "^0.2.1",
     "framer-motion": "^10.12.17",
     "material-react-table": "^1.14.0",
