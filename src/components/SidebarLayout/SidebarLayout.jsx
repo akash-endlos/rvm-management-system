@@ -48,6 +48,11 @@ const SidebarLayout = ({ children }) => {
       url: '/inventories',
       icon: <InventoryIcon />,
     },
+    {
+      title: 'Stock',
+      url: '/stock',
+      icon: <InventoryIcon />,
+    },
     //  {
     //   title: 'Inventory',
     //   // url: '#',
