@@ -2,7 +2,7 @@ import AdminTable from '@/components/AdminTable/AdminTable'
 import Layout from '@/layout/Layout'
 import { fetchAllCustomers } from '@/redux/reducers/customerSlice'
 import { Delete, Edit } from '@mui/icons-material'
-import { Box, Button, IconButton, Tooltip, Typography } from '@mui/material'
+import { Box, Button, IconButton, Tooltip, Typography,Chip } from '@mui/material'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
@@ -77,9 +77,13 @@ const index = () => {
         size: 150,
       },
       {
-        accessorKey: 'warrentystatus',
+        accessorKey: 'machineStatus',
         header: 'Status',
         size: 150,
+        Cell: ({ renderedCellValue }) => {
+          return(
+            <Chip label={renderedCellValue==='Out Of Warranty' ? 'Out Of Warranty' : renderedCellValue} color={renderedCellValue==='Out Of Warranty' ? 'primary' : 'default'} />
+        )},
       },
     ],
     []
