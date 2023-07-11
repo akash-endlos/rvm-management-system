@@ -76,8 +76,8 @@ console.log(watch('category'));
               {problemtype && problemtype.map((item,index)=>(
               <MenuItem key={index} value={item._id}>{item.name}</MenuItem>
               ))}
-              <MenuItem value="Type 2">Type 2</MenuItem>
-              <MenuItem value="Type 3">Type 3</MenuItem>
+              {/* <MenuItem value="Type 2">Type 2</MenuItem>
+              <MenuItem value="Type 3">Type 3</MenuItem> */}
             </Select>
             <Typography variant="body2" color="error">{errors.problemType?.message}</Typography>
           </div>)
