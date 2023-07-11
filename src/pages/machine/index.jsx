@@ -14,15 +14,21 @@ import { fetchAllBranches } from '@/redux/reducers/branchSlice'
 import { fetchInventoryDetails, fetchUnAssignedInventoryDetails } from '@/redux/reducers/inventoryDetailSlice'
 import { toast } from 'react-hot-toast'
 import DeleteMachineModal from '@/components/machine/DeleteMachineModal'
+import AddEditMachineInventorySidebar from '@/components/machine/AddEditMachineInventorySidebar'
+import DeleteMachineInventoryModal from '@/components/machine/DeleteMachineInventoryModal'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
   const [selectedMachine, setSelectedMachine] = useState(null);
   const [isDeleteMachineModalOpen, setIsDeleteMachineModalOpen] = useState(false);
-  const allcustomers = useSelector((state) => state.machine)
+  const [selectedMachineInventory, setSelectedMachineInventory] = useState(null);
+  const [isAddMachineInventorySidebarOpen, setIsAddMachineInventorySidebarOpen] = useState(false);
+  const [isDeleteMachineInventoryModalOpen, setIsDeleteMachineInventoryModalOpen] = useState(false);
+  const [assignedInventories, setAssignedInventories] = useState([])
+  const [unassignedInventories, setUnAssignedInventories] = useState([])
+  const allmachines = useSelector((state) => state.machine)
   const allbranches = useSelector((state) => state.branch)
   const inventories = useSelector((state)=>state.inventory)
-  console.log(inventories);
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchData = async () => {
@@ -34,12 +40,14 @@ const index = () => {
   useEffect(() => {
     const fetchBranches = async () => {
       await dispatch(fetchAllBranches());
-      // await dispatch(fetchInventoryDetails());
-      await dispatch(fetchUnAssignedInventoryDetails());
+     const allassignedInventories = await dispatch(fetchInventoryDetails());
+     setAssignedInventories(allassignedInventories.payload.payload.allInventry);
+    const  allunassignedInventories = await dispatch(fetchUnAssignedInventoryDetails());
+    setUnAssignedInventories(allunassignedInventories.payload.payload.unAssignedInventry);
     };
   
     fetchBranches();
-  }, [dispatch]);
+  }, [isAddSidebarOpen]);
   const mainTableColumns = useMemo(
     () => [
       {
@@ -101,6 +109,11 @@ const index = () => {
     setSelectedMachine(machineData);
     setIsDeleteMachineModalOpen(true);
   };
+  const handleOpenAddMachineInventorySidebar = (machineData) => {
+    setSelectedMachineInventory(null);
+    setIsAddMachineInventorySidebarOpen(true);
+    setSelectedMachine(machineData);
+  };
   const handleAdminTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
@@ -115,23 +128,31 @@ const index = () => {
           </IconButton>
         </Tooltip>
         <Tooltip arrow placement="right" title="Add Branch">
-          <IconButton color="secondary" onClick={() => handleOpenAddBranchSidebar(row.original)}>
+          <IconButton color="secondary" onClick={() => handleOpenAddMachineInventorySidebar(row.original)}>
             <FiGitBranch />
           </IconButton>
         </Tooltip>
       </Box>
     );
   };
+  const handleEditMachineInventory = (machineInventoryData) => {
+    setSelectedMachineInventory(machineInventoryData);
+    setIsAddMachineInventorySidebarOpen(true);
+  };
+  const handleDeleteMachineInventory = (machineInventoryData) => {
+    setSelectedMachineInventory(machineInventoryData);
+    setIsDeleteMachineInventoryModalOpen(true);
+  };
   const handleAdminNestedTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip arrow placement="left" title="Edit Customer">
-          <IconButton onClick={() => handleEditBranch(row.original)}>
+          <IconButton onClick={() => handleEditMachineInventory(row.original)}>
             <Edit />
           </IconButton>
         </Tooltip>
         <Tooltip arrow placement="right" title="Delete Customer">
-          <IconButton color="error" onClick={() => handleDeleteBranch(row.original)}>
+          <IconButton color="error" onClick={() => handleDeleteMachineInventory(row.original)}>
             <Delete />
           </IconButton>
         </Tooltip>
@@ -239,6 +260,40 @@ const index = () => {
         console.error('Error deleting customer:', error);
       });
   };
+  const handleCloseAddMachineInventorySidebar = () => {
+    setIsAddMachineInventorySidebarOpen(false);
+  };
+  const handleCloseDeleteMachineInventoryModal=()=>{
+    setIsDeleteMachineInventoryModalOpen(false)
+  }
+  const handleConfirmDeleteInventoryMachine = async () => {
+    dispatch(deleteBranch(selectedBranch?._id))
+    .then(async () => {
+      await dispatch(fetchAllMachines());
+      toast.success('Delete Machine Inventory Successfully');
+    })
+    .catch(error => {
+      toast.error(error);
+    });
+  
+    // Perform delete operation on selectedCustomer
+    console.log('Deleting branch', selectedBranch);
+    setIsDeleteMachineInventoryModalOpen(false);
+  };
+
+  const handleAddBranch = async (machineInventoryData) => {
+    if (selectedBranch) {
+      // Update existing branch
+
+    
+      console.log('Updating branch', machineInventoryData);
+    } else {
+
+      // Add new branch
+      console.log('Add branch', machineInventoryData);
+    }
+    handleCloseAddMachineInventorySidebar();
+  };
   return (
     <Layout>
       <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
@@ -246,7 +301,7 @@ const index = () => {
       </Typography>
       <>
         <AdminTable
-          data={allcustomers}
+          data={allmachines}
           handleToolBar={handleToolBar}
           columns={mainTableColumns}
           handleAdminTableRowActions={handleAdminTableRowActions}
@@ -258,7 +313,17 @@ const index = () => {
             onSubmit={handleAddMachine}
             selectedMachine={selectedMachine}
             branches={allbranches}
-            inventories={inventories}
+            assignedInventories={assignedInventories}
+            unassignedInventories={unassignedInventories}
+            // inventories={inventories}
+          />
+        )}
+          {isAddMachineInventorySidebarOpen && (
+          <AddEditMachineInventorySidebar
+            onClose={handleCloseAddMachineInventorySidebar}
+            onSubmit={handleAddBranch}
+            selectedMachineInventory={selectedMachineInventory}
+            // selectedCustomer={selectedCustomer}
           />
         )}
          <DeleteMachineModal
@@ -266,6 +331,12 @@ const index = () => {
           onClose={handleCloseDeleteModal}
           onDelete={handleConfirmDeleteMachine}
           title='Machine'
+        />
+        <DeleteMachineInventoryModal
+          isOpen={isDeleteMachineInventoryModalOpen}
+          onClose={handleCloseDeleteMachineInventoryModal}
+          onDelete={handleConfirmDeleteInventoryMachine}
+          title='Machine Inventory'
         />
       </>
     </Layout>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   TextField,
@@ -34,7 +34,19 @@ const schema = yup.object().shape({
     .required('At least one inventory item is required'),
 });
 
-const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, inventories }) => {
+const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, assignedInventories,unassignedInventories }) => {
+  const [editInventory, setEditInventory] = useState(false)
+  const [inventories, setInventories] = useState([])
+ useEffect(() => {
+  if(editInventory)
+  {
+    setInventories(unassignedInventories)
+  }
+  else{
+    setInventories(assignedInventories)
+  }
+ }, [editInventory])
+ 
   const durationOptions = [
     { value: '6', label: '6 months' },
     { value: '12', label: '12 months' },
@@ -42,6 +54,7 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, i
   ];
   const [selectedDuration, setSelectedDuration] = useState('');
   const [customDuration, setCustomDuration] = useState('');
+
   const {
     handleSubmit,
     register,
@@ -212,7 +225,7 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, i
                   defaultValue={selectedMachine ? selectedMachine?.inventoryDetails[index]?._inventry : ''}
                   rules={{ required: 'Inventory is required' }}
                   render={({ field }) => (
-                    <Select {...field} fullWidth>
+                    <Select {...field} fullWidth disabled={selectedMachine?.inventry[index]?._inventry}>
                       <MenuItem value="" disabled>
                         Select Inventory
                       </MenuItem>
@@ -229,7 +242,7 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, i
                     </Select>
                   )}
                 />
-                <TextField
+                {selectedMachine && <TextField
                   fullWidth
                   type="date"
                   name={`inventry[${index}].warrantyStart`}
@@ -237,9 +250,9 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, i
                   defaultValue={selectedMachine ? moment(selectedMachine?.inventoryDetails[index]?.resellerWarrantyExpire).format('YYYY-MM-DD') : ''}
                   error={!!errors?.inventry?.[index]?.warrantyStart}
                   helperText={errors?.inventry?.[index]?.warrantyStart?.message}
-                />
+                />}
                 
-                <TextField
+                {selectedMachine && <TextField
                   fullWidth
                   type="date"
                   name={`inventry[${index}].warrantyExpire`}
@@ -247,7 +260,7 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, i
                   defaultValue={selectedMachine ? moment(selectedMachine?.inventoryDetails[index]?.resellerWarrantyExpire).format('YYYY-MM-DD') : ''}
                   error={!!errors?.inventry?.[index]?.warrantyExpire}
                   helperText={errors?.inventry?.[index]?.warrantyExpire?.message}
-                />
+                />}
                 <Button onClick={() => remove(index)}>Remove</Button>
               </div>
             );
@@ -257,11 +270,11 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, i
           )}
           <Button 
             onClick={() =>
-              append({
+              {append({
                 _inventry: '',
                 warrantyStart: '',
                 warrantyExpire: '',
-              })
+              });setEditInventory(true)}
             }
           >
             Add Inventry
