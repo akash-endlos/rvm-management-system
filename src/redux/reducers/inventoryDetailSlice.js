@@ -3,7 +3,8 @@ import {
   getInventoryDetailsApi,
   createInventoryDetailApi,
   updateInventoryDetailApi,
-  deleteInventoryDetailApi
+  deleteInventoryDetailApi,
+  getUnAssignedInventoryDetailsApi
 } from '../api/inventoryDetailApi';
 
 // Async Thunks
@@ -18,7 +19,17 @@ export const fetchInventoryDetails = createAsyncThunk(
     }
   }
 );
-
+export const fetchUnAssignedInventoryDetails = createAsyncThunk(
+  'inventoryDetails/fetchAllUnassigned',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getUnAssignedInventoryDetailsApi();
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 export const createInventoryDetail = createAsyncThunk(
   'inventoryDetails/create',
   async (inventoryDetailData, { rejectWithValue }) => {
@@ -65,6 +76,15 @@ const inventoryDetailSlice = createSlice({
     builder
       .addCase(fetchInventoryDetails.fulfilled, (state, action) => {
         const inventoryDetailsWithIndex = action.payload.payload.allInventry.map((inventoryDetail, index) => ({
+          ...inventoryDetail,
+          index: index + 1,
+        }));
+        return inventoryDetailsWithIndex;
+      })
+      .addCase(fetchUnAssignedInventoryDetails.fulfilled, (state, action) => {
+        console.log(action);
+        const unassignedInventoryDetails = action.payload.payload.unAssignedInventry;
+        const inventoryDetailsWithIndex = unassignedInventoryDetails.map((inventoryDetail, index) => ({
           ...inventoryDetail,
           index: index + 1,
         }));

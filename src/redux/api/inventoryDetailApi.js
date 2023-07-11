@@ -8,6 +8,14 @@ export const getInventoryDetailsApi = async () => {
     throw error.response.data;
   }
 };
+export const getUnAssignedInventoryDetailsApi = async () => {
+  try {
+    const response = await axiosInstance.get('/inventry/get?type=unassigned');
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
 
 export const createInventoryDetailApi = async (inventoryDetailData) => {
   try {

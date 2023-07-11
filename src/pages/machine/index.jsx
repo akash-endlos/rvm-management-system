@@ -11,7 +11,7 @@ import AdminNestedTable from '@/components/AdminTable/AdminNestedTable'
 import AddEditMachineSidebar from '@/components/machine/AddEditMachineSidebar'
 import { createNewMachine, deleteMachine, fetchAllMachines, updateMachine } from '@/redux/reducers/machineSlice'
 import { fetchAllBranches } from '@/redux/reducers/branchSlice'
-import { fetchInventoryDetails } from '@/redux/reducers/inventoryDetailSlice'
+import { fetchInventoryDetails, fetchUnAssignedInventoryDetails } from '@/redux/reducers/inventoryDetailSlice'
 import { toast } from 'react-hot-toast'
 import DeleteMachineModal from '@/components/machine/DeleteMachineModal'
 
@@ -34,7 +34,7 @@ const index = () => {
   useEffect(() => {
     const fetchBranches = async () => {
       await dispatch(fetchAllBranches());
-      await dispatch(fetchInventoryDetails());
+      await dispatch(fetchUnAssignedInventoryDetails());
     };
   
     fetchBranches();
