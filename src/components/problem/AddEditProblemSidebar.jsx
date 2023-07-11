@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, TextField, Typography, Select, MenuItem, FormLabel } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAllInventoryTypes } from '@/redux/reducers/inventoryTypeSlice';
 
 const schema = yup.object().shape({
   name: yup.string().required('Name is required'),
@@ -17,6 +18,21 @@ const schema = yup.object().shape({
 
 const AddEditProblemSidebar = ({ onClose, onSubmit, selectedProblem }) => {
   const problemtype=useSelector((state)=>state.inventoryType)
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const fetchData = () => {
+      dispatch(fetchAllInventoryTypes()).unwrap()
+        .then(() => {
+          // Success
+        })
+        .catch(error => {
+          toast.error(error);
+        });
+    };
+
+    fetchData();
+  }, [dispatch]);
+  
   console.log(selectedProblem);
   const {
     handleSubmit,
@@ -61,6 +77,7 @@ console.log(watch('category'));
             fullWidth
             name="category"
             {...register('category')}
+            value={watch('category')}
           >
             <MenuItem value="Hardware">Hardware</MenuItem>
             <MenuItem value="Plc">PLC</MenuItem>

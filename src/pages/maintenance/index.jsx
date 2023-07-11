@@ -43,6 +43,10 @@ const index = () => {
         accessorKey: 'problemType.name',
         header: 'Problem Type',
         size: 150,
+        Cell: ({ renderedCellValue }) => {
+          return(
+            renderedCellValue
+        )},
       },
       {
         accessorKey: 'description',
@@ -165,6 +169,7 @@ const index = () => {
       dispatch(updateProblem(updatedProblemData))
       .unwrap()
       .then(() => {
+        dispatch(fetchAllProblems())
         handleCloseAddSidebar();
         toast.success('Problem Updated Successfully');
       })
@@ -179,6 +184,7 @@ const index = () => {
       dispatch(createNewProblem(problemData))
       .unwrap()
       .then(() => {
+        dispatch(fetchAllProblems())
         handleCloseAddSidebar();
         toast.success('Problem Added Successfully');
       })
