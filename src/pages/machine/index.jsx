@@ -34,11 +34,12 @@ const index = () => {
   useEffect(() => {
     const fetchBranches = async () => {
       await dispatch(fetchAllBranches());
+      // await dispatch(fetchInventoryDetails());
       await dispatch(fetchUnAssignedInventoryDetails());
     };
   
     fetchBranches();
-  }, []);
+  }, [dispatch]);
   const mainTableColumns = useMemo(
     () => [
       {
