@@ -237,11 +237,11 @@ const index = () => {
             <Delete />
           </IconButton>
         </Tooltip>
-        <Tooltip arrow placement="right" title="Add Inventory">
+        {/* <Tooltip arrow placement="right" title="Add Inventory">
           <IconButton color="teal" onClick={() => handleOpenAddInventorySidebar(row.original)}>
             <Inventory />
           </IconButton>
-        </Tooltip>
+        </Tooltip> */}
       </Box>
     );
   };
