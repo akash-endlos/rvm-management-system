@@ -103,6 +103,18 @@ console.log(selectedInventory);
         <Typography variant="h5" style={{ fontWeight: 'bold', color: 'teal' }}>
           Detail
         </Typography>
+
+        <div style={{ marginBottom: '10px' }}>
+          <InputLabel>Invoice No</InputLabel>
+          <TextField
+            fullWidth
+            name="invoiceNo"
+            {...register('invoiceNo')}
+            error={!!errors.invoiceNo}
+            helperText={errors.invoiceNo?.message}
+          />
+        </div>
+        
         <div style={{ marginBottom: '10px' }}>
           <InputLabel>Invoice Date</InputLabel>
           <TextField
@@ -135,17 +147,6 @@ console.log(selectedInventory);
             InputLabelProps={{
               shrink: true,
             }}
-          />
-        </div>
-
-        <div style={{ marginBottom: '10px' }}>
-          <InputLabel>Invoice No</InputLabel>
-          <TextField
-            fullWidth
-            name="invoiceNo"
-            {...register('invoiceNo')}
-            error={!!errors.invoiceNo}
-            helperText={errors.invoiceNo?.message}
           />
         </div>
 
