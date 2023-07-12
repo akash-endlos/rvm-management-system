@@ -27,12 +27,14 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     const originalRequest = error.config;
+    console.log(store?.getState()?.auth?.user?.token?.refreshToken);
     if (
       error.response.status === 401 &&
       !originalRequest._retry &&
-      store?.getState()?.auth?.user?.token?.refreshtoken
+      store?.getState()?.auth?.user?.token?.refreshToken
     ) {
       originalRequest._retry = true;
+      console.log('kkkkkkkkkkkkkkkk',originalRequest._retry);
 
       return store.dispatch(refreshAccessToken())
         .then((newAccessToken) => {
@@ -43,6 +45,7 @@ axiosInstance.interceptors.response.use(
           return axiosInstance(originalRequest);
         })
         .catch((refreshError) => {
+          console.log(refreshError);
           // Handle refresh token error or logout the user
           store.dispatch(logout());
           return Promise.reject(refreshError);
