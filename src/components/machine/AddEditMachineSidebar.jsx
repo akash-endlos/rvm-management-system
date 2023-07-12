@@ -81,6 +81,33 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, a
   });
 
 
+  // const handleDurationChange = (event) => {
+  //   const value = event.target.value;
+  
+  //   setSelectedDuration(value);
+  
+  //   if (value !== 'custom') {
+
+  //     const warrentyStart = watch('warrentyStart');
+  //     console.log(warrentyStart);
+  //     const formattedStartDate = moment(warrentyStart, 'YYYY-MM-DD');
+  //     const newExpiryDate = formattedStartDate.add(Number(selectedDuration), 'months');
+  //     setValue('warrentyExpire', newExpiryDate.format('YYYY-MM-DD'));
+  //     setCustomDuration('');
+  //   } 
+  // };
+  
+  // const handleCustomDurationChange = (event) => {
+  //   const value = event.target.value;
+  //   setCustomDuration(value);
+  
+  //   if (selectedDuration === 'custom') {
+  //     const warrentyStart = watch('warrentyStart');
+  //     const formattedStartDate = moment(warrentyStart, 'YYYY-MM-DD');
+  //     const newExpiryDate = formattedStartDate.add(value, 'months');
+  //     setValue('warrentyExpire', newExpiryDate.format('YYYY-MM-DD'));
+  //   }
+  // };
   const handleDurationChange = (event) => {
     const value = event.target.value;
     setSelectedDuration(value);
