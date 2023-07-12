@@ -134,22 +134,22 @@ const AddEditStockSidebar = ({ onClose, onSubmit, selectedVendor,inventryTypeOpt
         position: 'fixed',
         top: 0,
         right: 0,
-        width: '500px',
+        width: '1200px',
         height: '100vh',
         backgroundColor: '#f0f0f0',
         padding: '1rem',
         display: 'flex',
         flexDirection: 'column',
         zIndex: 999,
-        overflowY:"scroll"
+        overflowY:"scroll",
       }}
     >
-      <form onSubmit={handleSubmit(handleFormSubmit)}>
+      <form className='px-5' onSubmit={handleSubmit(handleFormSubmit)}>
         <Typography variant="h5" style={{ fontWeight: 'bold', color: 'teal' }}>
           Stock
         </Typography>
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12}>
+          <Grid item xs={4}>
             <Select
               fullWidth
               label="Vendor"
@@ -166,7 +166,7 @@ const AddEditStockSidebar = ({ onClose, onSubmit, selectedVendor,inventryTypeOpt
             </Select>
             <div style={{ color: 'red' }}>{errors.vendorId?.message}</div>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={4}>
             <TextField
               fullWidth
               label="Invoice Number"
@@ -175,7 +175,7 @@ const AddEditStockSidebar = ({ onClose, onSubmit, selectedVendor,inventryTypeOpt
             />
             <div style={{ color: 'red' }}>{errors.invoiceNumber?.message}</div>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={4}>
             <TextField
               fullWidth
               label="Invoice Date"
@@ -190,7 +190,7 @@ const AddEditStockSidebar = ({ onClose, onSubmit, selectedVendor,inventryTypeOpt
           </Grid>
           {fields.map((item, index) => (
             <Grid px={2} py={2} container spacing={2} key={item.id}>
-              <Grid item xs={12}>
+              <Grid item xs={2}>
                 <Select
                   fullWidth
                   label="Inventry Type"
@@ -210,7 +210,7 @@ const AddEditStockSidebar = ({ onClose, onSubmit, selectedVendor,inventryTypeOpt
                 </Select>
                 <div style={{ color: 'red' }}>{errors.inventryTypeId?.message}</div>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={2}>
                 <Select
                   fullWidth
                   label="Brand"
@@ -231,7 +231,7 @@ const AddEditStockSidebar = ({ onClose, onSubmit, selectedVendor,inventryTypeOpt
                   {errors?.inventry?.[index]?.brandId?.message}
                 </div>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={2}>
                 <TextField
                   fullWidth
                   label="Warranty Start"
@@ -246,7 +246,7 @@ const AddEditStockSidebar = ({ onClose, onSubmit, selectedVendor,inventryTypeOpt
                   {errors?.inventry?.[index]?.warrantyStart?.message}
                 </div>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={2}>
                 <TextField
                   fullWidth
                   label="Purchase Date"
@@ -261,7 +261,7 @@ const AddEditStockSidebar = ({ onClose, onSubmit, selectedVendor,inventryTypeOpt
                   {errors?.inventry?.[index]?.purchaseDate?.message}
                 </div>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={2}>
                 <TextField
                   fullWidth
                   label="Warranty Expire"
@@ -276,7 +276,7 @@ const AddEditStockSidebar = ({ onClose, onSubmit, selectedVendor,inventryTypeOpt
                   {errors?.inventry?.[index]?.warrantyExpire?.message}
                 </div>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={2}>
                 <TextField
                   fullWidth
                   label="Purchase Rate"
