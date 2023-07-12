@@ -360,6 +360,9 @@ const index = () => {
       purchaseDate: inventoryData.purchaseDate,
       warrantyExpired: inventoryData.warrantyExpired,
       localVendorId:inventoryData.localVendorId,
+      purchaseRate:inventoryData.purchaseRate,
+      warrantyStart:inventoryData.warrantyStart,
+      invoiceDate:inventoryData.invoiceDate,
     }
     if (selectedInventory) {
       const newUpdateDetailData = {
@@ -376,6 +379,7 @@ const index = () => {
       });
     } else {
       const newDetailData = {
+        invoiceDate:inventoryData.invoiceDate,
         brandId: selectedInventoryBrand._id,
         localVendorId:inventoryData.localVendorId,
         inventryTypeId: selectedInventoryBrand.inventryTypeId,
@@ -383,6 +387,8 @@ const index = () => {
         serialNumber: inventoryData.serialNumbers,
         purchaseDate: inventoryData.purchaseDate,
         warrantyExpired: inventoryData.warrantyExpired,
+        purchaseRate:inventoryData.purchaseRate,
+        warrantyStart:inventoryData.warrantyStart
       };
       
       console.log(newDetailData);

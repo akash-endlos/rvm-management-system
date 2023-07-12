@@ -24,6 +24,7 @@ import { fetchAllLocalVendors } from '@/redux/reducers/localVendorSlice';
 const schema = yup.object().shape({
   invoiceNo: yup.string().required('Invoice No is required'),
   localVendorId: yup.string().required('Local Vendor is required'),
+  invoiceDate:yup.date().required("Invoice Date is required"),
 });
 
 const AddEditInventorySidebar = ({ onClose, onSubmit, selectedInventory, brands }) => {
@@ -45,7 +46,7 @@ const AddEditInventorySidebar = ({ onClose, onSubmit, selectedInventory, brands 
     fetchData();
   }, [dispatch]);
   const [serialNumbers, setSerialNumbers] = useState(selectedInventory?.serialNumbers || []);
-
+console.log(selectedInventory);
   const {
     handleSubmit,
     register,
@@ -54,6 +55,9 @@ const AddEditInventorySidebar = ({ onClose, onSubmit, selectedInventory, brands 
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
+      invoiceDate:moment(selectedInventory?.invoiceDate).format('YYYY-MM-DD') || '',
+      purchaseRate:selectedInventory?.purchaseRate || '',
+      warrantyStart:moment(selectedInventory?.warrantyStart).format('YYYY-MM-DD') || '',
       invoiceNo: selectedInventory?.invoiceNo || '',
       localVendorId: selectedInventory ? selectedInventory?.localVendorId : '',
       serialNumbers: selectedInventory?.serialNumber || [],
@@ -99,6 +103,40 @@ const AddEditInventorySidebar = ({ onClose, onSubmit, selectedInventory, brands 
         <Typography variant="h5" style={{ fontWeight: 'bold', color: 'teal' }}>
           Detail
         </Typography>
+        <div style={{ marginBottom: '10px' }}>
+          <InputLabel>Invoice Date</InputLabel>
+          <TextField
+            fullWidth
+            name="invoiceDate"
+            type="date"
+            {...register('invoiceDate')}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+        </div>
+        <div style={{ marginBottom: '10px' }}>
+            <InputLabel>Purchase Rate</InputLabel>
+            <TextField
+              fullWidth
+              name="purchaseRate"
+              {...register('purchaseRate')}
+              error={!!errors.purchaseRate}
+              helperText={errors.purchaseRate?.message}
+            />
+          </div>
+        <div style={{ marginBottom: '10px' }}>
+          <InputLabel>Waranty Start</InputLabel>
+          <TextField
+            fullWidth
+            name="warrantyStart"
+            type="date"
+            {...register('warrantyStart')}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+        </div>
 
         <div style={{ marginBottom: '10px' }}>
           <InputLabel>Invoice No</InputLabel>
