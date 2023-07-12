@@ -25,6 +25,7 @@ const AdminNestedTable = ({ columns, data, heading, handleSubAdminNestedTableRow
     <> 
       {data && (
         <MaterialReactTable
+        enableGrouping
           enableRowActions
           enableFilters
           enableColumnFilterModes

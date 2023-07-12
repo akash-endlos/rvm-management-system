@@ -5,6 +5,7 @@ const AdminTable = ({ columns, data, handleAdminTableRowActions, handleNestedTab
   return (
     <>
       <MaterialReactTable
+       enableGrouping
         enableRowActions
         enableFilters
         enableColumnFilterModes
