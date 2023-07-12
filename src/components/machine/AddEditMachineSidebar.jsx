@@ -242,6 +242,7 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, a
         <div style={{ marginBottom: '10px' }} >
           <InputLabel>Inventry</InputLabel>
           {fields.map((item, index) => {
+            
             return (
               <div key={item.id} className='flex'>
                 <Controller
@@ -267,12 +268,13 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, a
                     </Select>
                   )}
                 />
+                {console.log(selectedMachine?.inventoryDetails[index]?.resellerWarrantyStart,selectedMachine?.inventoryDetails[index]?.resellerWarrantyExpire)}
                 {selectedMachine && <TextField
                   fullWidth
                   type="date"
                   name={`inventry[${index}].warrantyStart`}
                   {...register(`inventry[${index}].warrantyStart`)}
-                  defaultValue={selectedMachine ? moment(selectedMachine?.inventoryDetails[index]?.resellerWarrantyExpire).format('YYYY-MM-DD') : ''}
+                  defaultValue={selectedMachine ? moment(selectedMachine?.inventoryDetails[index]?.resellerWarrantyStart).format('YYYY-MM-DD') : ''}
                   error={!!errors?.inventry?.[index]?.warrantyStart}
                   helperText={errors?.inventry?.[index]?.warrantyStart?.message}
                 />}
