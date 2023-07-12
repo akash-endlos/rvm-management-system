@@ -8,14 +8,33 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { Delete, Edit } from '@mui/icons-material'
 import AddEditStockSidebar from '@/components/stock/AddEditStockSidebar'
 import DeleteStockModal from '@/components/stock/DeleteStockModal'
+import { fetchAllInventoryTypes } from '@/redux/reducers/inventoryTypeSlice'
+import { createNewStock, fetchAllStocks } from '@/redux/reducers/stockSlice'
+import { toast } from 'react-hot-toast'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
   const [selectedStock, setSelectedStock] = useState(null);
   const [isDeleteStockModalOpen, setIsDeleteStockModalOpen] = useState(false);
-  const alllocalVendors = useSelector((state) => state.localvendor)
-  console.log(alllocalVendors);
+  const alllocalStocks = useSelector((state) => state.stock)
+  const alllocalvendors = useSelector((state) => state.localvendor)
+  const allinventories = useSelector((state) => state.inventoryType)
   const dispatch = useDispatch();
+  useEffect(() => {
+    const fetchData = () => {
+      dispatch(fetchAllLocalVendors())
+      dispatch(fetchAllStocks()).unwrap()
+        .then(() => {
+          // Success
+        })
+        .catch(error => {
+          toast.error(error);
+        });
+    };
+
+    fetchData();
+  }, [dispatch]);
+  console.log(alllocalvendors);
   useEffect(() => {
     const fetchData = () => {
       dispatch(fetchAllLocalVendors()).unwrap()
@@ -26,68 +45,68 @@ const index = () => {
           toast.error(error);
         });
     };
-  
+
     fetchData();
   }, [dispatch]);
-  
+
   const mainTableColumns = useMemo(
-      () => [
-        {
-          accessorKey: 'index',
-          header: 'Sr. No',
-          size: 150,
-        },
-        {
-          accessorKey: 'name',
-          header: 'Name',
-          size: 150,
-        },
-        {
-          accessorKey: 'email',
-          header: 'Email',
-          size: 150,
-        },
-        {
-          accessorKey: 'contact',
-          header: 'Mobile No.',
-          size: 150,
-        },
-      ],
-      []
-    );
-    const handleEditVendor = (stockData) => {
-      setSelectedStock(stockData);
-      setIsAddSidebarOpen(true);
-    };
-    const handleDeleteVendor = (customerData) => {
-      setSelectedStock(customerData);
-      setIsDeleteStockModalOpen(true);
-    };
-    const handleAdminTableRowActions = (row, table) => {
-      return (
-        <Box sx={{ display: 'flex', gap: '1rem' }}>
-          <Tooltip arrow placement="left" title="Edit Customer">
-            <IconButton onClick={() => handleEditVendor(row.original)}>
-              <Edit />
-            </IconButton>
-          </Tooltip>
-          <Tooltip arrow placement="right" title="Delete Customer">
-            <IconButton color="error" onClick={() => handleDeleteVendor(row.original)}>
-              <Delete />
-            </IconButton>
-          </Tooltip>
-          {/* <Tooltip arrow placement="right" title="Add Branch">
+    () => [
+      {
+        accessorKey: 'index',
+        header: 'Sr. No',
+        size: 150,
+      },
+      {
+        accessorKey: 'invoiceNo',
+        header: 'Invoice',
+        size: 150,
+      },
+      {
+        accessorKey: 'email',
+        header: 'Email',
+        size: 150,
+      },
+      {
+        accessorKey: 'contact',
+        header: 'Mobile No.',
+        size: 150,
+      },
+    ],
+    []
+  );
+  const handleEditVendor = (stockData) => {
+    setSelectedStock(stockData);
+    setIsAddSidebarOpen(true);
+  };
+  const handleDeleteVendor = (customerData) => {
+    setSelectedStock(customerData);
+    setIsDeleteStockModalOpen(true);
+  };
+  const handleAdminTableRowActions = (row, table) => {
+    return (
+      <Box sx={{ display: 'flex', gap: '1rem' }}>
+        <Tooltip arrow placement="left" title="Edit Customer">
+          <IconButton onClick={() => handleEditVendor(row.original)}>
+            <Edit />
+          </IconButton>
+        </Tooltip>
+        <Tooltip arrow placement="right" title="Delete Customer">
+          <IconButton color="error" onClick={() => handleDeleteVendor(row.original)}>
+            <Delete />
+          </IconButton>
+        </Tooltip>
+        {/* <Tooltip arrow placement="right" title="Add Branch">
             <IconButton color="secondary" onClick={() => handleOpenAddBranchSidebar(row.original)}>
               <FiGitBranch />
             </IconButton>
           </Tooltip> */}
-        </Box>
-      );
-    };
-    const handleOpenAddSidebar = () => {
-      setSelectedStock(null);
-      setIsAddSidebarOpen(true);
-    };
+      </Box>
+    );
+  };
+  const handleOpenAddSidebar = () => {
+    setSelectedStock(null);
+    setIsAddSidebarOpen(true);
+  };
   const handleToolBar = (table) => {
     const handleExportRows = (rows) => {
       csvExporter.generateCsv(rows.map((row) => row.original));
@@ -125,44 +144,56 @@ const index = () => {
 
       console.log('Updating customer', stockData);
     } else {
-       
-        console.log('Add customer', stockData);
+        const addStockData={
+          inventry:stockData.inventry,
+          invoiceDate:stockData.invoiceDate,
+          invoiceNo:stockData.invoiceNumber,
+          localVendorId:stockData.vendorId,
+        }
+        dispatch(createNewStock(addStockData)).unwrap()
+        .then(()=>{
+           toast.success('Added Successfully')
+           handleCloseAddSidebar();
+        }).catch((error)=>toast.error(error))
+      console.log('Add customer', addStockData);
     }
-    handleCloseAddSidebar();
+    // handleCloseAddSidebar();
   };
-  const handleCloseDeleteStockModal=()=>{
+  const handleCloseDeleteStockModal = () => {
     setIsDeleteStockModalOpen(false)
   }
   const handleConfirmDeleteVendor = () => {
-console.log(selectedStock);
+    console.log(selectedStock);
   };
   return (
     <Layout>
-    <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
-   Stock
- </Typography>
- <>
-   <AdminTable
-     data={alllocalVendors}
-     handleToolBar={handleToolBar}
-     columns={mainTableColumns}
-     handleAdminTableRowActions={handleAdminTableRowActions}
-   />
-    {isAddSidebarOpen && (
+      <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
+        Stock
+      </Typography>
+      <>
+        <AdminTable
+          data={alllocalStocks}
+          handleToolBar={handleToolBar}
+          columns={mainTableColumns}
+          handleAdminTableRowActions={handleAdminTableRowActions}
+        />
+        {isAddSidebarOpen && (
           <AddEditStockSidebar
             onClose={handleCloseAddSidebar}
             onSubmit={handleAddStock}
             selectedStock={selectedStock}
+            inventryTypeOptions={allinventories}
+            localVendorsOptions={alllocalvendors}
           />
         )}
-         <DeleteStockModal
+        <DeleteStockModal
           isOpen={isDeleteStockModalOpen}
           onClose={handleCloseDeleteStockModal}
           onDelete={handleConfirmDeleteVendor}
           title='Stock'
         />
-   </>
-</Layout>
+      </>
+    </Layout>
   )
 }
 
