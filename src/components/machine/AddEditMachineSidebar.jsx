@@ -71,7 +71,7 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, a
       branchId: selectedMachine?.branch?._id || '',
       warrentyStart: selectedMachine ? moment(selectedMachine?.warrentyStart).format('YYYY-MM-DD') : '',
       warrentyExpire: selectedMachine ? moment(selectedMachine?.warrentyExpire).format('YYYY-MM-DD') : '',
-      inventry: selectedMachine?.inventry || [],
+      inventry: selectedMachine?.inventoryDetails || [],
     },
   });
 
@@ -83,27 +83,25 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, a
 
   const handleDurationChange = (event) => {
     const value = event.target.value;
-  
     setSelectedDuration(value);
-  
+    
     if (value !== 'custom') {
-      setCustomDuration('');
-      const warrentyStart = watch('warrentyStart');
-      console.log(warrentyStart);
-      const formattedStartDate = moment(warrentyStart, 'YYYY-MM-DD');
-      const newExpiryDate = formattedStartDate.add(Number(selectedDuration), 'months');
+      const warrantyStart = watch('warrentyStart');
+      const formattedStartDate = moment(warrantyStart, 'YYYY-MM-DD');
+      const newExpiryDate = formattedStartDate.add(Number(value), 'months');
       setValue('warrentyExpire', newExpiryDate.format('YYYY-MM-DD'));
-    } 
+      setCustomDuration('');
+    }
   };
   
   const handleCustomDurationChange = (event) => {
     const value = event.target.value;
     setCustomDuration(value);
-  
+    
     if (selectedDuration === 'custom') {
-      const warrentyStart = watch('warrentyStart');
-      const formattedStartDate = moment(warrentyStart, 'YYYY-MM-DD');
-      const newExpiryDate = formattedStartDate.add(value, 'months');
+      const warrantyStart = watch('warrentyStart');
+      const formattedStartDate = moment(warrantyStart, 'YYYY-MM-DD');
+      const newExpiryDate = formattedStartDate.add(Number(value), 'months');
       setValue('warrentyExpire', newExpiryDate.format('YYYY-MM-DD'));
     }
   };
@@ -220,12 +218,12 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, a
             return (
               <div key={item.id} className='flex'>
                 <Controller
-                  name={`inventry[${index}]._inventry`}
+                  name={`inventry[${index}]._id`}
                   control={control}
-                  defaultValue={selectedMachine ? selectedMachine?.inventoryDetails[index]?._inventry : ''}
+                  defaultValue={selectedMachine ? selectedMachine?.inventoryDetails[index]?._id : ''}
                   rules={{ required: 'Inventory is required' }}
                   render={({ field }) => (
-                    <Select {...field} fullWidth disabled={selectedMachine?.inventry[index]?._inventry}>
+                    <Select {...field} fullWidth disabled={selectedMachine?.inventoryDetails[index]?._id}>
                       <MenuItem value="" disabled>
                         Select Inventory
                       </MenuItem>
