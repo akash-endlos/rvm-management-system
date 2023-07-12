@@ -71,7 +71,7 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, a
       branchId: selectedMachine?.branch?._id || '',
       warrentyStart: selectedMachine ? moment(selectedMachine?.warrentyStart).format('YYYY-MM-DD') : '',
       warrentyExpire: selectedMachine ? moment(selectedMachine?.warrentyExpire).format('YYYY-MM-DD') : '',
-      inventry: selectedMachine?.inventoryDetails || [],
+      inventry: selectedMachine?.inventry || [],
     },
   });
 
@@ -81,54 +81,29 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, a
   });
 
 
-  // const handleDurationChange = (event) => {
-  //   const value = event.target.value;
-  
-  //   setSelectedDuration(value);
-  
-  //   if (value !== 'custom') {
-
-  //     const warrentyStart = watch('warrentyStart');
-  //     console.log(warrentyStart);
-  //     const formattedStartDate = moment(warrentyStart, 'YYYY-MM-DD');
-  //     const newExpiryDate = formattedStartDate.add(Number(selectedDuration), 'months');
-  //     setValue('warrentyExpire', newExpiryDate.format('YYYY-MM-DD'));
-  //     setCustomDuration('');
-  //   } 
-  // };
-  
-  // const handleCustomDurationChange = (event) => {
-  //   const value = event.target.value;
-  //   setCustomDuration(value);
-  
-  //   if (selectedDuration === 'custom') {
-  //     const warrentyStart = watch('warrentyStart');
-  //     const formattedStartDate = moment(warrentyStart, 'YYYY-MM-DD');
-  //     const newExpiryDate = formattedStartDate.add(value, 'months');
-  //     setValue('warrentyExpire', newExpiryDate.format('YYYY-MM-DD'));
-  //   }
-  // };
   const handleDurationChange = (event) => {
     const value = event.target.value;
+  
     setSelectedDuration(value);
-    
+  
     if (value !== 'custom') {
-      const warrantyStart = watch('warrentyStart');
-      const formattedStartDate = moment(warrantyStart, 'YYYY-MM-DD');
-      const newExpiryDate = formattedStartDate.add(Number(value), 'months');
-      setValue('warrentyExpire', newExpiryDate.format('YYYY-MM-DD'));
       setCustomDuration('');
-    }
+      const warrentyStart = watch('warrentyStart');
+      console.log(warrentyStart);
+      const formattedStartDate = moment(warrentyStart, 'YYYY-MM-DD');
+      const newExpiryDate = formattedStartDate.add(Number(selectedDuration), 'months');
+      setValue('warrentyExpire', newExpiryDate.format('YYYY-MM-DD'));
+    } 
   };
   
   const handleCustomDurationChange = (event) => {
     const value = event.target.value;
     setCustomDuration(value);
-    
+  
     if (selectedDuration === 'custom') {
-      const warrantyStart = watch('warrentyStart');
-      const formattedStartDate = moment(warrantyStart, 'YYYY-MM-DD');
-      const newExpiryDate = formattedStartDate.add(Number(value), 'months');
+      const warrentyStart = watch('warrentyStart');
+      const formattedStartDate = moment(warrentyStart, 'YYYY-MM-DD');
+      const newExpiryDate = formattedStartDate.add(value, 'months');
       setValue('warrentyExpire', newExpiryDate.format('YYYY-MM-DD'));
     }
   };
@@ -242,16 +217,15 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, a
         <div style={{ marginBottom: '10px' }} >
           <InputLabel>Inventry</InputLabel>
           {fields.map((item, index) => {
-            
             return (
               <div key={item.id} className='flex'>
                 <Controller
-                  name={`inventry[${index}]._id`}
+                  name={`inventry[${index}]._inventry`}
                   control={control}
-                  defaultValue={selectedMachine ? selectedMachine?.inventoryDetails[index]?._id : ''}
+                  defaultValue={selectedMachine ? selectedMachine?.inventoryDetails[index]?._inventry : ''}
                   rules={{ required: 'Inventory is required' }}
                   render={({ field }) => (
-                    <Select {...field} fullWidth disabled={selectedMachine?.inventoryDetails[index]?._id}>
+                    <Select {...field} fullWidth disabled={selectedMachine?.inventry[index]?._inventry}>
                       <MenuItem value="" disabled>
                         Select Inventory
                       </MenuItem>
@@ -268,13 +242,12 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, a
                     </Select>
                   )}
                 />
-                {console.log(selectedMachine?.inventoryDetails[index]?.resellerWarrantyStart,selectedMachine?.inventoryDetails[index]?.resellerWarrantyExpire)}
                 {selectedMachine && <TextField
                   fullWidth
                   type="date"
                   name={`inventry[${index}].warrantyStart`}
                   {...register(`inventry[${index}].warrantyStart`)}
-                  defaultValue={selectedMachine ? moment(selectedMachine?.inventoryDetails[index]?.resellerWarrantyStart).format('YYYY-MM-DD') : ''}
+                  defaultValue={selectedMachine ? moment(selectedMachine?.inventoryDetails[index]?.resellerWarrantyExpire).format('YYYY-MM-DD') : ''}
                   error={!!errors?.inventry?.[index]?.warrantyStart}
                   helperText={errors?.inventry?.[index]?.warrantyStart?.message}
                 />}
