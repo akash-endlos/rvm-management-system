@@ -6,11 +6,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Box, Button, IconButton, Tooltip, Typography } from '@mui/material'
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { Delete, Edit } from '@mui/icons-material'
-import AddEditStockSidebar from '@/components/stock/AddEditStockSidebar'
 import DeleteStockModal from '@/components/stock/DeleteStockModal'
 import { fetchAllInventoryTypes } from '@/redux/reducers/inventoryTypeSlice'
 import { createNewStock, fetchAllStocks } from '@/redux/reducers/stockSlice'
 import { toast } from 'react-hot-toast'
+import AddEditStockSidebar from '@/components/stock/AddEditStockSidebar'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
@@ -34,7 +34,7 @@ const index = () => {
 
     fetchData();
   }, [dispatch]);
-  console.log(alllocalvendors);
+  console.log(alllocalStocks);
   useEffect(() => {
     const fetchData = () => {
       dispatch(fetchAllLocalVendors()).unwrap()
@@ -57,18 +57,68 @@ const index = () => {
         size: 150,
       },
       {
+        accessorKey: 'vendor.name',
+        header: 'Vendor',
+        size: 150,
+      },
+      {
+        accessorKey: 'reseller.name',
+        header: 'Reseller',
+        size: 150,
+      },
+      {
         accessorKey: 'invoiceNo',
-        header: 'Invoice',
+        header: 'Invoice No.',
         size: 150,
       },
       {
-        accessorKey: 'email',
-        header: 'Email',
+        accessorKey: 'invoiceDate',
+        header: 'Invoice Date.',
         size: 150,
       },
       {
-        accessorKey: 'contact',
-        header: 'Mobile No.',
+        accessorKey: 'productSerialNumber',
+        header: 'Product Serial number.',
+        size: 150,
+      },
+      {
+        accessorKey: 'purchaseRate',
+        header: 'Purchase Rate.',
+        size: 150,
+      },
+      {
+        accessorKey: 'endlosWarrantyExpire',
+        header: 'Endlos Warranty Expire',
+        size: 150,
+      },
+      {
+        accessorKey: 'resellerWarrantyStart',
+        header: 'Reseller Warranty Start',
+        size: 150,
+      },
+      {
+        accessorKey: 'resellerWarrantyExpire',
+        header: 'Reseller Warranty Expire',
+        size: 150,
+      },
+      {
+        accessorKey: 'status',
+        header: 'Status',
+        size: 150,
+      },
+      {
+        accessorKey: 'endlosPurchaseDate',
+        header: 'Endlos Purchase Date',
+        size: 150,
+      },
+      {
+        accessorKey: 'productCategory.name',
+        header: 'Product Category Name',
+        size: 150,
+      },
+      {
+        accessorKey: 'productBrand.name',
+        header: 'Product Brand Name',
         size: 150,
       },
     ],
