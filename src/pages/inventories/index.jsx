@@ -141,7 +141,20 @@ const index = () => {
     const nestedTableConfigurations = [
       {
         header: 'Product Detail',
-        columns: [{ header: 'Invoice', accessorKey: 'invoiceNo' }],
+        columns: [
+          { header: 'Invoice', accessorKey: 'invoiceNo' },
+          { header: 'Invoice Date', accessorKey: 'invoiceDate' },
+          { header: 'Serial Number', accessorKey: 'serialNumber' },
+          { header: 'Purchase Rate', accessorKey: 'purchaseRate' },
+          { header: 'Warranty Start', accessorKey: 'warrantyStart' },
+          { header: 'Purchase Date', accessorKey: 'purchaseDate' },
+          { header: 'Warranty Expire', accessorKey: 'warrantyExpire' },
+          { header: 'Status', accessorKey: 'status' },
+          { header: 'Reseller Warranty Expire', accessorKey: 'resellerWarrantyExpire' },
+          { header: 'Reseller Warranty Start', accessorKey: 'resellerWarrantyStart' },
+
+        
+        ],
         data: currentDepth === 0 ? row?.original?.invetries : undefined,
       },
     ];
