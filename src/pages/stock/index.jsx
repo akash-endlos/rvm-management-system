@@ -57,68 +57,18 @@ const index = () => {
         size: 150,
       },
       {
-        accessorKey: 'vendor.name',
-        header: 'Vendor',
-        size: 150,
-      },
-      {
-        accessorKey: 'reseller.name',
-        header: 'Reseller',
-        size: 150,
-      },
-      {
         accessorKey: 'invoiceNo',
-        header: 'Invoice No.',
+        header: 'Invoice',
         size: 150,
       },
       {
-        accessorKey: 'invoiceDate',
-        header: 'Invoice Date.',
+        accessorKey: 'email',
+        header: 'Email',
         size: 150,
       },
       {
-        accessorKey: 'productSerialNumber',
-        header: 'Product Serial number.',
-        size: 150,
-      },
-      {
-        accessorKey: 'purchaseRate',
-        header: 'Purchase Rate.',
-        size: 150,
-      },
-      {
-        accessorKey: 'endlosWarrantyExpire',
-        header: 'Endlos Warranty Expire',
-        size: 150,
-      },
-      {
-        accessorKey: 'resellerWarrantyStart',
-        header: 'Reseller Warranty Start',
-        size: 150,
-      },
-      {
-        accessorKey: 'resellerWarrantyExpire',
-        header: 'Reseller Warranty Expire',
-        size: 150,
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-        size: 150,
-      },
-      {
-        accessorKey: 'endlosPurchaseDate',
-        header: 'Endlos Purchase Date',
-        size: 150,
-      },
-      {
-        accessorKey: 'productCategory.name',
-        header: 'Product Category Name',
-        size: 150,
-      },
-      {
-        accessorKey: 'productBrand.name',
-        header: 'Product Brand Name',
+        accessorKey: 'contact',
+        header: 'Mobile No.',
         size: 150,
       },
     ],
