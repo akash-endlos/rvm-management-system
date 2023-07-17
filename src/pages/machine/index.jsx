@@ -50,7 +50,7 @@ const index = () => {
     };
 
     fetchData();
-  }, [dispatch]);
+  }, []);
   useEffect(() => {
     const fetchBranches = async () => {
       await dispatch(fetchAllBranches());
