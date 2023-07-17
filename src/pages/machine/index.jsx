@@ -17,7 +17,7 @@ import DeleteMachineModal from '@/components/machine/DeleteMachineModal'
 import AddEditMachineInventorySidebar from '@/components/machine/AddEditMachineInventorySidebar'
 import DeleteMachineInventoryModal from '@/components/machine/DeleteMachineInventoryModal'
 import { fetchAllVendors } from '@/redux/reducers/vendorSlice'
-
+ 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
   const [selectedMachine, setSelectedMachine] = useState(null);
