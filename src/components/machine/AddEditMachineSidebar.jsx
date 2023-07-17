@@ -34,7 +34,7 @@ const schema = yup.object().shape({
     .required('At least one inventory item is required'),
 });
 
-const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, assignedInventories,unassignedInventories }) => {
+const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, assignedInventories,unassignedInventories,vendors }) => {
   const [editInventory, setEditInventory] = useState(false)
   const [inventories, setInventories] = useState([])
  useEffect(() => {
@@ -55,6 +55,12 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, a
   const [selectedDuration, setSelectedDuration] = useState('');
   const [customDuration, setCustomDuration] = useState('');
 
+  const [selectedVendor, setSelectedVendor] = useState('');
+  const [selectedCustomer, setSelectedCustomer] = useState('');
+  const [selectedBranch, setSelectedBranch] = useState('');
+  const [availableCustomers, setAvailableCustomers] = useState([]);
+  const [availableBranches, setAvailableBranches] = useState([]);
+
   const {
     handleSubmit,
     register,
@@ -68,6 +74,9 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, a
     resolver: yupResolver(schema),
     defaultValues: {
       machineId: selectedMachine?.machineId || '',
+      resellerId: selectedMachine?.vendorId || '',
+      customerId: selectedMachine?.customerId || '',
+      branchId: selectedMachine?.branchId || '',
       branchId: selectedMachine?.branch?._id || '',
       warrentyStart: selectedMachine ? moment(selectedMachine?.warrentyStart).format('YYYY-MM-DD') : '',
       warrentyExpire: selectedMachine ? moment(selectedMachine?.warrentyExpire).format('YYYY-MM-DD') : '',
@@ -113,11 +122,42 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, a
   const handleFormSubmit = (data) => {
     const modifiedData = {
       ...data,
+      resellerId: selectedVendor, // Assign selected vendor ID to resellerId field
+      customerId: selectedCustomer, // Assign selected customer ID to customerId field
+      branchId: selectedBranch, 
     };
     console.log(modifiedData);
     onSubmit(modifiedData);
     reset();
   };
+
+  useEffect(() => {
+    // Filter available customers based on the selected vendor
+    const filteredCustomers = vendors
+      .find((vendor) => vendor._id === selectedVendor)
+      ?.customers.map((customer) => ({
+        id: customer._id,
+        name: customer.name,
+      })) || [];
+    setAvailableCustomers(filteredCustomers);
+    setSelectedCustomer('');
+    setAvailableBranches([]);
+    setSelectedBranch('');
+  }, [selectedVendor]);
+
+
+  useEffect(() => {
+    const filteredBranches =
+      vendors
+        .find((vendor) => vendor._id === selectedVendor)
+        ?.customers.find((customer) => customer._id === selectedCustomer)
+        ?.branches.map((branch) => ({
+          id: branch._id,
+          name: branch.name,
+        })) || [];
+    setAvailableBranches(filteredBranches);
+    setSelectedBranch('');
+  }, [selectedCustomer]);
 
   return (
     <div
@@ -150,28 +190,49 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, a
           />
         </div>
 
-        <FormControl fullWidth error={!!errors.branchId}>
-          <Controller
-            name="branchId"
-            control={control}
-            defaultValue={selectedMachine?.branch?._id || ''}
-            rules={{ required: 'Branch ID is required' }}
-            render={({ field }) => (
-              <Select {...field} displayEmpty>
-                <MenuItem value="" disabled>
-                  Select Branch ID
-                </MenuItem>
-                {branches?.map((item) => (
-                  <MenuItem key={item._id} value={item._id}>
-                    {item.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            )}
-          />
-          {errors.branchId && (
-            <FormHelperText error>{errors.branchId.message}</FormHelperText>
-          )}
+        <FormControl fullWidth   style={{ marginBottom: '1rem' }}>
+          <InputLabel>Select Reseller</InputLabel>
+          <Select
+            value={selectedVendor}
+            onChange={(event) => setSelectedVendor(event.target.value)}
+          >
+            <MenuItem value="">Select Reseller</MenuItem>
+            {vendors.map((vendor) => (
+              <MenuItem key={vendor._id} value={vendor._id}>
+                {vendor.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl fullWidth  style={{ marginBottom: '1rem' }}>
+          <InputLabel>Select Customer</InputLabel>
+          <Select
+            value={selectedCustomer}
+            onChange={(event) => setSelectedCustomer(event.target.value)}
+          >
+            <MenuItem value="">Select Customer</MenuItem>
+            {availableCustomers.map((customer) => (
+              <MenuItem key={customer.id} value={customer.id}>
+                {customer.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl fullWidth  style={{ marginBottom: '1rem' }}>
+          <InputLabel>Select Branch</InputLabel>
+          <Select
+            value={selectedBranch}
+            onChange={(event) => setSelectedBranch(event.target.value)}
+          >
+            <MenuItem value="">Select Branch</MenuItem>
+            {availableBranches.map((branch) => (
+              <MenuItem key={branch.id} value={branch.id}>
+                {branch.name}
+              </MenuItem>
+            ))}
+          </Select>
         </FormControl>
         <div style={{ marginBottom: '10px' }}>
           <InputLabel>Warranty Start Date</InputLabel>

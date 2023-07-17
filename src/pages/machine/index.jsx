@@ -16,6 +16,7 @@ import { toast } from 'react-hot-toast'
 import DeleteMachineModal from '@/components/machine/DeleteMachineModal'
 import AddEditMachineInventorySidebar from '@/components/machine/AddEditMachineInventorySidebar'
 import DeleteMachineInventoryModal from '@/components/machine/DeleteMachineInventoryModal'
+import { fetchAllVendors } from '@/redux/reducers/vendorSlice'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
@@ -29,10 +30,23 @@ const index = () => {
   const allmachines = useSelector((state) => state.machine)
   const allbranches = useSelector((state) => state.branch)
   const inventories = useSelector((state)=>state.inventory)
+  const allvendors = useSelector((state) => state.vendor)
+  console.log(allvendors);
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchData = async () => {
       await dispatch(fetchAllMachines());
+    };
+
+    fetchData();
+  }, [dispatch]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await dispatch(fetchAllVendors()).unwrap();
+      } catch (error) {
+       toast.error(error)
+      }
     };
 
     fetchData();
@@ -222,6 +236,7 @@ const index = () => {
     setIsAddSidebarOpen(false);
   };
   const handleAddMachine = async (machineData) => {
+    console.log(machineData);
     if (selectedMachine) {
       // Update existing customer
       const updatedData={
@@ -318,6 +333,7 @@ const index = () => {
             branches={allbranches}
             assignedInventories={assignedInventories}
             unassignedInventories={unassignedInventories}
+            vendors={allvendors}
             // inventories={inventories}
           />
         )}
