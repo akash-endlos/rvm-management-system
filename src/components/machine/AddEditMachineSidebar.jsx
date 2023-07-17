@@ -22,22 +22,12 @@ const AddEditMachineSidebar = ({
     register,
     watch,
     setValue,
-    control,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
     // defaultValues: {
     //   resellerId: selectedMachine ? selectedMachine.reseller._id : ''
     // }
-  });
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: 'inventoryDetails',
-    defaultValues: {
-      _id: '',
-      inventoryType: '',
-      inventoryBrand: '',
-    },
   });
   
   
@@ -91,7 +81,6 @@ const AddEditMachineSidebar = ({
         </FormControl>
 
 
-        {watchResellerId && (
           <FormControl sx={{ width: '100%' }}>
             <FormLabel>Customer</FormLabel>
             <Select  defaultValue={selectedMachine ? selectedMachine?.customer?._id : ''} id="customerId" name="customerId" {...register('customerId')}>
@@ -101,8 +90,7 @@ const AddEditMachineSidebar = ({
               ))}
             </Select>
           </FormControl>
-        )}
-        {watchCustomerId && (
+          
           <FormControl sx={{ width: '100%' }}>
             <FormLabel>Branch</FormLabel>
             <Select defaultValue={selectedMachine ? selectedMachine?.branch?._id : ''} id="branchId" name="branchId" {...register('branchId')}>
@@ -112,7 +100,6 @@ const AddEditMachineSidebar = ({
               ))}
             </Select>
           </FormControl>
-        )}
 
         <Box>
           <Button
