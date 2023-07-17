@@ -1,6 +1,6 @@
 import { Button, Typography, TextField, Box, FormControl, Select, MenuItem, FormLabel } from '@mui/material';
-import React from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useEffect } from 'react';
+import { useForm,useFieldArray } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
@@ -21,11 +21,26 @@ const AddEditMachineSidebar = ({
     handleSubmit,
     register,
     watch,
+    setValue,
+    control,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
+    // defaultValues: {
+    //   resellerId: selectedMachine ? selectedMachine.reseller._id : ''
+    // }
   });
-
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'inventoryDetails',
+    defaultValues: {
+      _id: '',
+      inventoryType: '',
+      inventoryBrand: '',
+    },
+  });
+  
+  
   const watchResellerId = watch('resellerId');
   const watchCustomerId = watch('customerId');
   const watchBranchId = watch('branchId');
@@ -67,7 +82,7 @@ const AddEditMachineSidebar = ({
         />
         <FormControl sx={{ width: '100%' }}>
           <FormLabel>Reseller</FormLabel>
-          <Select id="resellerId" name="resellerId" {...register('resellerId')}>
+          <Select   defaultValue={selectedMachine ? selectedMachine?.reseller?._id : ''} id="resellerId" name="resellerId" {...register('resellerId')}>
             <MenuItem value="">Select a reseller</MenuItem>
             {vendors.map((item, index) => (
               <MenuItem value={item._id}>{item.name}</MenuItem>
@@ -79,7 +94,7 @@ const AddEditMachineSidebar = ({
         {watchResellerId && (
           <FormControl sx={{ width: '100%' }}>
             <FormLabel>Customer</FormLabel>
-            <Select id="customerId" name="customerId" {...register('customerId')}>
+            <Select  defaultValue={selectedMachine ? selectedMachine?.customer?._id : ''} id="customerId" name="customerId" {...register('customerId')}>
               <MenuItem value="">Select a customer</MenuItem>
               {customers.map((item, index) => (
                 <MenuItem value={item._id}>{item.name}</MenuItem>
@@ -90,7 +105,7 @@ const AddEditMachineSidebar = ({
         {watchCustomerId && (
           <FormControl sx={{ width: '100%' }}>
             <FormLabel>Branch</FormLabel>
-            <Select id="branchId" name="branchId" {...register('branchId')}>
+            <Select defaultValue={selectedMachine ? selectedMachine?.branch?._id : ''} id="branchId" name="branchId" {...register('branchId')}>
               <MenuItem value="">Select a branch</MenuItem>
               {branch.map((item, index) => (
                 <MenuItem value={item._id}>{item.name}</MenuItem>
