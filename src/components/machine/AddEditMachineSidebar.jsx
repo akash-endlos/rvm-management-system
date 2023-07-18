@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   Button,
   TextField,
@@ -17,105 +17,29 @@ import * as yup from 'yup';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 
-const schema = yup.object().shape({
-  machineId: yup.string().required('Machine ID is required'),
-  branchId: yup.string(),
-  warrentyStart: yup.string().required('Warranty Start Date is required'),
-  warrentyExpire: yup.string().required('Warranty Expire Date is required'),
-  inventry: yup
-    .array()
-    .of(
-      yup.object().shape({
-        _inventry: yup.string().required('Inventory is required'),
-        warrantyStart: yup.string().required('Warranty Start is required'),
-        warrantyExpire: yup.string().required('Warranty Expire is required'),
-      })
-    )
-    .required('At least one inventory item is required'),
-});
-
-const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, assignedInventories,unassignedInventories }) => {
-  const [editInventory, setEditInventory] = useState(false)
-  const [inventories, setInventories] = useState([])
- useEffect(() => {
-  if(editInventory)
-  {
-    setInventories(unassignedInventories)
-  }
-  else{
-    setInventories(assignedInventories)
-  }
- }, [editInventory])
- 
-  const durationOptions = [
-    { value: '6', label: '6 months' },
-    { value: '12', label: '12 months' },
-    { value: 'custom', label: 'Custom' },
-  ];
-  const [selectedDuration, setSelectedDuration] = useState('');
-  const [customDuration, setCustomDuration] = useState('');
-
+const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, unassignedInventories }) => {
   const {
     handleSubmit,
     register,
     control,
     formState: { errors },
-    defaultValues,
+    reset,
     watch,
-    setValue,
-    reset
+    setValue
   } = useForm({
-    resolver: yupResolver(schema),
     defaultValues: {
-      machineId: selectedMachine?.machineId || '',
-      branchId: selectedMachine?.branch?._id || '',
-      warrentyStart: selectedMachine ? moment(selectedMachine?.warrentyStart).format('YYYY-MM-DD') : '',
-      warrentyExpire: selectedMachine ? moment(selectedMachine?.warrentyExpire).format('YYYY-MM-DD') : '',
-      inventry: selectedMachine?.inventoryDetails.map((inventory) => ({
-        _id: inventory._id,
-        warrantyStart: moment(inventory.resellerWarrantyStart).format('YYYY-MM-DD'),
-        warrantyExpire: moment(inventory.resellerWarrantyExpire).format('YYYY-MM-DD'),
-      })) || [],
+      inventoryDetails: selectedMachine ? selectedMachine.inventoryDetails : []
     },
-    
   });
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'inventry',
+    name: 'inventoryDetails'
   });
 
-
-  const handleDurationChange = (event) => {
-    const value = event.target.value;
-    setSelectedDuration(value);
-
-    if (value !== 'custom') {
-      setCustomDuration('');
-      const warrentyStart = watch('warrentyStart');
-      const formattedStartDate = moment(warrentyStart, 'YYYY-MM-DD');
-      const newExpiryDate = formattedStartDate.add(Number(value), 'months');
-      setValue('warrentyExpire', newExpiryDate.format('YYYY-MM-DD'));
-    }
-  };
-
-  const handleCustomDurationChange = (event) => {
-    const value = event.target.value;
-    setCustomDuration(value);
-
-    if (selectedDuration === 'custom') {
-      const warrentyStart = watch('warrentyStart');
-      const formattedStartDate = moment(warrentyStart, 'YYYY-MM-DD');
-      const newExpiryDate = formattedStartDate.add(Number(value), 'months');
-      setValue('warrentyExpire', newExpiryDate.format('YYYY-MM-DD'));
-    }
-  };
   const handleFormSubmit = (data) => {
-    const modifiedData = {
-      ...data,
-    };
-    console.log(modifiedData);
-    onSubmit(modifiedData);
+    console.log(data);
+    onSubmit(data);
     reset();
   };
 
@@ -132,157 +56,94 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, a
         display: 'flex',
         flexDirection: 'column',
         zIndex: 999,
-        overflowY: 'auto',
+        overflowY: 'auto'
       }}
     >
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <Typography variant="h5" style={{ fontWeight: 'bold', color: 'teal' }}>
           Machine Inventory
         </Typography>
-        <div style={{ marginBottom: '10px' }}>
-          <TextField
-            fullWidth
-            name="machineId"
-            label="Machine ID"
-            {...register('machineId')}
-            error={!!errors.machineId}
-            helperText={errors.machineId?.message}
-          />
-        </div>
 
-        <FormControl fullWidth error={!!errors.branchId}>
-          <Controller
-            name="branchId"
-            control={control}
-            defaultValue={selectedMachine?.branch?._id || ''}
-            rules={{ required: 'Branch ID is required' }}
-            render={({ field }) => (
-              <Select {...field} displayEmpty>
-                <MenuItem value="" disabled>
-                  Select Branch ID
-                </MenuItem>
-                {branches?.map((item) => (
-                  <MenuItem key={item._id} value={item._id}>
-                    {item.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            )}
-          />
-          {errors.branchId && (
-            <FormHelperText error>{errors.branchId.message}</FormHelperText>
-          )}
-        </FormControl>
-        <div style={{ marginBottom: '10px' }}>
-          <InputLabel>Warranty Start Date</InputLabel>
-          <TextField
-            fullWidth
-            type="date"
-            name="warrentyStart"
-            {...register('warrentyStart')}
-            error={!!errors.warrentyStart}
-            helperText={errors.warrentyStart?.message}
-          />
-        </div>
-        {durationOptions.map((option) => (
-        <FormControlLabel
-          key={option.value}
-          control={
-            <Radio
-              value={option.value}
-              checked={selectedDuration === option.value}
-              onChange={handleDurationChange}
+        {fields.map((detail, index) => (
+          <div key={detail.id}>
+            <Controller
+              name={`inventoryDetails.${index}.type`}
+              control={control}
+              defaultValue={detail.type}
+              render={({ field }) => (
+                <Select {...field} label="Type">
+                  <MenuItem value="Type 1">Type 1</MenuItem>
+                  <MenuItem value="Type 2">Type 2</MenuItem>
+                  <MenuItem value="Type 3">Type 3</MenuItem>
+                </Select>
+              )}
             />
-          }
-          label={option.label}
-        />
-      ))}
-      {selectedDuration === 'custom' && (
-        <TextField
-          label="Custom Duration"
-          name="customDuration"
-          value={customDuration}
-          onChange={handleCustomDurationChange}
-          fullWidth
-        />
-      )}
-        <div style={{ marginBottom: '10px' }}>
-          <InputLabel>Warranty Expire Date</InputLabel>
-          <TextField
-            fullWidth
-            type="date"
-            name="warrentyExpire"
-            {...register('warrentyExpire')}
-            error={!!errors.warrentyExpire}
-            helperText={errors.warrentyExpire?.message}
-          />
-        </div>
-        <div style={{ marginBottom: '10px' }} >
-          <InputLabel>Inventry</InputLabel>
-          {fields.map((item, index) => {
-            return (
-              <div key={item.id} className='flex'>
-                <Controller
-                  name={`inventry[${index}]._id`}
-                  control={control}
-                  defaultValue={selectedMachine ? selectedMachine?.inventoryDetails[index]?._id : ''}
-                  rules={{ required: 'Inventory is required' }}
-                  render={({ field }) => (
-                    <Select {...field} fullWidth disabled={selectedMachine?.inventoryDetails[index]?._id}>
-                      <MenuItem value="" disabled>
-                        Select Inventory
-                      </MenuItem>
-                      {inventories?.map((inventory) => {
-                        return (
-                          <MenuItem
-                            key={inventory._id}
-                            value={inventory._id}
-                          >
-                            {inventory.serialNumber}
-                          </MenuItem>
-                        )
-                      })}
-                    </Select>
-                  )}
-                />
-                {selectedMachine && <TextField
-                  fullWidth
-                  type="date"
-                  name={`inventry[${index}].warrantyStart`}
-                  {...register(`inventry[${index}].warrantyStart`)}
-                  defaultValue={selectedMachine ? moment(selectedMachine?.inventoryDetails[index]?.resellerWarrantyStart).format('YYYY-MM-DD') : ''}
-                  error={!!errors?.inventry?.[index]?.warrantyStart}
-                  helperText={errors?.inventry?.[index]?.warrantyStart?.message}
-                />}
-                
-                {selectedMachine && <TextField
-                  fullWidth
-                  type="date"
-                  name={`inventry[${index}].warrantyExpire`}
-                  {...register(`inventry[${index}].warrantyExpire`)}
-                  defaultValue={selectedMachine ? moment(selectedMachine?.inventoryDetails[index]?.resellerWarrantyExpire).format('YYYY-MM-DD') : ''}
-                  error={!!errors?.inventry?.[index]?.warrantyExpire}
-                  helperText={errors?.inventry?.[index]?.warrantyExpire?.message}
-                />}
-                <Button onClick={() => remove(index)}>Remove</Button>
-              </div>
-            );
-          })}
-          {errors.inventry && (
-            <FormHelperText error>{errors.inventry.message}</FormHelperText>
-          )}
-          <Button 
-            onClick={() =>
-              {append({
-                _inventry: '',
-                warrantyStart: '',
-                warrantyExpire: '',
-              });setEditInventory(true)}
-            }
-          >
-            Add Inventry
-          </Button>
-        </div>
+
+            <Controller
+              name={`inventoryDetails.${index}.brand`}
+              control={control}
+              defaultValue={detail.brand}
+              render={({ field }) => (
+                <Select {...field} label="Brand">
+                  <MenuItem value="Brand 1">Brand 1</MenuItem>
+                  <MenuItem value="Brand 2">Brand 2</MenuItem>
+                  <MenuItem value="Brand 3">Brand 3</MenuItem>
+                </Select>
+              )}
+            />
+
+            <Controller
+              name={`inventoryDetails.${index}.inventory`}
+              control={control}
+              defaultValue={detail.inventory}
+              render={({ field }) => (
+                <Select {...field} label="Inventory">
+                  <MenuItem value="Inventory 1">Inventory 1</MenuItem>
+                  <MenuItem value="Inventory 2">Inventory 2</MenuItem>
+                  <MenuItem value="Inventory 3">Inventory 3</MenuItem>
+                </Select>
+              )}
+            />
+
+            <Controller
+              name={`inventoryDetails.${index}._id`}
+              control={control}
+              defaultValue={detail._id}
+              render={({ field }) => <TextField {...field} label="ID" />}
+            />
+
+            <Controller
+              name={`inventoryDetails.${index}.resellerWarrantyStart`}
+              control={control}
+              defaultValue={detail.resellerWarrantyStart}
+              render={({ field }) => (
+                <TextField {...field} label="Reseller Warranty Start" />
+              )}
+            />
+
+            <Controller
+              name={`inventoryDetails.${index}.resellerWarrantyExpire`}
+              control={control}
+              defaultValue={detail.resellerWarrantyExpire}
+              render={({ field }) => (
+                <TextField {...field} label="Reseller Warranty Expire" />
+              )}
+            />
+
+            {index === fields.length - 1 && (
+              <Button variant="outlined" onClick={() => append({})}>
+                Add More Details
+              </Button>
+            )}
+
+            {index !== fields.length - 1 && (
+              <Button variant="outlined" onClick={() => remove(index)}>
+                Remove
+              </Button>
+            )}
+          </div>
+        ))}
+
         <Button
           type="submit"
           color="primary"
