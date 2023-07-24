@@ -91,6 +91,7 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, u
       setTypeOptions(unassignedInventories);
   }, []);
 
+
   // Handle brand change, fetch corresponding brand options
   const handleBrandChange = (selectedType) => {
     // Fetch brands data based on selected type (e.g., from an API or Redux store)
@@ -101,8 +102,11 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, u
       { id: 'brand3', name: 'Brand 3', type: 'type2' },
       // Add more brands as needed
     ];
-    const filteredBrands = brandsData.filter((brand) => brand.type === selectedType);
-    setBrandOptions(filteredBrands);
+    const filteredInventryBrands = unassignedInventories
+    .map(item => item.invetrybrands) // Extract all invetrybrands arrays
+    .flat() // Flatten the array of arrays into a single array
+    .filter(brand => brand.inventryTypeId === selectedType);
+    setBrandOptions(filteredInventryBrands);
     // Clear _id options when the brand changes
     setIdOptions([]);
   };
@@ -118,8 +122,12 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, u
       { id: 'id4', name: 'ID 4', brand: 'brand3' },
       // Add more _ids as needed
     ];
-    const filteredIds = idData.filter((id) => id.brand === selectedBrand);
-    setIdOptions(filteredIds);
+    const filteredInvetries = brandOptions
+    .map(item => item.invetries)
+    .flat()
+    .filter(inventory => inventory.brandId === selectedBrand);
+    // const filteredIds = idData.filter((id) => id.brand === selectedBrand);
+    setIdOptions(filteredInvetries);
   };
 
   const handleFormSubmit = (data) => {
@@ -234,7 +242,7 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, u
                   >
                     <MenuItem value="">Select Brand</MenuItem>
                     {brandOptions.map((brand) => (
-                      <MenuItem key={brand.id} value={brand.id}>
+                      <MenuItem key={brand._id} value={brand._id}>
                         {brand.name}
                       </MenuItem>
                     ))}
@@ -253,8 +261,8 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, u
                   <Select {...field}>
                     <MenuItem value="">Select _id</MenuItem>
                     {idOptions.map((id) => (
-                      <MenuItem key={id.id} value={id.id}>
-                        {id.name}
+                      <MenuItem key={id._id} value={id._id}>
+                        {id.serialNumber}
                       </MenuItem>
                     ))}
                   </Select>
