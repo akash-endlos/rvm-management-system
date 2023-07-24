@@ -14,9 +14,8 @@ import {
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import moment from 'moment';
-import { getInventoryBrandById } from '@/redux/reducers/inventoryBrandSlice';
 
 // Validation schema using yup
 const validationSchema = yup.object().shape({
@@ -42,7 +41,7 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, u
   const [typeOptions, setTypeOptions] = useState([]);
   const [brandOptions, setBrandOptions] = useState([]);
   const [idOptions, setIdOptions] = useState([]);
-  const dispatch = useDispatch()
+  
 
 
   const {
@@ -124,7 +123,7 @@ useEffect(() => {
     //   { id: 'id4', name: 'ID 4', brand: 'brand3' },
     //   // Add more _ids as needed
     // ];
-
+    
     const filteredInvetries = brandOptions
     .map(item => item.invetries)
     .flat()
