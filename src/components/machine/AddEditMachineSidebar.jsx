@@ -53,43 +53,44 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, u
     setValue
   } = useForm({
     resolver: yupResolver(validationSchema),
+    defaultValues: selectedMachine || {}, 
   });
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'inventoryDetails',
   });
+console.log(selectedMachine);
+useEffect(() => {
+  if (selectedMachine) {
+    // Set default values for the form fields using setValue
+    setValue('machineId', selectedMachine.machineId || '');
+    setValue('resellerId', selectedMachine.reseller?._id || '');
+    setValue('branchId', selectedMachine.branch?._id || '');
+    setValue('customerId', selectedMachine.customer?._id || '');
+    setValue('warrantyStart', moment(selectedMachine.warrantyStart).format('YYYY-MM-DD') || moment().format());
+    setValue('warrantyExpire', moment(selectedMachine.warrantyExpire).format('YYYY-MM-DD') || moment().format());
 
-  useEffect(() => {
-    if (selectedMachine) {
-      setValue('machineId', selectedMachine.machineId || '');
-      setValue('resellerId', selectedMachine.reseller?._id || '');
-      setValue('branchId', selectedMachine.branch?._id || '');
-      setValue('customerId', selectedMachine.customer?._id || '');
-      setValue('warrantyStart', moment(selectedMachine.warrentyStart).format('YYYY-MM-DD') || '');
-      setValue('warrantyExpire', moment(selectedMachine.warrentyExpire).format('YYYY-MM-DD') || '');
+    // Loop through the inventoryDetails and set default values for each item
+    selectedMachine.inventoryDetails.forEach((inventory, index) => {
+      setValue(`inventoryDetails.${index}.type`, inventory.invetrytypes._id || '');
+      setValue(`inventoryDetails.${index}.brand`, inventory.brand?._id || '');
+      setValue(`inventoryDetails.${index}._id`, inventory._id || '');
+      setValue(`inventoryDetails.${index}.resellerWarrantyStart`, moment(inventory.resellerWarrantyStart).format('YYYY-MM-DD') || moment().format());
+      setValue(`inventoryDetails.${index}.resellerWarrantyExpire`, moment(inventory.resellerWarrantyExpire).format('YYYY-MM-DD') || moment().format());
+    });
+  }
+}, [selectedMachine, setValue]);;
 
-      // Clear the existing inventoryDetails array before appending new ones
-      while (fields.length) {
-        remove(0);
-      }
-
-      if (selectedMachine.inventoryDetails && selectedMachine.inventoryDetails.length > 0) {
-        selectedMachine.inventoryDetails.forEach((inventory, index) => {
-          append({
-            _id: inventory._id || '',
-            resellerWarrantyStart: moment(inventory.resellerWarrantyStart).format('YYYY-MM-DD') || '',
-            resellerWarrantyExpire: moment(inventory.resellerWarrantyExpire).format('YYYY-MM-DD') || '',
-          });
-        });
-      }
-    }
-  }, [selectedMachine]);
+  
 
   // Fetch data for the cascading dropdowns
   useEffect(() => {
+     if(unassignedInventories)
+     {
       setTypeOptions(unassignedInventories);
-  }, []);
+     }
+  }, [unassignedInventories]);
 
 
   // Handle brand change, fetch corresponding brand options
@@ -171,16 +172,16 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, u
           helperText={errors.resellerId?.message}
         />
         <TextField
-          label="Branch ID (Optional)"
-          {...register('branchId')}
-          error={!!errors.branchId}
-          helperText={errors.branchId?.message}
-        />
-        <TextField
           label="Customer ID (Optional)"
           {...register('customerId')}
           error={!!errors.customerId}
           helperText={errors.customerId?.message}
+        />
+        <TextField
+          label="Branch ID (Optional)"
+          {...register('branchId')}
+          error={!!errors.branchId}
+          helperText={errors.branchId?.message}
         />
         <TextField
           // label="Warranty Start Date"

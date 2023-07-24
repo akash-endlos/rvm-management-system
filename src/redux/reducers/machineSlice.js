@@ -76,7 +76,6 @@ const machineSlice = createSlice({
         return machinesWithIndex;
       })
       .addCase(createNewMachine.fulfilled, (state, { payload }) => {
-        console.log(payload);
         const newMachine = {
           ...payload.payload.Machine,
           index: 1,
