@@ -14,8 +14,9 @@ import {
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
+import { getInventoryBrandById } from '@/redux/reducers/inventoryBrandSlice';
 
 // Validation schema using yup
 const validationSchema = yup.object().shape({
@@ -41,7 +42,7 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, u
   const [typeOptions, setTypeOptions] = useState([]);
   const [brandOptions, setBrandOptions] = useState([]);
   const [idOptions, setIdOptions] = useState([]);
-
+  const dispatch = useDispatch()
 
 
   const {
@@ -116,17 +117,19 @@ useEffect(() => {
   const handleIdChange = (selectedBrand) => {
     // Fetch _id data based on selected brand (e.g., from an API or Redux store)
     // Sample data, replace with your actual data retrieval
-    const idData = [
-      { id: 'id1', name: 'ID 1', brand: 'brand1' },
-      { id: 'id2', name: 'ID 2', brand: 'brand1' },
-      { id: 'id3', name: 'ID 3', brand: 'brand2' },
-      { id: 'id4', name: 'ID 4', brand: 'brand3' },
-      // Add more _ids as needed
-    ];
+    // const idData = [
+    //   { id: 'id1', name: 'ID 1', brand: 'brand1' },
+    //   { id: 'id2', name: 'ID 2', brand: 'brand1' },
+    //   { id: 'id3', name: 'ID 3', brand: 'brand2' },
+    //   { id: 'id4', name: 'ID 4', brand: 'brand3' },
+    //   // Add more _ids as needed
+    // ];
+
     const filteredInvetries = brandOptions
     .map(item => item.invetries)
     .flat()
     .filter(inventory => inventory.brandId === selectedBrand);
+    console.log(filteredInvetries);
     // const filteredIds = idData.filter((id) => id.brand === selectedBrand);
     setIdOptions(filteredInvetries);
   };

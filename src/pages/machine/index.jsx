@@ -17,6 +17,7 @@ import DeleteMachineModal from '@/components/machine/DeleteMachineModal'
 import AddEditMachineInventorySidebar from '@/components/machine/AddEditMachineInventorySidebar'
 import DeleteMachineInventoryModal from '@/components/machine/DeleteMachineInventoryModal'
 import { fetchAllVendors } from '@/redux/reducers/vendorSlice'
+import moment from 'moment'
  
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
@@ -93,11 +94,13 @@ const index = () => {
         accessorKey: 'warrentyStart',
         header: 'Warranty Start Date',
         size: 150,
+        Cell: ({ value }) => moment(value).format('YYYY-MM-DD'),
       },
       {
         accessorKey: 'warrentyExpire',
         header: 'Warranty Expire Date',
         size: 150,
+        Cell: ({ value }) => moment(value).format('YYYY-MM-DD'),
       },
       {
         accessorKey: 'machineStatus',
