@@ -12,11 +12,14 @@ import { createNewProblem, deleteProblem, fetchAllProblems, updateProblem } from
 import AddEditProblemSidebar from '@/components/problem/AddEditProblemSidebar'
 import { toast } from 'react-hot-toast'
 import DeleteProblemModal from '@/components/problem/DeleteProblemModal'
+import AddEditSolutionSidebar from '@/components/problem/AddEditSolutionSidebar'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
   const [selectedProblem, setSelectedProblem] = useState(null);
   const [isDeleteProblemModalOpen, setIsDeleteProblemModalOpen] = useState(false);
+  const [selectedSolution, setSelectedSolution] = useState(null); 
+  const [isAddSolutionSidebarOpen, setIsAddSolutionSidebarOpen] = useState(false); 
   const allproblems = useSelector((state) => state.problem)
   console.log(allproblems);
   const dispatch = useDispatch();
@@ -65,6 +68,12 @@ const index = () => {
     setSelectedProblem(problemData);
     setIsDeleteProblemModalOpen(true);
   };
+  const handleOpenAddSolutionSidebar = (solutionData) => {
+    setSelectedSolution(null);
+    setIsAddSolutionSidebarOpen(true);
+    setSelectedProblem(solutionData);
+  };
+
   const handleAdminTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
@@ -79,7 +88,7 @@ const index = () => {
           </IconButton>
         </Tooltip>
         <Tooltip arrow placement="right" title="Add Branch">
-          <IconButton color="secondary" onClick={() => handleOpenAddBranchSidebar(row.original)}>
+          <IconButton color="secondary" onClick={() => handleOpenAddSolutionSidebar(row.original)}>
             <FiGitBranch />
           </IconButton>
         </Tooltip>
@@ -215,6 +224,22 @@ const index = () => {
         console.error('Error deleting customer:', error);
       });
   };
+
+  const handleCloseAddSolutionSidebar = () => {
+    setIsAddSolutionSidebarOpen(false);
+  };
+
+  const handleAddBranch = async (solutionData) => {
+    if (selectedSolution) {
+      // Update existing branch
+    
+      console.log('Updating branch', solutionData);
+    } else {
+      console.log(solutionData.image);
+      console.log('Adding branch',solutionData);
+    }
+    handleCloseAddSolutionSidebar();
+  };
   return (
     <Layout>
        <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
@@ -233,6 +258,15 @@ const index = () => {
             onClose={handleCloseAddSidebar}
             onSubmit={handleAddProblem}
             selectedProblem={selectedProblem}
+          />
+        )}
+         {isAddSolutionSidebarOpen && (
+          <AddEditSolutionSidebar
+            onClose={handleCloseAddSolutionSidebar}
+            onSubmit={handleAddBranch}
+            selectedSolution={selectedSolution}
+            selectedProblem={selectedProblem}
+            // selectedCustomer={selectedCustomer}
           />
         )}
          <DeleteProblemModal
