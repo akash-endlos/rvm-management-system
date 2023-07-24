@@ -23,8 +23,8 @@ const validationSchema = yup.object().shape({
   resellerId: yup.string().required('Reseller ID is required'),
   branchId: yup.string().notRequired(),
   customerId: yup.string().notRequired(),
-  warrantyStart: yup.date().required('Warranty start date is required'),
-  warrantyExpire: yup.date().required('Warranty expire date is required'),
+  warrentyStart: yup.date().required('Warranty start date is required'),
+  warrentyExpire: yup.date().required('Warranty expire date is required'),
   inventoryDetails: yup.array().of(
     yup.object().shape({
       type: yup.string().required('Type is required'),
@@ -68,8 +68,8 @@ useEffect(() => {
     setValue('resellerId', selectedMachine.reseller?._id || '');
     setValue('branchId', selectedMachine.branch?._id || '');
     setValue('customerId', selectedMachine.customer?._id || '');
-    setValue('warrantyStart', moment(selectedMachine.warrantyStart).format('YYYY-MM-DD') || moment().format());
-    setValue('warrantyExpire', moment(selectedMachine.warrantyExpire).format('YYYY-MM-DD') || moment().format());
+    setValue('warrentyStart', moment(selectedMachine.warrentyStart).format('YYYY-MM-DD') || moment().format());
+    setValue('warrentyExpire', moment(selectedMachine.warrentyExpire).format('YYYY-MM-DD') || moment().format());
 
     // Loop through the inventoryDetails and set default values for each item
     selectedMachine.inventoryDetails.forEach((inventory, index) => {
@@ -186,16 +186,16 @@ useEffect(() => {
         <TextField
           // label="Warranty Start Date"
           type="date"
-          {...register('warrantyStart')}
-          error={!!errors.warrantyStart}
-          helperText={errors.warrantyStart?.message}
+          {...register('warrentyStart')}
+          error={!!errors.warrentyStart}
+          helperText={errors.warrentyStart?.message}
         />
         <TextField
           // label="Warranty Expire Date"
           type="date"
-          {...register('warrantyExpire')}
-          error={!!errors.warrantyExpire}
-          helperText={errors.warrantyExpire?.message}
+          {...register('warrentyExpire')}
+          error={!!errors.warrentyExpire}
+          helperText={errors.warrentyExpire?.message}
         />
 
         {/* Inventory Details */}
