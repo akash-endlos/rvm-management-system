@@ -88,17 +88,7 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, u
 
   // Fetch data for the cascading dropdowns
   useEffect(() => {
-    // Fetch types data (e.g., from an API or Redux store)
-    const fetchTypesData = async () => {
-      // Sample data, replace with your actual data retrieval
-      // const typesData = [
-      //   { id: 'type1', name: 'Type 1' },
-      //   { id: 'type2', name: 'Type 2' },
-      //   // Add more types as needed
-      // ];
       setTypeOptions(unassignedInventories);
-    };
-    fetchTypesData();
   }, []);
 
   // Handle brand change, fetch corresponding brand options
