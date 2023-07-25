@@ -61,28 +61,17 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
 
 const handleImageChange = (e, index) => {
     const file = e.target.files[0];
+    console.log(file);
     if (file) {
-      const reader = new FileReader();
-
-      reader.onloadend = () => {
-        // 'result' will contain the buffer data of the selected file
-        const buffer = reader.result;
-        setValue(`solution[${index}].image`, buffer);
-        console.log(file);
-        console.log('File Name:', file.name);
-        console.log('File Size:', file.size);
-        console.log('File Type:', file.type);
-        console.log('File Buffer Data:', buffer); // Here's the buffer data
-      };
-
-      reader.readAsArrayBuffer(file);
+        setValue(`solution[${index}].image`, file); // Here's the buffer data
     }
   };
 
   const handleCancel = () => {
-    setValue('solution', selectedProblem
-      ? selectedProblem?.solution.map((solution) => ({ ...solution, image: '' }))
+    setValue('solution', selectedSolution
+      ? selectedSolution?.solution.map((solution) => ({ ...solution, image: '' }))
       : [{ step: 1, description: '', image: '' }]);
+      onClose()
   };
 
   return (
