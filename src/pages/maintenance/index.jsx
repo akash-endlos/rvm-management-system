@@ -12,7 +12,7 @@ import { createNewProblem, deleteProblem, fetchAllProblems, updateProblem } from
 import AddEditProblemSidebar from '@/components/problem/AddEditProblemSidebar'
 import { toast } from 'react-hot-toast'
 import DeleteProblemModal from '@/components/problem/DeleteProblemModal'
-import { createNewSolution, deleteSolution, fetchAllSolutions } from '@/redux/reducers/solutionSlice'
+import { createNewSolution, deleteSolution, fetchAllSolutions, updateSolution } from '@/redux/reducers/solutionSlice'
 import AddEditSolutionSidebar from '@/components/problem/AddEditSolutionSidebar'
 import DeleteSolutionModal from '@/components/problem/DeleteSolutionModal'
 
@@ -243,12 +243,28 @@ const index = () => {
 
   const handleAddBranch = async (addsolutionData) => {
     if (selectedSolution) {
+      const updatedData={
+        _id:selectedSolution._id,
+        data:addsolutionData
+      }
       // Update existing branch
-    
+      dispatch(updateSolution(updatedData)).unwrap()
+        .then(() => {
+           dispatch(fetchAllProblems());
+          toast.success('Added Solution Successfully');
+        })
+        .catch(error => {
+          toast.error(error)
+        });
       console.log('Updating branch', addsolutionData);
     } else {
-      dispatch(createNewSolution(addsolutionData)).unwrap()
+      const addNewData={
+        ...addsolutionData,
+        problemId:selectedProblem._id
+      }
+      dispatch(createNewSolution(addNewData)).unwrap()
         .then(() => {
+           dispatch(fetchAllProblems());
           toast.success('Added Solution Successfully');
         })
         .catch(error => {

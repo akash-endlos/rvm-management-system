@@ -13,7 +13,7 @@ const schema = yup.object().shape({
     })
   ),
 });
-
+const imageUrl='https://storage.googleapis.com/rvmoperationadditionalbucket/rvmbackend'
 const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedProblem }) => {
   console.log(selectedSolution);
   const [SelectedImage, setsetSelectedImage] = useState(null);
@@ -27,7 +27,11 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
     resolver: yupResolver(schema),
     defaultValues: {
       solution: selectedSolution
-        ? selectedSolution?.solution.map((solution) => ({ ...solution, image: '' }))
+        ? selectedSolution?.solution.map((solution) => ({ 
+          step:solution.step,
+          description:solution.description,
+          image:`https://storage.googleapis.com/rvmoperationadditionalbucket/rvmbackend/${solution.image}`
+         }))
         : [{ step: 1, description: '', image: '' }],
     },
   });
@@ -41,7 +45,7 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
     const transformedData = new FormData();
     data.solution.forEach((solution, index) => {
       console.log(solution.image);
-      transformedData.append('problemId', selectedProblem._id);
+      // transformedData.append('problemId', selectedProblem._id);
       transformedData.append(`solution[${index}][step]`, solution.step.toString());
       transformedData.append(`solution[${index}][description]`, solution.description);
       transformedData.append(`solution[${index}][image]`, SelectedImage);
@@ -119,10 +123,9 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
                 onChange={(e) => handleImageChange(e, index)}
               />
               {/* Display the image preview */}
-              {console.log(field)}
               {field.image && typeof field.image !== 'string' && (
                 <img
-                  src={`https://storage.googleapis.com/rvmoperationadditionalbucket/rvmbackend/${field.image}`}
+                  src={field.image}
                   alt={`Solution ${index + 1}`}
                   style={{ width: '100px', height: '100px', objectFit: 'cover' }}
                 />

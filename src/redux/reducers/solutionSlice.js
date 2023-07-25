@@ -53,7 +53,7 @@ export const updateSolution = createAsyncThunk(
   'solutions/update',
   async (solutionData, { rejectWithValue }) => {
     try {
-      const response = await updateSolutionApi(solutionData.id, { name: solutionData.name });
+      const response = await updateSolutionApi(solutionData._id, solutionData.data);
       return response;
     } catch (error) {
       console.log(error);
