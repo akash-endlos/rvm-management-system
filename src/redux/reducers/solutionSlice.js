@@ -41,7 +41,7 @@ export const deleteSolution = createAsyncThunk(
   'solutions/delete',
   async (solutionId, { rejectWithValue }) => {
     try {
-      await deleteSolutionApi(solutionId._id);
+      await deleteSolutionApi(solutionId);
       return solutionId;
     } catch (error) {
       return rejectWithValue(error.message);

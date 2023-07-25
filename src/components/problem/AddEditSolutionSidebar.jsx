@@ -1,21 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, TextField, InputLabel, Typography } from '@mui/material';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 const schema = yup.object().shape({
-  solutions: yup.array().of(
+  solution: yup.array().of(
     yup.object().shape({
       step: yup.number(),
       description: yup.string().required('Description is required'),
-      image: yup.string(), // You might want to add validation for the image field as needed
+      image: yup.mixed(), // You might want to add validation for the image field as needed
     })
   ),
 });
 
 const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedProblem }) => {
   console.log(selectedSolution);
+  const [SelectedImage, setsetSelectedImage] = useState(null);
   const {
     handleSubmit,
     register,
@@ -25,7 +26,7 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      solutions: selectedSolution
+      solution: selectedSolution
         ? selectedSolution?.solution.map((solution) => ({ ...solution, image: '' }))
         : [{ step: 1, description: '', image: '' }],
     },
@@ -33,53 +34,36 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'solutions',
+    name: 'solution',
   });
 
   const handleFormSubmit = (data) => {
-    const transformedData = new FormData()
-    data.solutions.forEach((solution, index) => {
-        transformedData.append('problemId', selectedProblem._id);
-        transformedData.append(`solution[${index}][step]`, solution.step.toString());
-        transformedData.append(`solution[${index}][description]`, solution.description);
-        transformedData.append(`solution[${index}][image]`, solution.image);
-      });
+    const transformedData = new FormData();
+    data.solution.forEach((solution, index) => {
+      console.log(solution.image);
+      transformedData.append('problemId', selectedProblem._id);
+      transformedData.append(`solution[${index}][step]`, solution.step.toString());
+      transformedData.append(`solution[${index}][description]`, solution.description);
+      transformedData.append(`solution[${index}][image]`, SelectedImage);
+
+      // Check if there's a new image selected, if not, use the existing image from the selectedSolution
+      const image = solution.image instanceof File ? solution.image : selectedSolution?.solution[index]?.image;
+      transformedData.append(`solution[${index}][image]`, image);
+    });
     onSubmit(transformedData);
   };
-  
 
   const handleImageChange = async (e, index) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-  
-      // Set up a Promise to handle the asynchronous reading of the file
-      const readFileAsync = (file) => {
-        return new Promise((resolve, reject) => {
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = reject;
-          reader.readAsDataURL(file);
-        });
-      };
-  
-      try {
-        // Read the file and get the binary data (data URL)
-        const imageData = await readFileAsync(file);
-  
-        // Set the binary data (data URL) to the corresponding field in the form
-        setValue(`solutions[${index}].image`, imageData);
-      } catch (error) {
-        console.error('Error reading image file:', error);
-      }
-    }
+    console.log(file);
+    setsetSelectedImage(file);
   };
-  
 
   const handleCancel = () => {
-    setValue('solutions', selectedProblem
-      ? selectedProblem?.solutions.map((solution) => ({ ...solution, image: '' }))
+    setValue('solution', selectedProblem
+      ? selectedSolution?.solution.map((solution) => ({ ...solution, image: '' }))
       : [{ step: 1, description: '', image: '' }]);
-      onClose()
+    onClose();
   };
 
   return (
@@ -111,31 +95,40 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
               <InputLabel>SR Number</InputLabel>
               <TextField
                 fullWidth
-                name={`solutions[${index}].step`}
+                name={`solution[${index}].step`}
                 value={index + 1}
                 disabled
-                {...register(`solutions[${index}].step`)}
+                {...register(`solution[${index}].step`)}
               />
             </div>
             <div style={{ marginBottom: '10px' }}>
               <InputLabel>Description</InputLabel>
               <TextField
                 fullWidth
-                name={`solutions[${index}].description`}
-                {...register(`solutions[${index}].description`)}
-                error={!!errors?.solutions?.[index]?.description}
-                helperText={errors?.solutions?.[index]?.description?.message}
+                name={`solution[${index}].description`}
+                {...register(`solution[${index}].description`)}
+                error={!!errors?.solution?.[index]?.description}
+                helperText={errors?.solution?.[index]?.description?.message}
               />
             </div>
             <div style={{ marginBottom: '10px' }}>
               <InputLabel>Attach Image</InputLabel>
               <input
                 type="file"
-                name={`solutions[${index}].image`}
+                name={`solution[${index}].image`}
                 onChange={(e) => handleImageChange(e, index)}
               />
-              {/* Display the image if the URL is available */}
-              {field.image && (
+              {/* Display the image preview */}
+              {console.log(field)}
+              {field.image && typeof field.image !== 'string' && (
+                <img
+                  src={`https://storage.googleapis.com/rvmoperationadditionalbucket/rvmbackend/${field.image}`}
+                  alt={`Solution ${index + 1}`}
+                  style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                />
+              )}
+              {/* Display the existing image from selectedSolution */}
+              {typeof field.image === 'string' && (
                 <img
                   src={field.image}
                   alt={`Solution ${index + 1}`}

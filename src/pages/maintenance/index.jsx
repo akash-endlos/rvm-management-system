@@ -12,12 +12,14 @@ import { createNewProblem, deleteProblem, fetchAllProblems, updateProblem } from
 import AddEditProblemSidebar from '@/components/problem/AddEditProblemSidebar'
 import { toast } from 'react-hot-toast'
 import DeleteProblemModal from '@/components/problem/DeleteProblemModal'
-import { createNewSolution, fetchAllSolutions } from '@/redux/reducers/solutionSlice'
+import { createNewSolution, deleteSolution, fetchAllSolutions } from '@/redux/reducers/solutionSlice'
 import AddEditSolutionSidebar from '@/components/problem/AddEditSolutionSidebar'
+import DeleteSolutionModal from '@/components/problem/DeleteSolutionModal'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
   const [selectedProblem, setSelectedProblem] = useState(null);
+  const [isDeleteSolutionModalOpen, setIsDeleteSolutionModalOpen] = useState(false);
   const [isDeleteProblemModalOpen, setIsDeleteProblemModalOpen] = useState(false);
   const [selectedSolution, setSelectedSolution] = useState(null); 
   const [isAddSolutionSidebarOpen, setIsAddSolutionSidebarOpen] = useState(false); 
@@ -99,6 +101,10 @@ const index = () => {
     setSelectedSolution(branchData);
     setIsAddSolutionSidebarOpen(true);
   };
+  const handleDeleteSolution = (branchData) => {
+    setSelectedSolution(branchData);
+    setIsDeleteSolutionModalOpen(true);
+  };
   const handleAdminNestedTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
@@ -108,7 +114,7 @@ const index = () => {
           </IconButton>
         </Tooltip>
         <Tooltip arrow placement="right" title="Delete Customer">
-          <IconButton color="error" onClick={() => handleDeleteBranch(row.original)}>
+          <IconButton color="error" onClick={() => handleDeleteSolution(row.original)}>
             <Delete />
           </IconButton>
         </Tooltip>
@@ -252,6 +258,24 @@ const index = () => {
     }
     handleCloseAddSolutionSidebar();
   };
+  const handleCloseDeleteSolutionModal=()=>{
+    setIsDeleteSolutionModalOpen(false)
+  }
+
+  const handleConfirmDeleteSolution = async () => {
+    dispatch(deleteSolution(selectedSolution?._id)).unwrap()
+    .then(async () => {
+      await dispatch(fetchAllProblems());
+      toast.success('Delete Solution Successfully');
+    })
+    .catch(error => {
+      toast.error(error);
+    });
+  
+    // Perform delete operation on selectedCustomer
+    console.log('Deleting branch', selectedSolution);
+    setIsDeleteSolutionModalOpen(false);
+  };
   return (
     <Layout>
        <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
@@ -286,6 +310,12 @@ const index = () => {
           onClose={handleCloseDeleteModal}
           onDelete={handleConfirmDeleteProblem}
           title='Problem'
+        />
+         <DeleteSolutionModal
+          isOpen={isDeleteSolutionModalOpen}
+          onClose={handleCloseDeleteSolutionModal}
+          onDelete={handleConfirmDeleteSolution}
+          title='Solution'
         />
          </>
     </Layout>
