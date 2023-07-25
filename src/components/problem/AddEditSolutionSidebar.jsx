@@ -15,6 +15,7 @@ const schema = yup.object().shape({
 });
 
 const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedProblem }) => {
+  console.log(selectedSolution);
   const {
     handleSubmit,
     register,
@@ -25,7 +26,7 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
     resolver: yupResolver(schema),
     defaultValues: {
       solutions: selectedSolution
-        ? selectedSolution?.solutions.map((solution) => ({ ...solution, image: '' }))
+        ? selectedSolution?.solution.map((solution) => ({ ...solution, image: '' }))
         : [{ step: 1, description: '', image: '' }],
     },
   });
@@ -78,6 +79,7 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
     setValue('solutions', selectedProblem
       ? selectedProblem?.solutions.map((solution) => ({ ...solution, image: '' }))
       : [{ step: 1, description: '', image: '' }]);
+      onClose()
   };
 
   return (
