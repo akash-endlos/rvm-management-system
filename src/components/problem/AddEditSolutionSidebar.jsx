@@ -47,12 +47,32 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
   };
   
 
-  const handleImageChange = (e, index) => {
+  const handleImageChange = async (e, index) => {
     const file = e.target.files[0];
     if (file) {
-      setValue(`solutions[${index}].image`, file);
+      const reader = new FileReader();
+  
+      // Set up a Promise to handle the asynchronous reading of the file
+      const readFileAsync = (file) => {
+        return new Promise((resolve, reject) => {
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      };
+  
+      try {
+        // Read the file and get the binary data (data URL)
+        const imageData = await readFileAsync(file);
+  
+        // Set the binary data (data URL) to the corresponding field in the form
+        setValue(`solutions[${index}].image`, imageData);
+      } catch (error) {
+        console.error('Error reading image file:', error);
+      }
     }
   };
+  
 
   const handleCancel = () => {
     setValue('solutions', selectedProblem

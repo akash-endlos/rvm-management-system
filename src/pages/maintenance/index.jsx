@@ -95,11 +95,15 @@ const index = () => {
       </Box>
     );
   };
+  const handleEditSolution = (branchData) => {
+    setSelectedSolution(branchData);
+    setIsAddSolutionSidebarOpen(true);
+  };
   const handleAdminNestedTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
         <Tooltip arrow placement="left" title="Edit Customer">
-          <IconButton onClick={() => handleEditBranch(row.original)}>
+          <IconButton onClick={() => handleEditSolution(row.original)}>
             <Edit />
           </IconButton>
         </Tooltip>
