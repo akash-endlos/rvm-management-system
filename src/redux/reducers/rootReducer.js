@@ -13,6 +13,7 @@ import { problemReducer } from './problemSlice';
 import { machineReducer } from './machineSlice';
 import { localVendorReducer } from './localVendorSlice';
 import { stockReducer } from './stockSlice';
+import { solutionReducer } from './solutionSlice';
 const persistConfig = {
   key: 'root',
   storage,
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
   machine:machineReducer,
   localvendor:localVendorReducer,
   stock:stockReducer,
+  solution:solutionReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

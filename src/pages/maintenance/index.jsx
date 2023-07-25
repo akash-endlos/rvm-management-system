@@ -13,6 +13,7 @@ import AddEditProblemSidebar from '@/components/problem/AddEditProblemSidebar'
 import { toast } from 'react-hot-toast'
 import DeleteProblemModal from '@/components/problem/DeleteProblemModal'
 import AddEditSolutionSidebar from '@/components/problem/AddEditSolutionSidebar'
+import { createNewSolution, fetchAllSolutions } from '@/redux/reducers/solutionSlice'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
@@ -21,7 +22,6 @@ const index = () => {
   const [selectedSolution, setSelectedSolution] = useState(null); 
   const [isAddSolutionSidebarOpen, setIsAddSolutionSidebarOpen] = useState(false); 
   const allproblems = useSelector((state) => state.problem)
-  console.log(allproblems);
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchData = async () => {
@@ -115,7 +115,9 @@ const index = () => {
     const nestedTableConfigurations = [
       {
         header: 'Solutions',
-        columns: [{ header: 'Name', accessorKey: 'name' }],
+        columns: [
+          { header: 'solution', accessorKey: '_id' },
+      ],
         data: row?.original?.solutions,
       },
     ];
@@ -229,14 +231,20 @@ const index = () => {
     setIsAddSolutionSidebarOpen(false);
   };
 
-  const handleAddBranch = async (solutionData) => {
+  const handleAddBranch = async (addsolutionData) => {
     if (selectedSolution) {
       // Update existing branch
     
-      console.log('Updating branch', solutionData);
+      console.log('Updating branch', addsolutionData);
     } else {
-      console.log(solutionData.image);
-      console.log('Adding branch',solutionData);
+      dispatch(createNewSolution(addsolutionData)).unwrap()
+        .then(() => {
+          toast.success('Added Solution Successfully');
+        })
+        .catch(error => {
+          toast.error(error)
+        });
+      console.log('Adding branch',addsolutionData);
     }
     handleCloseAddSolutionSidebar();
   };

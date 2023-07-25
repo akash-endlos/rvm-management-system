@@ -1,11 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Button,
   TextField,
-  Select,
-  MenuItem,
   InputLabel,
-  FormHelperText,
   Typography,
 } from '@mui/material';
 import { useForm, useFieldArray } from 'react-hook-form';
@@ -13,10 +10,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 const schema = yup.object().shape({
-  name: yup.string().required('Branch Name is required'),
   solutions: yup.array().of(
     yup.object().shape({
-      srNumber: yup.number(),
+      step: yup.number(),
       description: yup.string().required('Description is required'),
       image: yup.string(), // You might want to add validation for the image field as needed
     })
@@ -29,11 +25,13 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
     register,
     control,
     formState: { errors },
+    setValue,
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      name: selectedProblem ? selectedProblem?.name : '',
-      solutions: selectedProblem ? selectedProblem?.solutions : [{ srNumber: 1, description: '', image: '' }],
+      solutions: selectedSolution
+        ? selectedSolution?.solutions.map((solution) => ({ ...solution, image: '' }))
+        : [{ step: 1, description: '', image: '' }],
     },
   });
 
@@ -44,6 +42,24 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
 
   const handleFormSubmit = (data) => {
     onSubmit(data);
+  };
+
+  // Function to convert selected image file to a local URL
+  const handleImageChange = (e, index) => {
+    const file = e.target.files[0];
+    console.log(file);
+    if (file) {
+      // const imageUrl = URL.createObjectURL(file);
+      // Update the image URL for the specific index in the state
+      setValue(`solutions[${index}].image`, file);
+    }
+  };
+
+  // Function to reset the form to its initial state
+  const handleCancel = () => {
+    setValue('solutions', selectedProblem
+      ? selectedProblem?.solutions.map((solution) => ({ ...solution, image: '' }))
+      : [{ step: 1, description: '', image: '' }]);
   };
 
   return (
@@ -65,17 +81,6 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
         <Typography variant="h5" style={{ fontWeight: 'bold', color: 'teal' }}>
           Solution
         </Typography>
-        <div style={{ marginBottom: '10px' }}>
-          <InputLabel>Name</InputLabel>
-          <TextField
-            fullWidth
-            name="name"
-            disabled
-            {...register('name')}
-            error={!!errors.name}
-            helperText={errors.name?.message}
-          />
-        </div>
 
         {fields.map((field, index) => (
           <div key={field.id}>
@@ -86,10 +91,10 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
               <InputLabel>SR Number</InputLabel>
               <TextField
                 fullWidth
-                name={`solutions[${index}].srNumber`}
+                name={`solutions[${index}].step`}
                 value={index + 1}
                 disabled
-                {...register(`solutions[${index}].srNumber`)}
+                {...register(`solutions[${index}].step`)}
               />
             </div>
             <div style={{ marginBottom: '10px' }}>
@@ -102,15 +107,21 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
                 helperText={errors?.solutions?.[index]?.description?.message}
               />
             </div>
-            {/* Add file input for image attachment */}
-            {/* You can customize this as needed */}
             <div style={{ marginBottom: '10px' }}>
               <InputLabel>Attach Image</InputLabel>
               <input
                 type="file"
                 name={`solutions[${index}].image`}
-                {...register(`solutions[${index}].image`)}
+                onChange={(e) => handleImageChange(e, index)}
               />
+              {/* Display the image if the URL is available */}
+              {field.image && (
+                <img
+                  src={field.image}
+                  alt={`Solution ${index + 1}`}
+                  style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                />
+              )}
             </div>
             <Button onClick={() => remove(index)}>Remove Solution</Button>
           </div>
@@ -118,7 +129,7 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
 
         <Button
           type="button"
-          onClick={() => append({ srNumber: fields.length + 1, description: '', image: '' })}
+          onClick={() => append({ step: fields.length + 1, description: '', image: '' })}
         >
           Add Solution
         </Button>
@@ -126,7 +137,7 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
         <Button type="submit" color="primary" variant="contained" style={{ marginRight: '10px' }}>
           {selectedSolution ? 'Update' : 'Submit'}
         </Button>
-        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={handleCancel}>Cancel</Button>
       </form>
     </div>
   );

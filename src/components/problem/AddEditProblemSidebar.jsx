@@ -5,6 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllInventoryTypes } from '@/redux/reducers/inventoryTypeSlice';
+import { toast } from 'react-hot-toast';
 
 const schema = yup.object().shape({
   name: yup.string().required('Name is required'),
