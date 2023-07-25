@@ -5,7 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 const schema = yup.object().shape({
-  solution: yup.array().of(
+  solutions: yup.array().of(
     yup.object().shape({
       step: yup.number(),
       description: yup.string().required('Description is required'),
@@ -24,54 +24,40 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      solution: selectedSolution
-        ? selectedSolution?.solution.map((solution) => ({ ...solution, image: '' }))
+      solutions: selectedSolution
+        ? selectedSolution?.solutions.map((solution) => ({ ...solution, image: '' }))
         : [{ step: 1, description: '', image: '' }],
     },
   });
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'solution',
+    name: 'solutions',
   });
 
   const handleFormSubmit = (data) => {
-    // Transform the data into the desired format for the API request
-    const transformedData = new FormData();
-    transformedData.append('problemId', selectedProblem._id);
-    data.solution.forEach((solution, index) => {
-      transformedData.append(`solution[${index}][step]`, solution.step.toString());
-      transformedData.append(`solution[${index}][description]`, solution.description);
-      transformedData.append(`solution[${index}][image]`, solution.image);
-    });
-
-    console.log('Transformed Data:', transformedData);
-
-    // Call the onSubmit function to pass the transformed data to the parent component
+    const transformedData = new FormData()
+    data.solutions.forEach((solution, index) => {
+        transformedData.append('problemId', selectedProblem._id);
+        transformedData.append(`solution[${index}][step]`, solution.step.toString());
+        transformedData.append(`solution[${index}][description]`, solution.description);
+        transformedData.append(`solution[${index}][image]`, solution.image);
+      });
     onSubmit(transformedData);
   };
+  
 
-//   const handleImageChange = (e, index) => {
-//     const file = e.target.files[0];
-//     if (file) {
-//       setValue(`solution[${index}].image`, file);
-//     }
-//   };
-
-
-const handleImageChange = (e, index) => {
+  const handleImageChange = (e, index) => {
     const file = e.target.files[0];
-    console.log(file);
     if (file) {
-        setValue(`solution[${index}].image`, file); // Here's the buffer data
+      setValue(`solutions[${index}].image`, file);
     }
   };
 
   const handleCancel = () => {
-    setValue('solution', selectedSolution
-      ? selectedSolution?.solution.map((solution) => ({ ...solution, image: '' }))
+    setValue('solutions', selectedProblem
+      ? selectedProblem?.solutions.map((solution) => ({ ...solution, image: '' }))
       : [{ step: 1, description: '', image: '' }]);
-      onClose()
   };
 
   return (
@@ -103,27 +89,27 @@ const handleImageChange = (e, index) => {
               <InputLabel>SR Number</InputLabel>
               <TextField
                 fullWidth
-                name={`solution[${index}].step`}
+                name={`solutions[${index}].step`}
                 value={index + 1}
                 disabled
-                {...register(`solution[${index}].step`)}
+                {...register(`solutions[${index}].step`)}
               />
             </div>
             <div style={{ marginBottom: '10px' }}>
               <InputLabel>Description</InputLabel>
               <TextField
                 fullWidth
-                name={`solution[${index}].description`}
-                {...register(`solution[${index}].description`)}
-                error={!!errors?.solution?.[index]?.description}
-                helperText={errors?.solution?.[index]?.description?.message}
+                name={`solutions[${index}].description`}
+                {...register(`solutions[${index}].description`)}
+                error={!!errors?.solutions?.[index]?.description}
+                helperText={errors?.solutions?.[index]?.description?.message}
               />
             </div>
             <div style={{ marginBottom: '10px' }}>
               <InputLabel>Attach Image</InputLabel>
               <input
                 type="file"
-                name={`solution[${index}].image`}
+                name={`solutions[${index}].image`}
                 onChange={(e) => handleImageChange(e, index)}
               />
               {/* Display the image if the URL is available */}
