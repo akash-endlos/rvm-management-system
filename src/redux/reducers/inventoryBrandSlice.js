@@ -4,7 +4,8 @@ import {
   createInventoryBrandApi,
   getInventoryBrandApi,
   deleteInventoryBrandApi,
-  updateInventoryBrandApi
+  updateInventoryBrandApi,
+  getInventoryBrandByInventoryTypeApi
 } from '../api/inventoryBrandApi';
 
 export const fetchAllInventoryBrands = createAsyncThunk(
@@ -60,6 +61,17 @@ export const updateInventoryBrand = createAsyncThunk(
   async (inventoryBrandData, { rejectWithValue }) => {
     try {
       const response = await updateInventoryBrandApi(inventoryBrandData.id, { name: inventoryBrandData.name });
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+export const getInventoryBrandByTypeApi = createAsyncThunk(
+  'inventoryBrands/getByTypeId',
+  async (inventoryTypeId, { rejectWithValue }) => {
+    try {
+      const response = await getInventoryBrandByInventoryTypeApi(inventoryTypeId);
       return response;
     } catch (error) {
       return rejectWithValue(error.message);

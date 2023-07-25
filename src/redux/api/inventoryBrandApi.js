@@ -44,3 +44,12 @@ export const deleteInventoryBrandApi = async (brandId) => {
     throw error.response.data;
   }
 };
+
+export const getInventoryBrandByInventoryTypeApi = async (inventoryTypeId) => {
+  try {
+    const response = await axiosInstance.get(`/inventrybrand/${inventoryTypeId}`);
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};

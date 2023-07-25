@@ -43,3 +43,15 @@ export const deleteInventoryDetailApi = async (inventoryDetailId) => {
     throw error.response.data;
   }
 };
+
+
+export const getInventoryDetailByBrandIdApi = async (inventoryBrandId) => {
+  console.log(inventoryBrandId);
+  try {
+    const response = await axiosInstance.get(`/inventry/${inventoryBrandId}?unassigned=true`);
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};

@@ -4,7 +4,8 @@ import {
   createInventoryDetailApi,
   updateInventoryDetailApi,
   deleteInventoryDetailApi,
-  getUnAssignedInventoryDetailsApi
+  getUnAssignedInventoryDetailsApi,
+  getInventoryDetailByBrandIdApi
 } from '../api/inventoryDetailApi';
 
 // Async Thunks
@@ -60,6 +61,18 @@ export const deleteInventoryDetail = createAsyncThunk(
     try {
       await deleteInventoryDetailApi(inventoryDetailId);
       return inventoryDetailId;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const getInventoryDetailByBrandId = createAsyncThunk(
+  'inventoryDetails/getByBrandId',
+  async (inventoryBrandId, { rejectWithValue }) => {
+    try {
+      const response = await getInventoryDetailByBrandIdApi(inventoryBrandId);
+      return response;
     } catch (error) {
       return rejectWithValue(error.message);
     }

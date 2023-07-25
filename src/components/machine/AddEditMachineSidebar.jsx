@@ -14,8 +14,10 @@ import {
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
+import { getInventoryBrandByTypeApi } from '@/redux/reducers/inventoryBrandSlice';
+import { getInventoryDetailByBrandId } from '@/redux/reducers/inventoryDetailSlice';
 
 // Validation schema using yup
 const validationSchema = yup.object().shape({
@@ -38,10 +40,12 @@ const validationSchema = yup.object().shape({
 
 const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, unassignedInventories }) => {
   // State to hold the dropdown options
+  const [typeId, setTypeId] = useState('');
+  const [brandId, setBrandId] = useState('');
   const [typeOptions, setTypeOptions] = useState([]);
   const [brandOptions, setBrandOptions] = useState([]);
   const [idOptions, setIdOptions] = useState([]);
-  
+  const dispatch = useDispatch()
 
 
   const {
@@ -92,45 +96,37 @@ useEffect(() => {
      }
   }, [unassignedInventories]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      if (typeId) {
+       const data = await dispatch(getInventoryBrandByTypeApi(typeId));
+       setBrandOptions(data?.payload?.payload?.brands);
+      }
+    };
+
+    fetchData();
+  }, [dispatch, typeId]);
 
   // Handle brand change, fetch corresponding brand options
   const handleBrandChange = (selectedType) => {
-    // Fetch brands data based on selected type (e.g., from an API or Redux store)
-    // Sample data, replace with your actual data retrieval
-    const brandsData = [
-      { id: 'brand1', name: 'Brand 1', type: 'type1' },
-      { id: 'brand2', name: 'Brand 2', type: 'type1' },
-      { id: 'brand3', name: 'Brand 3', type: 'type2' },
-      // Add more brands as needed
-    ];
-    const filteredInventryBrands = unassignedInventories
-    .map(item => item.invetrybrands) // Extract all invetrybrands arrays
-    .flat() // Flatten the array of arrays into a single array
-    .filter(brand => brand.inventryTypeId === selectedType);
-    setBrandOptions(filteredInventryBrands);
-    // Clear _id options when the brand changes
+    setTypeId(selectedType)
     setIdOptions([]);
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      if (brandId) {
+      const data =  await dispatch(getInventoryDetailByBrandId(brandId));
+      setIdOptions(data?.payload?.payload?.inventries);
+      }
+    };
+
+    fetchData();
+  }, [dispatch, brandId]);
+
 
   // Handle _id change, fetch corresponding _id options
   const handleIdChange = (selectedBrand) => {
-    // Fetch _id data based on selected brand (e.g., from an API or Redux store)
-    // Sample data, replace with your actual data retrieval
-    // const idData = [
-    //   { id: 'id1', name: 'ID 1', brand: 'brand1' },
-    //   { id: 'id2', name: 'ID 2', brand: 'brand1' },
-    //   { id: 'id3', name: 'ID 3', brand: 'brand2' },
-    //   { id: 'id4', name: 'ID 4', brand: 'brand3' },
-    //   // Add more _ids as needed
-    // ];
-    
-    const filteredInvetries = brandOptions
-    .map(item => item.invetries)
-    .flat()
-    .filter(inventory => inventory.brandId === selectedBrand);
-    console.log(filteredInvetries);
-    // const filteredIds = idData.filter((id) => id.brand === selectedBrand);
-    setIdOptions(filteredInvetries);
+    setBrandId(selectedBrand)
   };
 
   const handleFormSubmit = (data) => {
@@ -263,7 +259,7 @@ useEffect(() => {
                   <InputLabel>_id</InputLabel>
                   <Select {...field}>
                     <MenuItem value="">Select _id</MenuItem>
-                    {idOptions.map((id) => (
+                    {idOptions?.map((id) => (
                       <MenuItem key={id._id} value={id._id}>
                         {id.serialNumber}
                       </MenuItem>
