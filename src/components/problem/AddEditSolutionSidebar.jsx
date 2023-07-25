@@ -43,6 +43,8 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
 
   const handleFormSubmit = (data) => {
     const transformedData = new FormData();
+   if(selectedSolution)
+   {
     data.solution.forEach((solution, index) => {
       console.log(solution.image);
       // transformedData.append('problemId', selectedProblem._id);
@@ -54,6 +56,20 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
       const image = solution.image instanceof File ? solution.image : selectedSolution?.solution[index]?.image;
       transformedData.append(`solution[${index}][image]`, image);
     });
+   }
+   else{
+    data.solution.forEach((solution, index) => {
+      console.log(solution.image);
+      transformedData.append('problemId', selectedProblem._id);
+      transformedData.append(`solution[${index}][step]`, solution.step.toString());
+      transformedData.append(`solution[${index}][description]`, solution.description);
+      transformedData.append(`solution[${index}][image]`, SelectedImage);
+
+      // Check if there's a new image selected, if not, use the existing image from the selectedSolution
+      const image = solution.image instanceof File ? solution.image : selectedSolution?.solution[index]?.image;
+      transformedData.append(`solution[${index}][image]`, image);
+    });
+   }
     onSubmit(transformedData);
   };
 
@@ -131,7 +147,7 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
                 />
               )}
               {/* Display the existing image from selectedSolution */}
-              {typeof field.image === 'string' && (
+              {selectedSolution && typeof field.image === 'string' && (
                 <img
                   src={field.image}
                   alt={`Solution ${index + 1}`}

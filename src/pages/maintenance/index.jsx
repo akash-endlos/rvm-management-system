@@ -258,11 +258,8 @@ const index = () => {
         });
       console.log('Updating branch', addsolutionData);
     } else {
-      const addNewData={
-        ...addsolutionData,
-        problemId:selectedProblem._id
-      }
-      dispatch(createNewSolution(addNewData)).unwrap()
+
+      dispatch(createNewSolution(addsolutionData)).unwrap()
         .then(() => {
            dispatch(fetchAllProblems());
           toast.success('Added Solution Successfully');
