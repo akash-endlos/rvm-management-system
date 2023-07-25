@@ -1,7 +1,7 @@
 import AdminTable from '@/components/AdminTable/AdminTable'
 import Layout from '@/layout/Layout'
 import { fetchAllCustomers } from '@/redux/reducers/customerSlice'
-import { Box, Button, IconButton, Tooltip, Typography } from '@mui/material'
+import { Box, Button, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
@@ -21,8 +21,8 @@ const index = () => {
   const [selectedProblem, setSelectedProblem] = useState(null);
   const [isDeleteSolutionModalOpen, setIsDeleteSolutionModalOpen] = useState(false);
   const [isDeleteProblemModalOpen, setIsDeleteProblemModalOpen] = useState(false);
-  const [selectedSolution, setSelectedSolution] = useState(null); 
-  const [isAddSolutionSidebarOpen, setIsAddSolutionSidebarOpen] = useState(false); 
+  const [selectedSolution, setSelectedSolution] = useState(null);
+  const [isAddSolutionSidebarOpen, setIsAddSolutionSidebarOpen] = useState(false);
   const allproblems = useSelector((state) => state.problem)
   const dispatch = useDispatch();
   useEffect(() => {
@@ -49,9 +49,10 @@ const index = () => {
         header: 'Problem Type',
         size: 150,
         Cell: ({ renderedCellValue }) => {
-          return(
+          return (
             renderedCellValue
-        )},
+          )
+        },
       },
       {
         accessorKey: 'description',
@@ -126,8 +127,39 @@ const index = () => {
       {
         header: 'Solutions',
         columns: [
-          { header: 'solution', accessorKey: '_id' },
-      ],
+          {
+            header: 'solution',
+            accessorKey: '_id',
+            Cell: ({ row }) => {
+              return (
+                <>
+                 
+                    <><TableContainer >
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell style={{borderBottom:"none"}}>Step</TableCell>
+                              <TableCell style={{borderBottom:"none"}}>Description</TableCell>
+                              <TableCell style={{borderBottom:"none"}}>Image</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                          {row && row.original.solution.map((item, index) => (
+                              <TableRow key={index}>
+                                <TableCell style={{borderBottom:"none"}}>{item.step}</TableCell>
+                                <TableCell style={{borderBottom:"none"}}>{item.description}</TableCell>
+                                <TableCell style={{borderBottom:"none"}}>{item.image}</TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </>
+                </>
+              )
+            },
+          },
+        ],
         data: row?.original?.solutions,
       },
     ];
@@ -152,7 +184,7 @@ const index = () => {
     const handleExportRows = (rows) => {
       csvExporter.generateCsv(rows.map((row) => row.original));
     };
-  
+
     return (
       <Box sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}>
         <Button
@@ -183,36 +215,36 @@ const index = () => {
   const handleAddProblem = async (problemData) => {
     if (selectedProblem) {
       // Update existing customer
-      const updatedProblemData={
-        id:selectedProblem._id,
-        data:problemData
+      const updatedProblemData = {
+        id: selectedProblem._id,
+        data: problemData
       }
       dispatch(updateProblem(updatedProblemData))
-      .unwrap()
-      .then(() => {
-        dispatch(fetchAllProblems())
-        handleCloseAddSidebar();
-        toast.success('Problem Updated Successfully');
-      })
-      .catch((error) => {
-        // Handle the error here
-        toast.error(error);
-      });
+        .unwrap()
+        .then(() => {
+          dispatch(fetchAllProblems())
+          handleCloseAddSidebar();
+          toast.success('Problem Updated Successfully');
+        })
+        .catch((error) => {
+          // Handle the error here
+          toast.error(error);
+        });
       console.log('Updating customer', problemData);
     } else {
       // Add new customer
       // addCustomer(newcustomer.payload);
       dispatch(createNewProblem(problemData))
-      .unwrap()
-      .then(() => {
-        dispatch(fetchAllProblems())
-        handleCloseAddSidebar();
-        toast.success('Problem Added Successfully');
-      })
-      .catch((error) => {
-        // Handle the error here
-        toast.error(error);
-      });
+        .unwrap()
+        .then(() => {
+          dispatch(fetchAllProblems())
+          handleCloseAddSidebar();
+          toast.success('Problem Added Successfully');
+        })
+        .catch((error) => {
+          // Handle the error here
+          toast.error(error);
+        });
       console.log('Add customer', problemData);
     }
     handleCloseAddSidebar();
@@ -243,14 +275,14 @@ const index = () => {
 
   const handleAddBranch = async (addsolutionData) => {
     if (selectedSolution) {
-      const updatedData={
-        _id:selectedSolution._id,
-        data:addsolutionData
+      const updatedData = {
+        _id: selectedSolution._id,
+        data: addsolutionData
       }
       // Update existing branch
       dispatch(updateSolution(updatedData)).unwrap()
         .then(() => {
-           dispatch(fetchAllProblems());
+          dispatch(fetchAllProblems());
           toast.success('Added Solution Successfully');
         })
         .catch(error => {
@@ -261,37 +293,37 @@ const index = () => {
 
       dispatch(createNewSolution(addsolutionData)).unwrap()
         .then(() => {
-           dispatch(fetchAllProblems());
+          dispatch(fetchAllProblems());
           toast.success('Added Solution Successfully');
         })
         .catch(error => {
           toast.error(error)
         });
-      console.log('Adding branch',addsolutionData);
+      console.log('Adding branch', addsolutionData);
     }
     handleCloseAddSolutionSidebar();
   };
-  const handleCloseDeleteSolutionModal=()=>{
+  const handleCloseDeleteSolutionModal = () => {
     setIsDeleteSolutionModalOpen(false)
   }
 
   const handleConfirmDeleteSolution = async () => {
     dispatch(deleteSolution(selectedSolution?._id)).unwrap()
-    .then(async () => {
-      await dispatch(fetchAllProblems());
-      toast.success('Delete Solution Successfully');
-    })
-    .catch(error => {
-      toast.error(error);
-    });
-  
+      .then(async () => {
+        await dispatch(fetchAllProblems());
+        toast.success('Delete Solution Successfully');
+      })
+      .catch(error => {
+        toast.error(error);
+      });
+
     // Perform delete operation on selectedCustomer
     console.log('Deleting branch', selectedSolution);
     setIsDeleteSolutionModalOpen(false);
   };
   return (
     <Layout>
-       <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
+      <Typography variant="h4" style={{ fontWeight: 'bold', color: 'teal' }}>
         Problems
       </Typography>
       <>
@@ -302,35 +334,35 @@ const index = () => {
           handleAdminTableRowActions={handleAdminTableRowActions}
           handleNestedTable={handleNestedTable}
         />
-         {isAddSidebarOpen && (
+        {isAddSidebarOpen && (
           <AddEditProblemSidebar
             onClose={handleCloseAddSidebar}
             onSubmit={handleAddProblem}
             selectedProblem={selectedProblem}
           />
         )}
-         {isAddSolutionSidebarOpen && (
+        {isAddSolutionSidebarOpen && (
           <AddEditSolutionSidebar
             onClose={handleCloseAddSolutionSidebar}
             onSubmit={handleAddBranch}
             selectedSolution={selectedSolution}
             selectedProblem={selectedProblem}
-            // selectedCustomer={selectedCustomer}
+          // selectedCustomer={selectedCustomer}
           />
         )}
-         <DeleteProblemModal
+        <DeleteProblemModal
           isOpen={isDeleteProblemModalOpen}
           onClose={handleCloseDeleteModal}
           onDelete={handleConfirmDeleteProblem}
           title='Problem'
         />
-         <DeleteSolutionModal
+        <DeleteSolutionModal
           isOpen={isDeleteSolutionModalOpen}
           onClose={handleCloseDeleteSolutionModal}
           onDelete={handleConfirmDeleteSolution}
           title='Solution'
         />
-         </>
+      </>
     </Layout>
   )
 }
