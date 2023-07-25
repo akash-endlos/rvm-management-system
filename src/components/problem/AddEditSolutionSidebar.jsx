@@ -1,16 +1,11 @@
 import React from 'react';
-import {
-  Button,
-  TextField,
-  InputLabel,
-  Typography,
-} from '@mui/material';
+import { Button, TextField, InputLabel, Typography } from '@mui/material';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 const schema = yup.object().shape({
-  solutions: yup.array().of(
+  solution: yup.array().of(
     yup.object().shape({
       step: yup.number(),
       description: yup.string().required('Description is required'),
@@ -29,36 +24,64 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      solutions: selectedSolution
-        ? selectedSolution?.solutions.map((solution) => ({ ...solution, image: '' }))
+      solution: selectedSolution
+        ? selectedSolution?.solution.map((solution) => ({ ...solution, image: '' }))
         : [{ step: 1, description: '', image: '' }],
     },
   });
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'solutions',
+    name: 'solution',
   });
 
   const handleFormSubmit = (data) => {
-    onSubmit(data);
+    // Transform the data into the desired format for the API request
+    const transformedData = new FormData();
+    transformedData.append('problemId', selectedProblem._id);
+    data.solution.forEach((solution, index) => {
+      transformedData.append(`solution[${index}][step]`, solution.step.toString());
+      transformedData.append(`solution[${index}][description]`, solution.description);
+      transformedData.append(`solution[${index}][image]`, solution.image);
+    });
+
+    console.log('Transformed Data:', transformedData);
+
+    // Call the onSubmit function to pass the transformed data to the parent component
+    onSubmit(transformedData);
   };
 
-  // Function to convert selected image file to a local URL
-  const handleImageChange = (e, index) => {
+//   const handleImageChange = (e, index) => {
+//     const file = e.target.files[0];
+//     if (file) {
+//       setValue(`solution[${index}].image`, file);
+//     }
+//   };
+
+
+const handleImageChange = (e, index) => {
     const file = e.target.files[0];
-    console.log(file);
     if (file) {
-      // const imageUrl = URL.createObjectURL(file);
-      // Update the image URL for the specific index in the state
-      setValue(`solutions[${index}].image`, file);
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        // 'result' will contain the buffer data of the selected file
+        const buffer = reader.result;
+        setValue(`solution[${index}].image`, buffer);
+        console.log(file);
+        console.log('File Name:', file.name);
+        console.log('File Size:', file.size);
+        console.log('File Type:', file.type);
+        console.log('File Buffer Data:', buffer); // Here's the buffer data
+      };
+
+      reader.readAsArrayBuffer(file);
     }
   };
 
-  // Function to reset the form to its initial state
   const handleCancel = () => {
-    setValue('solutions', selectedProblem
-      ? selectedProblem?.solutions.map((solution) => ({ ...solution, image: '' }))
+    setValue('solution', selectedProblem
+      ? selectedProblem?.solution.map((solution) => ({ ...solution, image: '' }))
       : [{ step: 1, description: '', image: '' }]);
   };
 
@@ -91,27 +114,27 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
               <InputLabel>SR Number</InputLabel>
               <TextField
                 fullWidth
-                name={`solutions[${index}].step`}
+                name={`solution[${index}].step`}
                 value={index + 1}
                 disabled
-                {...register(`solutions[${index}].step`)}
+                {...register(`solution[${index}].step`)}
               />
             </div>
             <div style={{ marginBottom: '10px' }}>
               <InputLabel>Description</InputLabel>
               <TextField
                 fullWidth
-                name={`solutions[${index}].description`}
-                {...register(`solutions[${index}].description`)}
-                error={!!errors?.solutions?.[index]?.description}
-                helperText={errors?.solutions?.[index]?.description?.message}
+                name={`solution[${index}].description`}
+                {...register(`solution[${index}].description`)}
+                error={!!errors?.solution?.[index]?.description}
+                helperText={errors?.solution?.[index]?.description?.message}
               />
             </div>
             <div style={{ marginBottom: '10px' }}>
               <InputLabel>Attach Image</InputLabel>
               <input
                 type="file"
-                name={`solutions[${index}].image`}
+                name={`solution[${index}].image`}
                 onChange={(e) => handleImageChange(e, index)}
               />
               {/* Display the image if the URL is available */}

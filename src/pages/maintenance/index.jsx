@@ -12,8 +12,8 @@ import { createNewProblem, deleteProblem, fetchAllProblems, updateProblem } from
 import AddEditProblemSidebar from '@/components/problem/AddEditProblemSidebar'
 import { toast } from 'react-hot-toast'
 import DeleteProblemModal from '@/components/problem/DeleteProblemModal'
-import AddEditSolutionSidebar from '@/components/problem/AddEditSolutionSidebarDemo'
 import { createNewSolution, fetchAllSolutions } from '@/redux/reducers/solutionSlice'
+import AddEditSolutionSidebar from '@/components/problem/AddEditSolutionSidebar'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
