@@ -29,18 +29,27 @@ const NewHeader = ({ handleSidebarToggle, isSidebarOpen }) => {
         <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 ">
             <div className="px-3  lg:px-5 lg:pl-3">
                 <div className="flex items-center justify-between">
-                    <div className='flex items-center'>
-                        {isSidebarOpen ? <AiOutlineDoubleLeft
-                            className="cursor-pointer"
-                            size={25}
-                            onClick={handleSidebarToggle}
-                        /> : <AiOutlineDoubleRight
-                            className="cursor-pointer"
-                            size={25}
-                            onClick={handleSidebarToggle}
-                        />}
-                        <img src="/1080.png" className="h-20 ml-3" alt="Endlos" />
-                    </div>
+                <div className='flex items-center justify-center md:justify-start'>
+  {isSidebarOpen ? (
+    <AiOutlineDoubleLeft
+      className="cursor-pointer text-gray-500 hover:text-gray-800 transition-colors duration-300"
+      size={25}
+      onClick={handleSidebarToggle}
+    />
+  ) : (
+    <AiOutlineDoubleRight
+      className="cursor-pointer text-gray-500 hover:text-gray-800 transition-colors duration-300"
+      size={25}
+      onClick={handleSidebarToggle}
+    />
+  )}
+  <img
+    src="/1080.png"
+    className="h-20 w-20 ml-3  "
+    alt="Endlos"
+  />
+</div>
+
                     <div className="flex items-center">
                         <div className="ml-3">
                             <Button onClick={handleClick} style={{ display: 'flex', alignItems: 'center', borderRadius: 8 }}>
