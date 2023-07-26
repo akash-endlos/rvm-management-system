@@ -13,6 +13,11 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+
 
 export default function Home() {
   const token = useSelector(state => state?.auth?.user?.token?.accessToken);
@@ -25,6 +30,11 @@ export default function Home() {
     reset,
   } = useForm();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleTogglePassword = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
 
   useEffect(() => {
     if (token) {
@@ -90,13 +100,26 @@ export default function Home() {
               <TextField
                 id="password"
                 label="Password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 variant="outlined"
                 {...register('password', { required: 'Password is required' })}
                 error={!!errors.password}
                 helperText={errors.password?.message}
                 fullWidth
                 sx={{ mb: 3 }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleTogglePassword}
+                        edge="end"
+                      >
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
               <Button
                 type="submit"
