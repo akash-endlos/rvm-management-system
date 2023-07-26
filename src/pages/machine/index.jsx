@@ -18,6 +18,7 @@ import AddEditMachineInventorySidebar from '@/components/machine/AddEditMachineI
 import DeleteMachineInventoryModal from '@/components/machine/DeleteMachineInventoryModal'
 import { fetchAllVendors } from '@/redux/reducers/vendorSlice'
 import moment from 'moment'
+import { ExportToCsv } from 'export-to-csv'
  
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
@@ -114,6 +115,17 @@ const index = () => {
     ],
     []
   );
+  const csvOptions = {
+    fieldSeparator: ',',
+    quoteStrings: '"',
+    decimalSeparator: '.',
+    showLabels: true,
+    useBom: true,
+    useKeysAsHeaders: false,
+    headers: mainTableColumns.map((c) => c.header),
+  };
+  const csvExporter = new ExportToCsv(csvOptions);
+
   const handleOpenAddSidebar = () => {
     setSelectedMachine(null);
     setIsAddSidebarOpen(true);

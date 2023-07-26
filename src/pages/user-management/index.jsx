@@ -16,6 +16,7 @@ import AddEditUserSidebar from '@/components/user-management/AddEditUserSidebar'
 import { createUser, deleteUser, updateUser } from '@/redux/reducers/userSlice'
 import DeleteUserModal from '@/components/user-management/DeleteUserModal'
 import { deleteUserApi } from '@/redux/api/userApi'
+import { ExportToCsv } from 'export-to-csv'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
@@ -71,6 +72,17 @@ const index = () => {
     ],
     []
   );
+  const csvOptions = {
+    fieldSeparator: ',',
+    quoteStrings: '"',
+    decimalSeparator: '.',
+    showLabels: true,
+    useBom: true,
+    useKeysAsHeaders: false,
+    headers: mainTableColumns.map((c) => c.header),
+  };
+  const csvExporter = new ExportToCsv(csvOptions);
+
   const handleOpenAddSidebar = () => {
     setSelectedRole(null);
     setIsAddSidebarOpen(true);

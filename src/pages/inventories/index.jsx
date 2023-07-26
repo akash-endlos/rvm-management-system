@@ -29,6 +29,7 @@ import DeleteInventoryBrandModal from '@/components/inventories/DeleteInventoryB
 import { createInventoryDetail, deleteInventoryDetail, updateInventoryDetail } from '@/redux/reducers/inventoryDetailSlice';
 import AddEditInventorySidebar from '@/components/inventories/AddEditInventory';
 import DeleteInventoryModal from '@/components/inventories/DeleteInventoryModal';
+import { ExportToCsv } from 'export-to-csv';
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
@@ -71,6 +72,17 @@ const index = () => {
     ],
     []
   );
+  const csvOptions = {
+    fieldSeparator: ',',
+    quoteStrings: '"',
+    decimalSeparator: '.',
+    showLabels: true,
+    useBom: true,
+    useKeysAsHeaders: false,
+    headers: mainTableColumns.map((c) => c.header),
+  };
+  const csvExporter = new ExportToCsv(csvOptions);
+
   const handleEditInventoryType = (inventoryTypeData) => {
     setSelectedInventoryType(inventoryTypeData);
     setIsAddSidebarOpen(true);

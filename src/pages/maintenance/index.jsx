@@ -15,6 +15,7 @@ import DeleteProblemModal from '@/components/problem/DeleteProblemModal'
 import { createNewSolution, deleteSolution, fetchAllSolutions, updateSolution } from '@/redux/reducers/solutionSlice'
 import AddEditSolutionSidebar from '@/components/problem/AddEditSolutionSidebar'
 import DeleteSolutionModal from '@/components/problem/DeleteSolutionModal'
+import { ExportToCsv } from 'export-to-csv'
 
 const index = () => {
   const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
@@ -67,6 +68,17 @@ const index = () => {
     ],
     []
   );
+  const csvOptions = {
+    fieldSeparator: ',',
+    quoteStrings: '"',
+    decimalSeparator: '.',
+    showLabels: true,
+    useBom: true,
+    useKeysAsHeaders: false,
+    headers: mainTableColumns.map((c) => c.header),
+  };
+  const csvExporter = new ExportToCsv(csvOptions);
+
   const handleDeleteProblem = (problemData) => {
     setSelectedProblem(problemData);
     setIsDeleteProblemModalOpen(true);

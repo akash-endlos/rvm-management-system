@@ -11,8 +11,11 @@ import { createNewLocalVendor, deleteLocalVendor, fetchAllLocalVendors, updateLo
 import { toast } from 'react-hot-toast'
 import AddEditLocalVendorSidebar from '@/components/localVendor/AddEditLocalVendorSidebar'
 import DeleteLocalVendor from '@/components/localVendor/DeleteLocalVendor'
+import { ExportToCsv } from 'export-to-csv'
 
 const index = () => {
+
+
     const [isAddSidebarOpen, setIsAddSidebarOpen] = useState(false);
     const [selectedVendor, setSelectedVendor] = useState(null);
     const [isDeleteLocalVendorModalOpen, setIsDeleteLocalVendorModalOpen] = useState(false);
@@ -58,6 +61,18 @@ const index = () => {
         ],
         []
       );
+
+      const csvOptions = {
+        fieldSeparator: ',',
+        quoteStrings: '"',
+        decimalSeparator: '.',
+        showLabels: true,
+        useBom: true,
+        useKeysAsHeaders: false,
+        headers: mainTableColumns.map((c) => c.header),
+      };
+      const csvExporter = new ExportToCsv(csvOptions);
+    
       const handleEditVendor = (vendorData) => {
         setSelectedVendor(vendorData);
         setIsAddSidebarOpen(true);
