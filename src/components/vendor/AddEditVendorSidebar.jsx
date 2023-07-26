@@ -52,7 +52,7 @@ const AddEditVendorSidebar = ({ onClose, onSubmit, selectedVendor }) => {
     >
       <form onSubmit={handleSubmit(handleFormSubmit)}>
       <Typography variant="h5" style={{ fontWeight: 'bold', color: 'teal' }}>
-              Vendor
+              Reseller
             </Typography>
         <div style={{ marginBottom: '10px' }}>
           <InputLabel>Name</InputLabel>
