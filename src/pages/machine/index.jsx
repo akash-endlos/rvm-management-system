@@ -168,11 +168,11 @@ const index = () => {
             <Edit />
           </IconButton>
         </Tooltip>
-        <Tooltip arrow placement="right" title="Delete Customer">
+        {/* <Tooltip arrow placement="right" title="Delete Customer">
           <IconButton color="error" onClick={() => handleDeleteMachineInventory(row.original)}>
             <Delete />
           </IconButton>
-        </Tooltip>
+        </Tooltip> */}
       </Box>
     );
   };
