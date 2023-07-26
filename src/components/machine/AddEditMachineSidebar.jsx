@@ -293,7 +293,7 @@ console.log(vendors);
                     }}
                   >
                     <MenuItem value="">Select Type</MenuItem>
-                    {typeOptions.map((type) => (
+                    {typeOptions && typeOptions?.map((type) => (
                       <MenuItem key={type._id} value={type._id}>
                         {type.name}
                       </MenuItem>
@@ -337,7 +337,7 @@ console.log(vendors);
                   <InputLabel>_id</InputLabel>
                   <Select {...field}>
                     <MenuItem value="">Select _id</MenuItem>
-                    {idOptions?.map((id) => (
+                    {idOptions && idOptions?.map((id) => (
                       <MenuItem key={id._id} value={id._id}>
                         {id.serialNumber}
                       </MenuItem>
