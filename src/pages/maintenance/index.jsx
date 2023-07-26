@@ -92,17 +92,17 @@ const index = () => {
   const handleAdminTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
-        <Tooltip arrow placement="left" title="Edit Customer">
+        <Tooltip arrow placement="left" title="Edit Problem">
           <IconButton onClick={() => handleEditProblem(row.original)}>
             <Edit />
           </IconButton>
         </Tooltip>
-        <Tooltip arrow placement="right" title="Delete Customer">
+        <Tooltip arrow placement="right" title="Delete Problem">
           <IconButton color="error" onClick={() => handleDeleteProblem(row.original)}>
             <Delete />
           </IconButton>
         </Tooltip>
-        <Tooltip arrow placement="right" title="Add Branch">
+        <Tooltip arrow placement="right" title="Add Solution">
           <IconButton color="secondary" onClick={() => handleOpenAddSolutionSidebar(row.original)}>
             <FiGitBranch />
           </IconButton>
@@ -121,12 +121,12 @@ const index = () => {
   const handleAdminNestedTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
-        <Tooltip arrow placement="left" title="Edit Customer">
+        <Tooltip arrow placement="left" title="Edit Solution">
           <IconButton onClick={() => handleEditSolution(row.original)}>
             <Edit />
           </IconButton>
         </Tooltip>
-        <Tooltip arrow placement="right" title="Delete Customer">
+        <Tooltip arrow placement="right" title="Delete Solution">
           <IconButton color="error" onClick={() => handleDeleteSolution(row.original)}>
             <Delete />
           </IconButton>
