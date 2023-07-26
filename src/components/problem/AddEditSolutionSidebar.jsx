@@ -53,7 +53,7 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
       transformedData.append(`solution[${index}][image]`, SelectedImage);
 
       // Check if there's a new image selected, if not, use the existing image from the selectedSolution
-      const image = solution.image instanceof File ? solution.image : selectedSolution?.solution[index]?.image;
+      const image = solution.image instanceof File ? SelectedImage : selectedSolution?.solution[index]?.image;
       transformedData.append(`solution[${index}][image]`, image);
     });
    }
@@ -66,8 +66,8 @@ const AddEditSolutionSidebar = ({ onClose, onSubmit, selectedSolution, selectedP
       transformedData.append(`solution[${index}][image]`, SelectedImage);
 
       // Check if there's a new image selected, if not, use the existing image from the selectedSolution
-      const image = solution.image instanceof File ? solution.image : selectedSolution?.solution[index]?.image;
-      transformedData.append(`solution[${index}][image]`, image);
+      // const image = solution.image instanceof File ? SelectedImage : selectedSolution?.solution[index]?.image;
+      // transformedData.append(`solution[${index}][image]`, image);
     });
    }
     onSubmit(transformedData);
