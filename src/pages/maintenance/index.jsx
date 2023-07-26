@@ -148,7 +148,7 @@ const index = () => {
                               <TableRow key={index}>
                                 <TableCell style={{borderBottom:"none"}}>{item.step}</TableCell>
                                 <TableCell style={{borderBottom:"none"}}>{item.description}</TableCell>
-                                <TableCell style={{borderBottom:"none"}}>{item.image}</TableCell>
+                                <TableCell style={{borderBottom:"none"}}>  <img src={`https://storage.googleapis.com/rvmoperationadditionalbucket/rvmbackend/${item.image}`} style={{ width: "100px", height: "auto" }} alt="Step Image" /></TableCell>
                               </TableRow>
                             ))}
                           </TableBody>
