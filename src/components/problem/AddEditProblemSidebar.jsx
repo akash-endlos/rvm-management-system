@@ -39,6 +39,7 @@ const AddEditProblemSidebar = ({ onClose, onSubmit, selectedProblem }) => {
     handleSubmit,
     register,
     watch,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -46,10 +47,19 @@ const AddEditProblemSidebar = ({ onClose, onSubmit, selectedProblem }) => {
       name: selectedProblem?.name || '',
       description: selectedProblem?.description || '',
       category: selectedProblem?.category || '',
-      problemType: selectedProblem?.category === 'Hardware' ? '' : undefined,
+      // problemType: selectedProblem?.category === 'Hardware' ? '' : undefined,
     },
   });
-console.log(watch('category'));
+
+  useEffect(() => {
+    // When the category changes, reset the problemType value to '' or the correct value
+    if (selectedProblem?.category === 'Hardware') {
+      setValue('problemType', '');
+    } else {
+      setValue('problemType', selectedProblem?.problemType || ''); // Set the correct problemType value
+    }
+  }, [selectedProblem?.category, selectedProblem?.problemType, setValue]);
+console.log(watch('problemType'));
   const handleFormSubmit = (data) => {
     onSubmit(data);
   };
