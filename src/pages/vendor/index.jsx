@@ -84,12 +84,12 @@ const index = () => {
       const handleAdminTableRowActions = (row, table) => {
         return (
           <Box sx={{ display: 'flex', gap: '1rem' }}>
-            <Tooltip arrow placement="left" title="Edit Customer">
+            <Tooltip arrow placement="left" title="Edit Vendor">
               <IconButton onClick={() => handleEditVendor(row.original)}>
                 <Edit />
               </IconButton>
             </Tooltip>
-            <Tooltip arrow placement="right" title="Delete Customer">
+            <Tooltip arrow placement="right" title="Delete Vendor">
               <IconButton color="error" onClick={() => handleDeleteCustomer(row.original)}>
                 <Delete />
               </IconButton>

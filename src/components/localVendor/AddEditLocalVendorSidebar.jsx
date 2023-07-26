@@ -55,7 +55,7 @@ const AddEditLocalVendorSidebar = ({ onClose, onSubmit, selectedVendor }) => {
     >
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <Typography variant="h5" style={{ fontWeight: 'bold', color: 'teal' }}>
-          Customer
+          Vendor
         </Typography>
         <div style={{ marginBottom: '10px' }}>
           <TextField fullWidth label="Name" name="name" {...register('name')} />
