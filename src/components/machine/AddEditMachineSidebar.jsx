@@ -38,7 +38,7 @@ const validationSchema = yup.object().shape({
   ),
 });
 
-const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, unassignedInventories }) => {
+const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, unassignedInventories, vendors }) => {
   // State to hold the dropdown options
   const [typeId, setTypeId] = useState('');
   const [brandId, setBrandId] = useState('');
@@ -47,60 +47,79 @@ const AddEditMachineSidebar = ({ onClose, onSubmit, selectedMachine, branches, u
   const [idOptions, setIdOptions] = useState([]);
   const dispatch = useDispatch()
 
-
+console.log(vendors);
   const {
     handleSubmit,
     control,
     formState: { errors },
     reset,
     register,
-    setValue
+    setValue,
+    watch,
+    getFieldState
   } = useForm({
     resolver: yupResolver(validationSchema),
-    defaultValues: selectedMachine || {}, 
+    defaultValues: selectedMachine || {},
   });
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'inventoryDetails',
   });
-console.log(selectedMachine);
-useEffect(() => {
-  if (selectedMachine) {
-    // Set default values for the form fields using setValue
-    setValue('machineId', selectedMachine.machineId || '');
-    setValue('resellerId', selectedMachine.reseller?._id || '');
-    setValue('branchId', selectedMachine.branch?._id || '');
-    setValue('customerId', selectedMachine.customer?._id || '');
-    setValue('warrentyStart', moment(selectedMachine.warrentyStart).format('YYYY-MM-DD') || moment().format());
-    setValue('warrentyExpire', moment(selectedMachine.warrentyExpire).format('YYYY-MM-DD') || moment().format());
+  const resellerId = watch('resellerId')
+  const customerId = watch('customerId')
+  const filteredCustomersArray = vendors.reduce((customers, vendor) => {
+    if (vendor.customers && vendor.customers.length > 0) {
+      const vendorCustomers = vendor.customers.filter((customer) => customer.vendorId === resellerId);
+      return [...customers, ...vendorCustomers];
+    }
+    return customers;
+  }, []);;
 
-    // Loop through the inventoryDetails and set default values for each item
-    selectedMachine.inventoryDetails.forEach((inventory, index) => {
-      setValue(`inventoryDetails.${index}.type`, inventory.invetrytypes._id || '');
-      setValue(`inventoryDetails.${index}.brand`, inventory.brand?._id || '');
-      setValue(`inventoryDetails.${index}._id`, inventory._id || '');
-      setValue(`inventoryDetails.${index}.resellerWarrantyStart`, moment(inventory.resellerWarrantyStart).format('YYYY-MM-DD') || moment().format());
-      setValue(`inventoryDetails.${index}.resellerWarrantyExpire`, moment(inventory.resellerWarrantyExpire).format('YYYY-MM-DD') || moment().format());
-    });
-  }
-}, [selectedMachine, setValue]);;
+  const filteredBranches = filteredCustomersArray.reduce((branches, customer) => {
+    if (customer.branches && customer.branches.length > 0) {
+      const customerBranches = customer.branches.filter((branch) => branch.customer._customerId === customerId);
+      return [...branches, ...customerBranches];
+    }
+    return branches;
+  }, []);
+  console.log(filteredBranches);
+  // console.log(selectedMachine);
+  useEffect(() => {
+    if (selectedMachine) {
+      // Set default values for the form fields using setValue
+      setValue('machineId', selectedMachine.machineId || '');
+      setValue('resellerId', selectedMachine.reseller?._id || '');
+      setValue('branchId', selectedMachine.branch?._id || '');
+      setValue('customerId', selectedMachine.customer?._id || '');
+      setValue('warrentyStart', moment(selectedMachine.warrentyStart).format('YYYY-MM-DD') || moment().format());
+      setValue('warrentyExpire', moment(selectedMachine.warrentyExpire).format('YYYY-MM-DD') || moment().format());
 
-  
+      // Loop through the inventoryDetails and set default values for each item
+      selectedMachine.inventoryDetails.forEach((inventory, index) => {
+        setValue(`inventoryDetails.${index}.type`, inventory.invetrytypes._id || '');
+        setValue(`inventoryDetails.${index}.brand`, inventory.brand?._id || '');
+        setValue(`inventoryDetails.${index}._id`, inventory._id || '');
+        setValue(`inventoryDetails.${index}.resellerWarrantyStart`, moment(inventory.resellerWarrantyStart).format('YYYY-MM-DD') || moment().format());
+        setValue(`inventoryDetails.${index}.resellerWarrantyExpire`, moment(inventory.resellerWarrantyExpire).format('YYYY-MM-DD') || moment().format());
+      });
+    }
+  }, [selectedMachine, setValue]);;
+
+
 
   // Fetch data for the cascading dropdowns
   useEffect(() => {
-     if(unassignedInventories)
-     {
+    if (unassignedInventories) {
       setTypeOptions(unassignedInventories);
-     }
+    }
   }, [unassignedInventories]);
 
   useEffect(() => {
     const fetchData = async () => {
       if (typeId) {
-       const data = await dispatch(getInventoryBrandByTypeApi(typeId));
-       setBrandOptions(data?.payload?.payload?.brands);
+        const data = await dispatch(getInventoryBrandByTypeApi(typeId));
+        setBrandOptions(data?.payload?.payload?.brands);
       }
     };
 
@@ -115,8 +134,8 @@ useEffect(() => {
   useEffect(() => {
     const fetchData = async () => {
       if (brandId) {
-      const data =  await dispatch(getInventoryDetailByBrandId(brandId));
-      setIdOptions(data?.payload?.payload?.inventries);
+        const data = await dispatch(getInventoryDetailByBrandId(brandId));
+        setIdOptions(data?.payload?.payload?.inventries);
       }
     };
 
@@ -163,7 +182,7 @@ useEffect(() => {
           error={!!errors.machineId}
           helperText={errors.machineId?.message}
         />
-        <TextField
+        {/* <TextField
           label="Reseller ID"
           {...register('resellerId')}
           error={!!errors.resellerId}
@@ -180,7 +199,66 @@ useEffect(() => {
           {...register('branchId')}
           error={!!errors.branchId}
           helperText={errors.branchId?.message}
+        /> */}
+
+        <FormControl fullWidth>
+          <InputLabel>Reseller ID</InputLabel>
+          <Select
+            defaultValue={selectedMachine?.reseller?._id}
+            {...register('resellerId')}
+          >
+            <MenuItem value="">Select Reseller ID</MenuItem>
+            {vendors.map((vendor) => (
+              <MenuItem key={vendor._id} value={vendor._id}>
+                {vendor.name}
+              </MenuItem>
+            ))}
+          </Select>
+          <FormHelperText>{errors.resellerId?.message}</FormHelperText>
+        </FormControl>
+
+
+        <FormControl fullWidth>
+          <InputLabel>Customer ID (Optional)</InputLabel>
+          <Select
+           defaultValue={selectedMachine?.customer?._id}
+            {...register('customerId')}
+          >
+            <MenuItem value="">Select Customer ID</MenuItem>
+            {filteredCustomersArray && filteredCustomersArray?.map((customer) => (
+              <MenuItem key={customer._id} value={customer._id}>
+                {customer.name}
+              </MenuItem>
+            ))}
+          </Select>
+          <FormHelperText>{errors.customerId?.message}</FormHelperText>
+        </FormControl>
+
+        <FormControl fullWidth>
+        <InputLabel>Branch ID (Optional)</InputLabel>
+        <Controller
+          name="branchId"
+          control={control}
+          render={({ field }) => (
+            <Select
+              {...field}
+              defaultValue={selectedMachine?.branch?._id}
+              {...register('branchId')}
+            >
+              {filteredBranches && filteredBranches?.map((option, index) => (
+                <MenuItem key={index} value={option._id}>
+                  {option.name}
+                </MenuItem>
+              ))}
+            </Select>
+          )}
         />
+        {errors.branchId && <span>{errors.branchId.message}</span>}
+      </FormControl>
+
+
+
+
         <TextField
           // label="Warranty Start Date"
           type="date"
