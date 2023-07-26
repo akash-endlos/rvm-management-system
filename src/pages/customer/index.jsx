@@ -112,12 +112,12 @@ const Index = () => {
   const handleAdminNestedTableRowActions = (row, table) => {
     return (
       <Box sx={{ display: 'flex', gap: '1rem' }}>
-        <Tooltip arrow placement="left" title="Edit Customer">
+        <Tooltip arrow placement="left" title="Edit Branch">
           <IconButton onClick={() => handleEditBranch(row.original)}>
             <Edit />
           </IconButton>
         </Tooltip>
-        <Tooltip arrow placement="right" title="Delete Customer">
+        <Tooltip arrow placement="right" title="Delete Branch">
           <IconButton color="error" onClick={() => handleDeleteBranch(row.original)}>
             <Delete />
           </IconButton>
