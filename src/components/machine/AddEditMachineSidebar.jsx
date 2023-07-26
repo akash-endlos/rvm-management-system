@@ -318,7 +318,7 @@ console.log(vendors);
                     }}
                   >
                     <MenuItem value="">Select Brand</MenuItem>
-                    {brandOptions.map((brand) => (
+                    {brandOptions && brandOptions?.map((brand) => (
                       <MenuItem key={brand._id} value={brand._id}>
                         {brand.name}
                       </MenuItem>
