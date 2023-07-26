@@ -144,11 +144,11 @@ const index = () => {
             <Delete />
           </IconButton>
         </Tooltip>
-        <Tooltip arrow placement="right" title="Add Branch">
+        {/* <Tooltip arrow placement="right" title="Add Branch">
           <IconButton color="secondary" onClick={() => handleOpenAddMachineInventorySidebar(row.original)}>
             <FiGitBranch />
           </IconButton>
-        </Tooltip>
+        </Tooltip> */}
       </Box>
     );
   };
@@ -186,9 +186,15 @@ const index = () => {
           { header: 'Serial Number', accessorKey: 'serialNumber' },
           { header: 'Inventry Type', accessorKey: 'invetrytypes.name' },
           { header: 'Brand Name', accessorKey: 'brand.name' },
-          { header: 'Warranty Start Date', accessorKey: 'warrantyStart' },
-          { header: 'Reseller Warranty Start', accessorKey: 'resellerWarrantyStart' },
-          { header: 'Reseller Warranty Expire', accessorKey: 'resellerWarrantyExpire' },
+          { header: 'Warranty Start Date', accessorKey: 'warrantyStart',Cell: ({ value }) => moment(value).format('YYYY-MM-DD'), },
+          {
+            accessorKey: 'warrentyExpire',
+            header: 'Warranty Expire Date',
+            size: 150,
+            Cell: ({ value }) => moment(value).format('YYYY-MM-DD'),
+          },
+          { header: 'Reseller Warranty Start', accessorKey: 'resellerWarrantyStart',Cell: ({ value }) => moment(value).format('YYYY-MM-DD'), },
+          { header: 'Reseller Warranty Expire', accessorKey: 'resellerWarrantyExpire',Cell: ({ value }) => moment(value).format('YYYY-MM-DD'), },
           { header: 'Status', accessorKey: 'status' },
         ],
         data: row?.original?.inventoryDetails,
