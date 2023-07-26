@@ -12,9 +12,13 @@ import { fetchAllVendors } from '@/redux/reducers/vendorSlice';
 
 const schema = yup.object().shape({
   name: yup.string().required('Name is required'),
-  contact: yup.string().required('Contact is required'),
+  contact: yup
+    .string()
+    .matches(/^[0-9]{10}$/, 'Contact number must be exactly 10 digits')
+    .required('Contact is required'),
   email: yup.string().email('Invalid email').required('Email is required'),
 });
+
 
 const AddEditLocalVendorSidebar = ({ onClose, onSubmit, selectedVendor }) => {
   const dispatch = useDispatch();
